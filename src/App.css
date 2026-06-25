@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap');
+
+* {
+  font-family: "Karla", sans-serif !important;
+}
+
+.fas {
+  font-family: "Font Awesome 7 Free" !important;
+}
+
+:root {
+  --primary-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  --accent-gradient: linear-gradient(135deg, #4A97E4, #0a56a5);
+  --social-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  --primary: #4A97E4;
+  --primary-dark: #0d5fb1;
+  --primary-light: #e7f2ff;
+  --text-dark: #0f172a;
+  --text-light: #475569;
+  --primary-hover: #0a4f94;
+  --primary-light: #e8f2ff;
+  --accent: linear-gradient(135deg, #4A97E4, #0a56a5);
+  --accent-dark: #B89446;
+  --light-bg: #FAFAFA;
+  --border: rgba(10, 37, 64, 0.1);
+  --primary-soft: rgba(17, 116, 214, 0.1);
+  --text-muted: #64748b;
+  --border-light: #e5e7eb;
+  --bg-light: #f8fafc;
+  --white: #ffffff;
+  --text-main: #2d3748;
+  --card-bg: #ffffff;
+  --shadow: 0 10px 30px rgba(17, 116, 214, 0.15);
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 15px 35px rgba(0, 0, 0, 0.1);
+  --fs: clamp(26px, 10vw, 120px);
+  --txt: #dff7ff;
+  --accent: #4A97E4;
+  --accent2: #78ff99;
+}

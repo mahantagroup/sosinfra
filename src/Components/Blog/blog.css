@@ -1,0 +1,211 @@
+/* ==========================
+   Scroll Reveal Animation
+=========================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: 0.9s ease;
+}
+
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================
+   Blog Card
+=========================== */
+.blog-card {
+  display: block;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(16px);
+  border-radius: 20px;
+  border: 1px solid rgba(17, 116, 214, 0.25);
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.09);
+  transition: 0.35s ease;
+  padding-bottom: 1.2rem;
+  transform-style: preserve-3d;
+}
+
+/* 3D hover */
+.blog-card:hover {
+  box-shadow: 0 28px 55px rgba(0, 0, 0, 0.15);
+}
+
+/* Blog Image */
+.blog-img {
+  height: 220px;
+  overflow: hidden;
+  position: relative;
+}
+
+.blog-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.6s ease;
+}
+
+/* Zoom effect */
+.blog-card:hover img {
+  transform: scale(1.15);
+}
+
+/* Date badge */
+.blog-date {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: #4A97E4;
+  padding: 6px 12px;
+  color: #fff;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  box-shadow: 0 6px 14px rgba(17, 116, 214, 0.4);
+}
+
+/* Content */
+.blog-content {
+  padding: 1.3rem 1.4rem;
+}
+
+.blog-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.7rem;
+  font-size: 0.88rem;
+}
+
+.author {
+  color: #0f172a;
+}
+
+.category {
+  color: #4A97E4;
+  font-weight: 600;
+}
+
+/* Title */
+.blog-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.6rem;
+}
+
+/* Description */
+.blog-desc {
+  font-size: 0.95rem;
+  color: #475569;
+  line-height: 1.6;
+}
+
+/* Hover soft lift */
+.blog-card:hover .blog-title {
+  color: #0d5fb1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .blog-img {
+    height: 200px;
+  }
+}
+
+/* ---------------------------
+   3D Scroll Reveal Animation
+---------------------------- */
+.reveal {
+  opacity: 0;
+  transform: perspective(900px) rotateX(35deg) translateY(50px) scale(0.96);
+  transition: 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: top;
+}
+
+.reveal-visible {
+  opacity: 1;
+  transform: perspective(900px) rotateX(0deg) translateY(0) scale(1);
+}
+
+/* ================================
+   PREMIUM VLOGS – LIGHT THEME
+================================ */
+
+.vlogs-coming-section.light {
+  position: relative;
+  padding: 120px 0;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.vlogs-coming-section.light::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at top, rgba(99, 102, 241, 0.08), transparent 45%),
+    radial-gradient(circle at bottom, rgba(139, 92, 246, 0.08), transparent 45%);
+  pointer-events: none;
+}
+
+.vlogs-content {
+  text-align: center;
+  max-width: 860px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.vlogs-eyebrow {
+  display: inline-block;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #6366f1;
+  margin-bottom: 18px;
+}
+
+.vlogs-title {
+  font-size: 48px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 18px;
+  line-height: 1.2;
+}
+
+.vlogs-subtitle {
+  font-size: 17px;
+  color: #475569;
+  line-height: 1.75;
+  margin-bottom: 42px;
+}
+
+.vlogs-divider {
+  width: 90px;
+  height: 3px;
+  margin: 0 auto 26px;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  border-radius: 10px;
+}
+
+.vlogs-note {
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: #64748b;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .vlogs-title {
+    font-size: 34px;
+  }
+
+  .vlogs-subtitle {
+    font-size: 15px;
+  }
+
+  .vlogs-coming-section.light {
+    padding: 90px 0;
+  }
+}

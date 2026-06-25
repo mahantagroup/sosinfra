@@ -1,0 +1,359 @@
+/* Premium Corporate & Luxury Variable Theme matching JoinAsPartner */
+:root {
+  --primary-brand: #0A2540;
+  --accent-blue: #4A97E4;
+  --neutral-soft: #f8fafc;
+  --border-color: #e2e8f0;
+  --text-dark: #334155;
+  --text-muted: #64748b;
+  --radius-lg: 24px;
+  --radius-sm: 12px;
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.premium-page-wrapper {
+  background-color: var(--neutral-soft);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Helper Utilities */
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Luxury Editorial Card Treatment */
+.premium-thankyou-card.card {
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: var(--radius-lg);
+  padding: 3rem 2.5rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.03), 0 10px 10px -5px rgba(0, 0, 0, 0.01);
+  transition: var(--transition-smooth);
+}
+
+.premium-thankyou-card.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.06);
+}
+
+/* Elegant Animation Keyframes for Checkmark */
+.success-icon-wrapper {
+  background: rgba(17, 116, 214, 0.05);
+  padding: 1rem;
+  border-radius: 50%;
+  display: inline-flex;
+}
+
+.success-checkmark-icon {
+  color: var(--accent-blue);
+  animation: premiumScaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes premiumScaleIn {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Core Typography styles */
+.premium-main-heading {
+  color: var(--primary-brand);
+  font-weight: 800;
+  font-size: 2.25rem;
+  letter-spacing: -0.02em;
+}
+
+.premium-message-text {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* High-End Informational Feedback Box */
+.premium-credentials-box {
+  background-color: rgba(17, 116, 214, 0.03);
+  border: 1px solid rgba(17, 116, 214, 0.12);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem;
+}
+
+.premium-box-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--primary-brand);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.premium-box-desc {
+  font-size: 0.875rem;
+  color: var(--text-dark);
+  line-height: 1.5;
+}
+
+.text-danger-soft {
+  color: #dc3545 !important;
+}
+
+.premium-box-footer {
+  font-size: 0.725rem;
+  color: #94a3b8;
+  border-top: 1px dashed var(--border-color);
+  padding-top: 0.75rem;
+}
+
+/* Balanced Interactive Navigation Buttons */
+.premium-primary-action {
+  background-color: var(--accent-blue);
+  color: #ffffff !important;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  border: none;
+  transition: var(--transition-smooth);
+}
+
+.premium-primary-action:hover {
+  background-color: #0d5fb3;
+  box-shadow: 0 4px 12px rgba(17, 116, 214, 0.2);
+}
+
+.premium-secondary-action {
+  background-color: #ffffff;
+  color: var(--text-dark) !important;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  transition: var(--transition-smooth);
+}
+
+.premium-secondary-action:hover {
+  background-color: var(--neutral-soft);
+  border-color: #cbd5e1;
+}
+
+
+/* =======================================================
+   PREMIUM CERTIFICATE SECTION
+======================================================= */
+
+.premium-certificate-box {
+  margin-top: 2rem;
+  padding: 2rem;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+  border: 1px solid rgba(74, 151, 228, 0.15);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+  transition: var(--transition-smooth);
+}
+
+.premium-certificate-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
+}
+
+.certificate-icon {
+  width: 82px;
+  height: 82px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4A97E4, #0A2540);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  box-shadow: 0 12px 25px rgba(74, 151, 228, .25);
+}
+
+.certificate-title {
+  color: var(--primary-brand);
+  font-size: 1.45rem;
+  font-weight: 700;
+  margin-bottom: .75rem;
+}
+
+.certificate-description {
+  color: var(--text-muted);
+  font-size: .95rem;
+  line-height: 1.7;
+  margin-bottom: 1.75rem;
+}
+
+.certificate-description strong {
+  color: var(--primary-brand);
+}
+
+/* ==========================================
+   DETAILS GRID
+========================================== */
+
+.certificate-details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.certificate-item {
+  background: #fff;
+  border: 1px solid rgba(226,232,240,.9);
+  border-radius: 14px;
+  padding: 1rem;
+  text-align: left;
+  transition: .25s ease;
+}
+
+.certificate-item:hover {
+  border-color: rgba(74,151,228,.35);
+  transform: translateY(-2px);
+}
+
+.certificate-item span {
+  display: block;
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: #64748b;
+  margin-bottom: .4rem;
+}
+
+.certificate-item strong {
+  display: block;
+  color: #0A2540;
+  font-size: .95rem;
+  font-weight: 700;
+  word-break: break-word;
+}
+
+/* ==========================================
+   NOTE BOX
+========================================== */
+
+.certificate-note {
+  display: flex;
+  align-items: flex-start;
+  gap: .75rem;
+  padding: 1rem 1.2rem;
+  background: rgba(74,151,228,.06);
+  border: 1px solid rgba(74,151,228,.12);
+  border-radius: 14px;
+  text-align: left;
+}
+
+.certificate-note svg {
+  color: #4A97E4;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.certificate-note span {
+  font-size: .88rem;
+  line-height: 1.6;
+  color: var(--text-dark);
+}
+
+/* ==========================================
+   DOWNLOAD BUTTON
+========================================== */
+
+.premium-download-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .7rem;
+  width: 100%;
+  background: linear-gradient(135deg,#4A97E4,#0A2540);
+  color: #fff !important;
+  border: none;
+  border-radius: 12px;
+  padding: .95rem 1.5rem;
+  font-size: .95rem;
+  font-weight: 600;
+  transition: .3s ease;
+  text-decoration: none;
+}
+
+.premium-download-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(74,151,228,.25);
+  color: #fff !important;
+}
+
+.premium-download-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width:768px){
+
+  .premium-certificate-box{
+    padding:1.5rem;
+  }
+
+  .certificate-details{
+    grid-template-columns:1fr;
+  }
+
+  .certificate-title{
+    font-size:1.2rem;
+  }
+
+  .certificate-description{
+    font-size:.9rem;
+  }
+
+  .certificate-item{
+    padding:.9rem;
+  }
+
+  .premium-download-btn{
+    font-size:.9rem;
+    padding:.85rem;
+  }
+
+}
+
+@media (max-width:480px){
+
+  .certificate-icon{
+    width:68px;
+    height:68px;
+  }
+
+  .certificate-icon svg{
+    width:32px;
+    height:32px;
+  }
+
+  .certificate-title{
+    font-size:1.05rem;
+  }
+
+  .certificate-description{
+    font-size:.85rem;
+  }
+
+  .certificate-note{
+    padding:.85rem;
+  }
+
+  .certificate-note span{
+    font-size:.82rem;
+  }
+
+}

@@ -1,0 +1,169 @@
+/* ===============================
+   PREMIUM VIDEO TESTIMONIALS
+================================ */
+
+
+
+/* soft background pattern */
+.premium-testimonial-light::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top left,
+      rgba(17, 116, 214, 0.08),
+      transparent 60%);
+  pointer-events: none;
+}
+
+/* ===============================
+   SWIPER CONTAINER
+================================ */
+
+.premium-testimonial-swiper {
+  position: relative;
+  margin-top: 60px;
+}
+
+.premium-testimonial-slider {
+  padding: 30px 20px 90px;
+}
+
+/* ===============================
+   VIDEO CARD (MAIN)
+================================ */
+
+.premium-video-card {
+  height: 400px;
+  background: #ffffff;
+  border-radius: 26px;
+  padding: 18px;
+
+  border: 1px solid rgba(17, 116, 214, 0.15);
+  transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* glow layer */
+.premium-video-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+      rgba(17, 116, 214, 0.12),
+      transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+/* hover lift */
+.premium-video-card:hover {
+  transform: translateY(-12px);
+  box-shadow:
+    0 40px 90px rgba(17, 116, 214, 0.22),
+    0 18px 40px rgba(0, 0, 0, 0.1);
+}
+
+.premium-video-card:hover::after {
+  opacity: 1;
+}
+
+/* ===============================
+   VIDEO WRAPPER
+================================ */
+
+.premium-video-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 22px;
+  overflow: hidden;
+  background: #000;
+}
+
+/* iframe */
+.premium-video-wrapper iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* ===============================
+   ACTIVE SLIDE EMPHASIS
+/*  */
+
+/* ===============================
+   PAGINATION (PREMIUM)
+================================ */
+
+.premium-swiper-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+}
+
+.premium-swiper-bullet {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  transition: all 0.3s ease;
+}
+
+.premium-swiper-bullet-active {
+  width: 34px;
+  border-radius: 8px;
+  background: linear-gradient(135deg,
+      #4A97E4,
+      #0a56a5);
+  box-shadow: 0 6px 18px rgba(17, 116, 214, 0.4);
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 1200px) {
+  .premium-video-card {
+    height: 400px;
+  }
+}
+
+@media (max-width: 992px) {
+  .premium-video-card {
+    height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .premium-testimonial-light {
+    padding: 0px 0;
+  }
+
+  .premium-testimonial-slider {
+    padding: 0px 20px 90px;
+  }
+
+
+  .premium-video-card {
+    height: 440px;
+  }
+
+  .swiper-slide-active .premium-video-card {
+    transform: scale(1.02);
+  }
+}
+
+@media (max-width: 576px) {
+  .premium-video-card {
+    height: 380px;
+    padding: 14px;
+  }
+}

@@ -1,0 +1,123 @@
+/* Section */
+.teampro-section {
+  padding: 70px 0;
+}
+
+/* Header */
+.teampro-head {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.teampro-subtitle {
+  color: var(--primary);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.teampro-title {
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: var(--text-dark);
+}
+
+/* CARD */
+.teampro-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 60px 25px 30px;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 8px 26px rgba(0,0,0,0.06);
+  transition: 0.25s ease;
+}
+
+/* Subtle hover lift */
+.teampro-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 34px rgba(0,0,0,0.1);
+}
+
+/* Top Blue Border */
+.teampro-top-border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 6px;
+  width: 100%;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  background: var(--primary);
+}
+
+/* HEAD IMAGE */
+.teampro-img-wrap {
+  position: absolute;
+  top: -45px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 95px;
+  height: 95px;
+  border-radius: 50%;
+  background: #ffffff;
+  padding: 5px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.teampro-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #fff;
+}
+
+/* TEXT */
+.teampro-name {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  margin-top: 20px;
+}
+
+.teampro-role {
+  font-size: 0.9rem;
+  color: var(--pro-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Icons */
+.teampro-icons {
+  margin-top: 14px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.teampro-icons i {
+  font-size: 18px;
+  color: var(--primary);
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.teampro-icons i:hover {
+  color: #0a56a7;
+  transform: translateY(-2px);
+}
+
+/* Swiper arrows */
+.swiper-button-next,
+.swiper-button-prev {
+  color: var(--primary) !important;
+  font-weight: bold;
+}
+
+.swiper-pagination-bullet {
+  background: #b4c7dd !important;
+}
+
+.swiper-pagination-bullet-active {
+  background: var(--primary) !important;
+}

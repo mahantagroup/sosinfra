@@ -1,0 +1,323 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+.pc-wrapper {
+  padding: 60px 20px;
+  background: #f8fafc;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* --- Premium Ambient Micro-Glow Layer --- */
+.pc-ambient-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(140px);
+  opacity: 0.45;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.pc-ambient-1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(17, 116, 214, 0.15) 0%, transparent 70%);
+  top: -10%;
+  left: -5%;
+}
+
+.pc-ambient-2 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(255, 215, 130, 0.25) 0%, transparent 70%);
+  bottom: -10%;
+  right: -5%;
+}
+
+.pc-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* --- Header Section --- */
+.pc-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.pc-badge {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #4A97E4;
+  background: #ffffff;
+  padding: 8px 18px;
+  border-radius: 100px;
+  box-shadow: 0 4px 15px rgba(17, 116, 214, 0.06);
+  border: 1px solid rgba(17, 116, 214, 0.12);
+}
+
+.pc-main-title {
+  font-size: clamp(2.25rem, 6vw, 3.5rem);
+  font-weight: 800;
+  color: #0f172a;
+  margin-top: 25px;
+  margin-bottom: 15px;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.pc-gradient-text {
+  color: #4A97E4;
+}
+
+.pc-subtitle {
+  font-size: 1.1rem;
+  color: #64748b;
+  max-width: 540px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* --- Premium Staggered Grid --- */
+.pc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
+
+/* --- Premium Glassmorphic Card Architecture --- */
+.pc-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 28px;
+  padding: 2px;
+  /* Precision gap for illuminated borders */
+  opacity: 0;
+  transform: translateY(50px);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+}
+
+.pc-card.pc-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: var(--pc-delay);
+}
+
+.pc-card-inner {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 26px;
+  padding: 45px 30px 40px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 10px 40px -15px rgba(15, 23, 42, 0.05);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  z-index: 2;
+}
+
+/* --- Standard Hover Lift --- */
+.pc-card:hover {
+  transform: translateY(-10px);
+}
+
+.pc-card:hover .pc-card-inner {
+  background: #ffffff;
+  box-shadow: 0 30px 60px -20px rgba(17, 116, 214, 0.12);
+}
+
+/* --- Center Cards Multi-Highlight Effect --- */
+.pc-highlight-card {
+  overflow: hidden;
+  box-shadow: 0 15px 45px -12px rgba(17, 116, 214, 0.08);
+}
+
+.pc-highlight-card .pc-border-glow {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(from 180deg,
+      transparent 60%,
+      rgba(17, 116, 214, 0.6) 100%);
+  animation: spinRing 5s linear infinite;
+  z-index: 1;
+}
+
+@keyframes spinRing {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* --- Premium Icon Architecture --- */
+.pc-icon-container {
+  position: relative;
+  margin-bottom: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pc-icon-box {
+  width: 64px;
+  height: 64px;
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  color: #4A97E4;
+  box-shadow: 0 8px 20px -6px rgba(15, 23, 42, 0.08);
+  transition: all 0.4s ease;
+  z-index: 2;
+}
+
+.pc-highlight-card .pc-icon-box {
+  background: #4A97E4;
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 10px 25px -5px rgba(17, 116, 214, 0.3);
+}
+
+/* Interactive Ring Scaling */
+.pc-icon-pulse {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgba(17, 116, 214, 0.15);
+  border-radius: 20px;
+  z-index: 1;
+  transition: all 0.5s ease;
+}
+
+.pc-card:hover .pc-icon-box {
+  transform: scale(1.08) rotate(3deg);
+  background: #4A97E4;
+  color: #ffffff;
+}
+
+.pc-highlight-card:hover .pc-icon-box {
+  transform: scale(1.08) rotate(-3deg);
+  background: #0c5fae;
+}
+
+.pc-card:hover .pc-icon-pulse {
+  transform: scale(1.3);
+  opacity: 0;
+}
+
+/* --- Typography Elements --- */
+.pc-number {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 10px 0;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.pc-number span {
+  color: #4A97E4;
+  margin-left: 2px;
+  font-weight: 600;
+}
+
+.pc-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #64748b;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+/* Subtle typography highlight on card hover */
+.pc-card:hover .pc-number {
+  color: #4A97E4;
+}
+
+/* --- Responsive Adaptations --- */
+@media (max-width: 1024px) {
+  .pc-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+
+  .pc-wrapper {
+    padding: 100px 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .pc-wrapper {
+    padding: 40px 15px;
+  }
+
+  .pc-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .pc-main-title {
+    margin-top: 10px;
+    font-size: 1.8rem;
+  }
+
+  .pc-header {
+    margin-bottom: 30px;
+  }
+
+  .pc-card-inner {
+    padding: 25px 15px;
+    border-radius: 20px;
+  }
+
+  .pc-icon-box {
+    width: 48px;
+    height: 48px;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    border-radius: 14px;
+  }
+
+  .pc-number {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+  }
+
+  .pc-label {
+    font-size: 0.8rem;
+  }
+
+  .pc-icon-container {
+    margin-bottom: 15px;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+
+  .pc-card,
+  .pc-icon-box,
+  .pc-icon-pulse,
+  .pc-highlight-card .pc-border-glow {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+  }
+}

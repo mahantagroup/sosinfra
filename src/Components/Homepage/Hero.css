@@ -1,0 +1,465 @@
+/* ==========================================================
+   PREMIUM HERO SECTION - CINEMATIC LUXURY DESIGN
+========================================================== */
+
+.hero-premium {
+    position: relative;
+    height: 74vh;
+    min-height: 750px;
+    overflow: hidden;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 60px;
+    /* margin-top: px; */
+}
+
+/* ==========================================================
+   CINEMATIC BACKGROUND SLIDES
+========================================================== */
+.hero-backgrounds {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.hero-background {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transform: scale(1.05);
+    transition: opacity 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        transform 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    filter: brightness(0.85) contrast(1.1) saturate(1.1);
+    will-change: transform, opacity;
+}
+
+.hero-background.active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* ==========================================================
+   LUXURY GRADIENT OVERLAY SYSTEM
+========================================================== */
+.hero-overlay-premium {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.overlay-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,
+            rgba(10, 25, 47, 0.85) 0%,
+            rgba(23, 42, 70, 0.75) 25%,
+            rgba(44, 83, 100, 0.6) 50%,
+            rgba(96, 108, 136, 0.4) 75%,
+            rgba(158, 158, 158, 0.2) 100%);
+    mix-blend-mode: multiply;
+}
+
+.overlay-shine {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.1) 0%,
+            transparent 20%,
+            transparent 80%,
+            rgba(255, 255, 255, 0.05) 100%);
+    mix-blend-mode: overlay;
+}
+
+/* ==========================================================
+   PREMIUM FLOATING SHAPES / ORBS
+========================================================== */
+.hero-shapes-premium {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.luxury-shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.4;
+    animation: floatLuxury 8s ease-in-out infinite;
+    will-change: transform, opacity;
+}
+
+.shape-1 {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(17, 116, 214, 0.3) 0%, transparent 70%);
+    left: 10%;
+    top: 20%;
+    animation-delay: 0s;
+}
+
+.shape-2 {
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.25) 0%, transparent 70%);
+    right: 15%;
+    top: 60%;
+    animation-delay: 2s;
+}
+
+.shape-3 {
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(100, 200, 255, 0.2) 0%, transparent 70%);
+    left: 20%;
+    bottom: 25%;
+    animation-delay: 4s;
+}
+
+.shape-4 {
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(17, 116, 214, 0.15) 0%, transparent 70%);
+    right: 8%;
+    bottom: 15%;
+    animation-delay: 1s;
+}
+
+@keyframes floatLuxury {
+
+    0%,
+    100% {
+        transform: translateY(0px) rotate(0deg) scale(1);
+        opacity: 0.4;
+    }
+
+    33% {
+        transform: translateY(-30px) rotate(120deg) scale(1.1);
+        opacity: 0.5;
+    }
+
+    66% {
+        transform: translateY(20px) rotate(240deg) scale(0.9);
+        opacity: 0.3;
+    }
+}
+
+/* ==========================================================
+   PREMIUM CONTENT LAYER
+========================================================== */
+.hero-content-premium {
+    position: relative;
+    z-index: 4;
+    width: 100%;
+    padding-top: 120px;
+}
+
+.hero-text-content {
+    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* ==========================================================
+   PREMIUM BADGE
+========================================================== */
+.premium-badge {
+    display: inline-block;
+    margin-bottom: 40px;
+    padding: 12px 28px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+}
+
+.premium-badge::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.premium-badge:hover::before {
+    opacity: 1;
+}
+
+/* ==========================================================
+   LUXURY TYPOGRAPHY SYSTEM
+========================================================== */
+.hero-title-premium {
+    font-size: 5rem;
+    font-weight: 700;
+    line-height: 1.05;
+    color: #fff;
+    margin-bottom: 30px;
+    text-shadow: 2px 4px 30px rgba(0, 0, 0, 0.6);
+    will-change: transform, opacity;
+}
+
+.hero-title-premium .hero-word-rotator {
+    position: relative;
+    display: inline-block;
+    min-width: 320px;
+    height: 120px;
+    vertical-align: top;
+}
+
+.rotating-word {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    opacity: 0;
+
+    background: #fff;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 800;
+    transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    text-shadow: 0 0 30px rgba(17, 116, 214, 0.3);
+}
+
+.rotating-word.active {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ==========================================================
+   PREMIUM CALL-TO-ACTION BUTTONS
+========================================================== */
+.hero-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.cta-btn {
+    position: relative;
+    padding: 18px 42px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.cta-btn.primary {
+    background: linear-gradient(135deg, #4A97E4 0%, #0d5bb0 100%);
+    color: #fff;
+    box-shadow: 0 20px 40px rgba(17, 116, 214, 0.3);
+}
+
+.cta-btn.primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 25px 50px rgba(17, 116, 214, 0.4);
+}
+
+.cta-btn.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.cta-btn.secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+.btn-glow {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.6s ease;
+}
+
+.cta-btn.primary:hover .btn-glow {
+    left: 100%;
+}
+
+/* ==========================================================
+   LUXURY SCROLL INDICATOR
+========================================================== */
+.scroll-indicator-premium {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    letter-spacing: 1px;
+    z-index: 4;
+}
+
+.scroll-line {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), transparent);
+    margin: 0 auto 15px;
+    animation: scrollLinePulse 2.5s infinite;
+}
+
+@keyframes scrollLinePulse {
+
+    0%,
+    100% {
+        opacity: 0.5;
+        transform: translateY(0);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateY(10px);
+    }
+}
+
+/* ==========================================================
+   RESPONSIVE DESIGN - MOBILE PERFECTION
+========================================================== */
+@media (max-width: 1024px) {
+    .hero-title-premium {
+        font-size: 4rem;
+    }
+
+    .hero-title-premium .hero-word-rotator {
+        min-width: 280px;
+        height: 100px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-premium {
+        min-height: 500px;
+        margin-top: 20px;
+    }
+
+    .hero-title-premium {
+        font-size: 3rem;
+        margin-bottom: 25px;
+    }
+
+    .hero-title-premium .hero-word-rotator {
+        min-width: 220px;
+        height: 80px;
+    }
+
+    .hero-subtitle-premium {
+        font-size: 1.1rem;
+        margin-bottom: 40px;
+        padding: 0 20px;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .cta-btn {
+        padding: 16px 35px;
+        width: 220px;
+    }
+
+    .premium-badge {
+        margin-bottom: 30px;
+        padding: 10px 24px;
+        font-size: 12px;
+    }
+
+    .luxury-shape {
+        filter: blur(30px);
+    }
+
+    .shape-1 {
+        width: 200px;
+        height: 200px;
+    }
+
+    .shape-2 {
+        width: 150px;
+        height: 150px;
+    }
+
+    .shape-3 {
+        width: 100px;
+        height: 100px;
+    }
+
+    .shape-4 {
+        width: 180px;
+        height: 180px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title-premium {
+        font-size: 2.5rem;
+    }
+
+    .hero-title-premium .hero-word-rotator {
+        min-width: 180px;
+        height: 70px;
+    }
+
+    .hero-content-premium {
+        padding-top: 80px;
+    }
+
+    .hero-premium {
+        border-radius: 0;
+    }
+}
+
+/* ==========================================================
+   PERFORMANCE OPTIMIZATIONS
+========================================================== */
+.hero-premium * {
+    box-sizing: border-box;
+}
+
+.hero-premium {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Prevent horizontal scroll */
+body {
+    overflow-x: hidden;
+}
+
+/* High-end focus styles */
+.cta-btn:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 2px;
+}

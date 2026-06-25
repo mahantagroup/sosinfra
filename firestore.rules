@@ -1,0 +1,89 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper to check if a user is an admin (checks agents, users, and custom claims)
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.role == 'admin' ||
+        (exists(/databases/$(database)/documents/agents/$(request.auth.uid)) && get(/databases/$(database)/documents/agents/$(request.auth.uid)).data.role == 'admin') ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+      );
+    }
+
+    // Helper to check if a user is HR (checks agents, users, and custom claims)
+    function isHR() {
+      return isAuthenticated() && (
+        request.auth.token.role == 'hr' ||
+        (exists(/databases/$(database)/documents/agents/$(request.auth.uid)) && get(/databases/$(database)/documents/agents/$(request.auth.uid)).data.role == 'hr') ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'hr')
+      );
+    }
+
+    // Helper to check if a user is HR or Admin
+    function isHRorAdmin() {
+      return isAdmin() || isHR();
+    }
+
+    // Agent profile rules
+    match /agents/{agentId} {
+      // Admin and HR can manage agents (add, edit, delete)
+      allow read, write: if isHRorAdmin();
+      
+      // Agents can read their own profile
+      allow read: if isAuthenticated() && request.auth.uid == agentId;
+      
+      // Allow listing profiles for authenticated users (required for some team views)
+      allow list: if isAuthenticated(); 
+    }
+
+    // Partner Requests rules
+    match /partnerRequests/{requestId} {
+      allow read, write: if isHRorAdmin();
+      // Allow public to submit requests
+      allow create: if true; 
+    }
+
+    // Public content collections
+    match /projects/{projectId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /properties/{propertyId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /blogs/{blogId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /gallery/{imageId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /team/{memberId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /testimonials/{testimonialId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Default deny for all other collections
+    match /{document=**} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

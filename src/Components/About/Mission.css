@@ -1,0 +1,23 @@
+/* Large devices (default) */
+.container-sec {
+  padding: 100px 250px;
+}
+
+/* Tablets */
+@media (max-width: 1204px) {
+  .container-sec {
+    padding: 80px 140px;
+  }
+}
+@media (max-width: 1024px) {
+  .container-sec {
+    padding: 80px 120px;
+  }
+}
+
+/* Mobile devices */
+@media (max-width: 768px) {
+  .container-sec {
+    padding: 60px 60px; /* removes X-axis padding */
+  }
+}

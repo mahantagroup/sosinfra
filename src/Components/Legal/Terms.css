@@ -1,0 +1,12 @@
+.terms { padding: 80px 0; background: #0b0f14; color: #e6ebf1; }
+.terms .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+.terms__header { text-align: center; margin-bottom: 32px; }
+.terms__header h1 { font-size: 40px; line-height: 1.2; margin: 0 0 8px; color: #ffffff; }
+.terms__meta { color: #aab4c0; font-size: 14px; }
+.terms__content { display: grid; gap: 16px; }
+.terms__card { background: #0f141a; border: 1px solid #1a2430; border-radius: 14px; padding: 20px; }
+.terms__card h2 { margin: 0 0 8px; font-size: 20px; color: #eaf1ff; }
+.terms__card p { margin: 0; color: #c9d3df; line-height: 1.7; }
+.terms__link { color: #69b1ff; text-decoration: none; }
+.terms__link:hover { text-decoration: underline; }
+@media (min-width: 768px) { .terms__content { gap: 20px; } .terms__card { padding: 24px; } }

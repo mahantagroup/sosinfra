@@ -1,0 +1,31 @@
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Certificate Container - A4 Portrait */
+.certificate-container {
+  width: 841px;
+  height: 1190px;
+  background-image: url('/images/certificate.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Recipient Name - Absolute Center */
+.recipient-name {
+  font-size: 48px;
+  font-weight: 800;
+  color: #18599B;
+  text-transform: uppercase;
+  letter-spacing: 0px;
+  text-align: center;
+}
