@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Briefcase, MapPin, Phone, Camera, Upload, Loader2, CheckCircle2 } from 'lucide-react';
+import { 
+  User, Briefcase, MapPin, Phone, Camera, Upload, Loader2, CheckCircle2,
+  Calendar, CreditCard, Mail, Building, Users, FileText, ShieldCheck,
+  ArrowRight
+} from 'lucide-react';
 import { db } from './Firebase/Firebase';
 import { collection, addDoc, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { createAgentAccount, generateAgentPassword } from './Firebase/agentHelpers';
@@ -172,157 +176,235 @@ const JoinAsPartner = () => {
         <div className="text-center mb-5">
           <span className="contact-badge">PARTNER WITH US</span>
           <h1 className="contact-title mt-3">
-            Join <span>SOS Infrabulls</span>
+            Join As <span>Associate Channel Partner</span>
           </h1>
-          <p className="contact-subtitle">
+          <p className="contact-subtitle text-center">
             Empower your future with our premier partnership program.
           </p>
         </div>
 
         {submitted && (
-          <div className="alert alert-success d-flex align-items-center gap-3 mb-5 mx-auto" style={{ maxWidth: '600px' }} role="alert">
-            <CheckCircle2 size={22} />
+          <div className="premium-success-alert mx-auto" role="alert">
+            <CheckCircle2 size={24} />
             <strong>Your application has been submitted successfully!</strong>
           </div>
         )}
 
         <div className="row justify-content-center">
-          <div className="col-lg-10">
-            <div className="contact-card">
+          <div className="col-lg-11 col-xl-10">
+            <div className="premium-form-card">
               <form onSubmit={handleSubmit}>
                 {/* Basic Information */}
-                <div className="mb-5">
-                  <h4 className="card-title mb-4">
-                    <Briefcase size={20} className="me-2" />
-                    Basic Information
-                  </h4>
+                <div className="premium-section mb-5">
+                  <div className="premium-section-header">
+                    <div className="premium-section-icon">
+                      <Briefcase size={20} />
+                    </div>
+                    <div>
+                      <h4 className="premium-section-title">Basic Information</h4>
+                      <p className="premium-section-desc">Let's start with your application details</p>
+                    </div>
+                  </div>
                   <div className="row g-3">
                     <div className="col-md-6">
-                      <label className="form-label">Application Date</label>
-                      <input type="date" className="form-control" name="date" value={formData.date} onChange={handleChange} />
+                      <div className="premium-field-group">
+                        <label className="premium-field-label">
+                          <Calendar size={16} className="me-2" />
+                          Application Date
+                        </label>
+                        <input type="date" className="premium-form-control" name="date" value={formData.date} onChange={handleChange} />
+                      </div>
                     </div>
                     <div className="col-md-6">
-                      <label className="form-label">Your Photograph <span className="text-danger">*</span></label>
-                      <input type="file" id="photo" name="photograph" accept="image/*" onChange={handleFileChange} className="d-none" />
-                      <label htmlFor="photo" className="form-control d-flex align-items-center justify-content-between" style={{ cursor: 'pointer' }}>
-                        <span>{previews.photograph ? 'Photo Selected ✓' : 'Upload Photograph *'}</span>
-                        <Camera size={18} />
-                      </label>
+                      <div className="premium-field-group">
+                        <label className="premium-field-label">
+                          <Camera size={16} className="me-2" />
+                          Your Photograph <span className="premium-required">*</span>
+                        </label>
+                        <input type="file" id="photo" name="photograph" accept="image/*" onChange={handleFileChange} className="d-none" />
+                        <label htmlFor="photo" className="premium-file-upload">
+                          <div className="premium-file-upload-content">
+                            <span>{previews.photograph ? 'Photo Selected ✓' : 'Click to upload photograph'}</span>
+                            <Camera size={18} />
+                          </div>
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Applicant Name */}
-                <div className="mb-5">
-                  <h4 className="card-title mb-4">
-                    <User size={20} className="me-2" />
-                    Applicant Name
-                  </h4>
+                <div className="premium-section mb-5">
+                  <div className="premium-section-header">
+                    <div className="premium-section-icon">
+                      <User size={20} />
+                    </div>
+                    <div>
+                      <h4 className="premium-section-title">Applicant Name</h4>
+                      <p className="premium-section-desc">Enter your full name details</p>
+                    </div>
+                  </div>
                   <div className="row g-3">
                     <div className="col-md-4">
-                      <label className="form-label">First Name <span className="text-danger">*</span></label>
-                      <input type="text" className="form-control" placeholder="First Name" name="firstName" value={formData.firstName} onChange={handleChange} required />
+                      <div className="premium-field-group">
+                        <label className="premium-field-label">First Name <span className="premium-required">*</span></label>
+                        <input type="text" className="premium-form-control" placeholder="First Name" name="firstName" value={formData.firstName} onChange={handleChange} required />
+                      </div>
                     </div>
                     <div className="col-md-4">
-                      <label className="form-label">Middle Name</label>
-                      <input type="text" className="form-control" placeholder="Middle Name" name="middleName" value={formData.middleName} onChange={handleChange} />
+                      <div className="premium-field-group">
+                        <label className="premium-field-label">Middle Name</label>
+                        <input type="text" className="premium-form-control" placeholder="Middle Name" name="middleName" value={formData.middleName} onChange={handleChange} />
+                      </div>
                     </div>
                     <div className="col-md-4">
-                      <label className="form-label">Last Name</label>
-                      <input type="text" className="form-control" placeholder="Last Name" name="lastName" value={formData.lastName} onChange={handleChange} />
+                      <div className="premium-field-group">
+                        <label className="premium-field-label">Last Name</label>
+                        <input type="text" className="premium-form-control" placeholder="Last Name" name="lastName" value={formData.lastName} onChange={handleChange} />
+                      </div>
                     </div>
                   </div>
 
-                  <div className="mt-4">
-                    <label className="form-label text-muted d-block mb-2">Father / Husband Details</label>
+                  <div className="premium-subsection mt-4">
+                    <div className="premium-subsection-header">
+                      <Users size={18} />
+                      Father / Husband Details
+                    </div>
                     <div className="row g-3">
                       <div className="col-md-4">
-                        <input type="text" className="form-control" placeholder="First Name" name="fatherHusbandName" value={formData.fatherHusbandName} onChange={handleChange} />
+                        <input type="text" className="premium-form-control" placeholder="First Name" name="fatherHusbandName" value={formData.fatherHusbandName} onChange={handleChange} />
                       </div>
                       <div className="col-md-4">
-                        <input type="text" className="form-control" placeholder="Middle Name" name="fatherHusbandMiddleName" value={formData.fatherHusbandMiddleName} onChange={handleChange} />
+                        <input type="text" className="premium-form-control" placeholder="Middle Name" name="fatherHusbandMiddleName" value={formData.fatherHusbandMiddleName} onChange={handleChange} />
                       </div>
                       <div className="col-md-4">
-                        <input type="text" className="form-control" placeholder="Last Name" name="fatherHusbandLastName" value={formData.fatherHusbandLastName} onChange={handleChange} />
+                        <input type="text" className="premium-form-control" placeholder="Last Name" name="fatherHusbandLastName" value={formData.fatherHusbandLastName} onChange={handleChange} />
                       </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Personal Details */}
-                <div className="mb-5">
-                  <h4 className="card-title mb-4">
-                    <User size={20} className="me-2" />
-                    Personal Details
-                  </h4>
+                <div className="premium-section mb-5">
+                  <div className="premium-section-header">
+                    <div className="premium-section-icon">
+                      <FileText size={20} />
+                    </div>
+                    <div>
+                      <h4 className="premium-section-title">Personal Details</h4>
+                      <p className="premium-section-desc">Your personal identification information</p>
+                    </div>
+                  </div>
                   <div className="row g-3">
                     <div className="col-md-4">
-                      <label className="form-label">Date of Birth</label>
-                      <input type="date" className="form-control" name="dob" value={formData.dob} onChange={handleChange} />
+                      <div className="premium-field-group">
+                        <label className="premium-field-label">
+                          <Calendar size={16} className="me-2" />
+                          Date of Birth
+                        </label>
+                        <input type="date" className="premium-form-control" name="dob" value={formData.dob} onChange={handleChange} />
+                      </div>
                     </div>
                     <div className="col-md-4">
-                      <label className="form-label">PAN Card Image <span className="text-danger">*</span></label>
-                      <input type="file" id="pan-file" name="panCard" accept="image/*" onChange={handleFileChange} className="d-none" />
-                      <label htmlFor="pan-file" className="form-control d-flex align-items-center justify-content-between" style={{ cursor: 'pointer' }}>
-                        <span>{previews.panCard ? 'PAN Selected ✓' : 'Upload PAN *'}</span>
-                        <Upload size={18} />
-                      </label>
+                      <div className="premium-field-group">
+                        <label className="premium-field-label">
+                          <CreditCard size={16} className="me-2" />
+                          PAN Card Image <span className="premium-required">*</span>
+                        </label>
+                        <input type="file" id="pan-file" name="panCard" accept="image/*" onChange={handleFileChange} className="d-none" />
+                        <label htmlFor="pan-file" className="premium-file-upload">
+                          <div className="premium-file-upload-content">
+                            <span>{previews.panCard ? 'PAN Selected ✓' : 'Click to upload PAN card'}</span>
+                            <Upload size={18} />
+                          </div>
+                        </label>
+                      </div>
                     </div>
                     <div className="col-md-4">
-                      <label className="form-label">Aadhaar Card Image <span className="text-danger">*</span></label>
-                      <input type="file" id="aadhaar-file" name="aadhaarCard" accept="image/*" onChange={handleFileChange} className="d-none" />
-                      <label htmlFor="aadhaar-file" className="form-control d-flex align-items-center justify-content-between" style={{ cursor: 'pointer' }}>
-                        <span>{previews.aadhaarCard ? 'Aadhaar Selected ✓' : 'Upload Aadhaar *'}</span>
-                        <Upload size={18} />
-                      </label>
+                      <div className="premium-field-group">
+                        <label className="premium-field-label">
+                          <CreditCard size={16} className="me-2" />
+                          Aadhaar Card Image <span className="premium-required">*</span>
+                        </label>
+                        <input type="file" id="aadhaar-file" name="aadhaarCard" accept="image/*" onChange={handleFileChange} className="d-none" />
+                        <label htmlFor="aadhaar-file" className="premium-file-upload">
+                          <div className="premium-file-upload-content">
+                            <span>{previews.aadhaarCard ? 'Aadhaar Selected ✓' : 'Click to upload Aadhaar card'}</span>
+                            <Upload size={18} />
+                          </div>
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Professional Details */}
-                <div className="mb-5">
-                  <h4 className="card-title mb-4">
-                    <Briefcase size={20} className="me-2" />
-                    Professional Details
-                  </h4>
+                <div className="premium-section mb-5">
+                  <div className="premium-section-header">
+                    <div className="premium-section-icon">
+                      <Building size={20} />
+                    </div>
+                    <div>
+                      <h4 className="premium-section-title">Professional Details</h4>
+                      <p className="premium-section-desc">Your professional and partnership information</p>
+                    </div>
+                  </div>
                   <div className="row g-3">
                     <div className="col-md-6">
-                      <input type="text" className="form-control" placeholder="Reference" name="reference" value={formData.reference} onChange={handleChange} />
+                      <div className="premium-field-group">
+                        <label className="premium-field-label">Reference</label>
+                        <input type="text" className="premium-form-control" placeholder="Reference" name="reference" value={formData.reference} onChange={handleChange} />
+                      </div>
                     </div>
                     <div className="col-md-6">
-                      <input type="text" className="form-control" placeholder="Department" name="department" value={formData.department} onChange={handleChange} />
+                      <div className="premium-field-group">
+                        <label className="premium-field-label">Department</label>
+                        <input type="text" className="premium-form-control" placeholder="Department" name="department" value={formData.department} onChange={handleChange} />
+                      </div>
                     </div>
                     <div className="col-md-6">
-                      <input type="text" className="form-control" placeholder="Leader Name" name="leaderName" value={formData.leaderName} onChange={handleChange} />
+                      <div className="premium-field-group">
+                        <label className="premium-field-label">Leader Name</label>
+                        <input type="text" className="premium-form-control" placeholder="Leader Name" name="leaderName" value={formData.leaderName} onChange={handleChange} />
+                      </div>
                     </div>
                     <div className="col-md-6">
-                      <input type="text" className="form-control" placeholder="Plan By" name="planBy" value={formData.planBy} onChange={handleChange} />
+                      <div className="premium-field-group">
+                        <label className="premium-field-label">Plan By</label>
+                        <input type="text" className="premium-form-control" placeholder="Plan By" name="planBy" value={formData.planBy} onChange={handleChange} />
+                      </div>
                     </div>
                     <div className="col-md-12">
-                      <label className="form-label">Referral Code <span className="text-danger">*</span></label>
-                      <input type="text" className="form-control" placeholder="Enter Referral Code" name="referralCode" value={formData.referralCode} onChange={handleChange} required />
+                      <div className="premium-field-group">
+                        <label className="premium-field-label">
+                          <Users size={16} className="me-2" />
+                          Referral Code <span className="premium-required">*</span>
+                        </label>
+                        <input type="text" className="premium-form-control" placeholder="Enter Referral Code" name="referralCode" value={formData.referralCode} onChange={handleChange} required />
+                      </div>
                     </div>
                   </div>
                 </div>
 
+                {/* Address Section */}
                 <div className="row g-4 mb-5">
                   <div className="col-lg-6">
-                    <div className="contact-card h-100" style={{ padding: '1.5rem' }}>
-                      <h5 className="fw-semibold mb-3">
-                        <MapPin size={18} className="me-2" />
-                        Local Address
-                      </h5>
+                    <div className="premium-address-card">
+                      <div className="premium-address-header">
+                        <MapPin size={20} />
+                        <span>Local Address</span>
+                      </div>
                       <div className="d-flex flex-column gap-3">
-                        <input type="text" className="form-control" placeholder="Address Line" name="localAddressLine" value={formData.localAddressLine} onChange={handleChange} />
+                        <input type="text" className="premium-form-control" placeholder="Address Line" name="localAddressLine" value={formData.localAddressLine} onChange={handleChange} />
                         <div className="row g-2">
-                          <div className="col-4">
-                            <input type="text" className="form-control" placeholder="City" name="localCity" value={formData.localCity} onChange={handleChange} />
+                          <div className="col-12 col-sm-4">
+                            <input type="text" className="premium-form-control" placeholder="City" name="localCity" value={formData.localCity} onChange={handleChange} />
                           </div>
-                          <div className="col-4">
-                            <input type="text" className="form-control" placeholder="State" name="localState" value={formData.localState} onChange={handleChange} />
+                          <div className="col-12 col-sm-4">
+                            <input type="text" className="premium-form-control" placeholder="State" name="localState" value={formData.localState} onChange={handleChange} />
                           </div>
-                          <div className="col-4">
-                            <input type="text" className="form-control" placeholder="Pin Code" name="localPinCode" value={formData.localPinCode} onChange={handleChange} />
+                          <div className="col-12 col-sm-4">
+                            <input type="text" className="premium-form-control" placeholder="Pin Code" name="localPinCode" value={formData.localPinCode} onChange={handleChange} />
                           </div>
                         </div>
                       </div>
@@ -330,22 +412,22 @@ const JoinAsPartner = () => {
                   </div>
 
                   <div className="col-lg-6">
-                    <div className="contact-card h-100" style={{ padding: '1.5rem' }}>
-                      <h5 className="fw-semibold mb-3">
-                        <MapPin size={18} className="me-2" />
-                        Permanent Address
-                      </h5>
+                    <div className="premium-address-card">
+                      <div className="premium-address-header">
+                        <MapPin size={20} />
+                        <span>Permanent Address</span>
+                      </div>
                       <div className="d-flex flex-column gap-3">
-                        <input type="text" className="form-control" placeholder="Address Line" name="permanentAddressLine" value={formData.permanentAddressLine} onChange={handleChange} />
+                        <input type="text" className="premium-form-control" placeholder="Address Line" name="permanentAddressLine" value={formData.permanentAddressLine} onChange={handleChange} />
                         <div className="row g-2">
-                          <div className="col-4">
-                            <input type="text" className="form-control" placeholder="City" name="permanentCity" value={formData.permanentCity} onChange={handleChange} />
+                          <div className="col-12 col-sm-4">
+                            <input type="text" className="premium-form-control" placeholder="City" name="permanentCity" value={formData.permanentCity} onChange={handleChange} />
                           </div>
-                          <div className="col-4">
-                            <input type="text" className="form-control" placeholder="State" name="permanentState" value={formData.permanentState} onChange={handleChange} />
+                          <div className="col-12 col-sm-4">
+                            <input type="text" className="premium-form-control" placeholder="State" name="permanentState" value={formData.permanentState} onChange={handleChange} />
                           </div>
-                          <div className="col-4">
-                            <input type="text" className="form-control" placeholder="Pin Code" name="permanentPinCode" value={formData.permanentPinCode} onChange={handleChange} />
+                          <div className="col-12 col-sm-4">
+                            <input type="text" className="premium-form-control" placeholder="Pin Code" name="permanentPinCode" value={formData.permanentPinCode} onChange={handleChange} />
                           </div>
                         </div>
                       </div>
@@ -353,59 +435,80 @@ const JoinAsPartner = () => {
                   </div>
                 </div>
 
-                <div className="mb-5">
-                  <h4 className="card-title mb-4">
-                    <Phone size={20} className="me-2" />
-                    Contact Details
-                  </h4>
+                {/* Contact Details */}
+                <div className="premium-section mb-5">
+                  <div className="premium-section-header">
+                    <div className="premium-section-icon">
+                      <Phone size={20} />
+                    </div>
+                    <div>
+                      <h4 className="premium-section-title">Contact Details</h4>
+                      <p className="premium-section-desc">How can we reach you?</p>
+                    </div>
+                  </div>
                   <div className="row g-3">
                     <div className="col-md-4">
-                      <input type="email" className="form-control" placeholder="Email ID" name="email" value={formData.email} onChange={handleChange} />
+                      <div className="premium-field-group">
+                        <label className="premium-field-label">
+                          <Mail size={16} className="me-2" />
+                          Email ID
+                        </label>
+                        <input type="email" className="premium-form-control" placeholder="Email ID" name="email" value={formData.email} onChange={handleChange} />
+                      </div>
                     </div>
                     <div className="col-md-4">
-                      <input type="tel" className="form-control" placeholder="Mobile 1" name="mobile1" value={formData.mobile1} onChange={handleChange} required />
+                      <div className="premium-field-group">
+                        <label className="premium-field-label">
+                          <Phone size={16} className="me-2" />
+                          Mobile 1 <span className="premium-required">*</span>
+                        </label>
+                        <input type="tel" className="premium-form-control" placeholder="Mobile 1" name="mobile1" value={formData.mobile1} onChange={handleChange} required />
+                      </div>
                     </div>
                     <div className="col-md-4">
-                      <input type="tel" className="form-control" placeholder="Mobile 2" name="mobile2" value={formData.mobile2} onChange={handleChange} />
+                      <div className="premium-field-group">
+                        <label className="premium-field-label">
+                          <Phone size={16} className="me-2" />
+                          Mobile 2
+                        </label>
+                        <input type="tel" className="premium-form-control" placeholder="Mobile 2" name="mobile2" value={formData.mobile2} onChange={handleChange} />
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Action/Submission Section */}
-                <div className="text-center py-4">
+                <div className="premium-submit-section">
                   {loading && (
-                    <div className="mx-auto mb-4" style={{ maxWidth: '400px' }}>
-                      <div className="d-flex justify-content-between mb-2 text-muted">
-                        <span>Processing Application</span>
-                        <span>{uploadProgress}%</span>
+                    <div className="premium-progress-container mx-auto mb-4">
+                      <div className="premium-progress-header">
+                        <span className="premium-progress-text">Processing Application</span>
+                        <span className="premium-progress-percent">{uploadProgress}%</span>
                       </div>
-                      <div className="progress" style={{ height: '10px', borderRadius: '999px' }}>
+                      <div className="premium-progress-bar-wrapper">
                         <div
-                          className="progress-bar progress-bar-striped progress-bar-animated"
-                          role="progressbar"
-                          style={{ width: `${uploadProgress}%`, background: 'var(--primary)', borderRadius: '999px' }}
-                          aria-valuenow={uploadProgress}
-                          aria-valuemin="0"
-                          aria-valuemax="100"
+                          className="premium-progress-bar"
+                          style={{ width: `${uploadProgress}%` }}
                         ></div>
                       </div>
                     </div>
                   )}
 
-                  <button type="submit" disabled={loading} className="btn btn-primary">
+                  <button type="submit" disabled={loading} className="premium-submit-btn">
                     {loading ? (
                       <>
-                        <Loader2 size={16} className="spinner-loader me-2" />
+                        <Loader2 size={18} className="premium-spinner me-2" />
                         <span>Processing...</span>
                       </>
                     ) : (
                       <>
                         <span>Submit Application</span>
-                       
+                        <ArrowRight size={18} />
                       </>
                     )}
                   </button>
-                  <p className="mt-3 text-muted">
+                  <p className="premium-security-note">
+                    <ShieldCheck size={16} className="me-2" />
                     Secure 256-bit SSL encrypted application
                   </p>
                 </div>

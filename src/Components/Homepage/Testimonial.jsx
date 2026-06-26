@@ -22,7 +22,7 @@ export default function TestimonialPremiumLight() {
         <div className="box-title text-center wow fadeInUp">
           <div className="text-subtitle text-primary">Our Testimonials</div>
           <h3 className="mt-4 title">What People Say</h3>
-          <p className="section-subtitle">Hear from our valued clients about their experience</p>
+          <p className="section-subtitle text-center">Hear from our valued clients about their experience</p>
         </div>
 
         {/* Video Swiper */}

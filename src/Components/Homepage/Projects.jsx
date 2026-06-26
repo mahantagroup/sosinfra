@@ -200,7 +200,7 @@ const Projects = () => {
                 <div className="head-content">
                     <div className="section-label">Our Portfolio</div>
                     <h2>Running Projects</h2>
-                    <p className="section-subtitle">Explore our current developments and ongoing construction initiatives</p>
+                    <p className="section- text-left">Explore our current developments and ongoing construction initiatives</p>
                 </div>
                 <div className="controls">
                     <div className="control-counter">

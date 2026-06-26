@@ -11,175 +11,177 @@ const formatLocationSummary = (location) => {
 };
 
 /* -----------------------------
-   CUSTOM STYLE
+   PREMIUM CUSTOM STYLE
 ------------------------------ */
 const CustomStyles = () => (
   <style>
     {`
-      .event-card {
+      :root {
+        --primary: #0A2540;
+        --accent: #4A97E4;
+        --neutral-soft: #f8fafc;
+        --border-light: #e2e8f0;
+        --text-dark: #334155;
+        --text-muted: #64748b;
+        --radius-lg: 20px;
+        --radius-md: 14px;
+        --radius-sm: 10px;
+        --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .premium-event-card {
         width: 100%;
-        height: 380px;
-        border-radius: var(--radius);
-        overflow: hidden;
         background: #fff;
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+        transition: var(--transition);
+        position: relative;
         display: flex;
         flex-direction: column;
-        box-shadow: 0 12px 40px rgba(0,0,0,0.12);
-        transition: 0.3s ease;
-        position: relative;
+        border: 1px solid rgba(226,232,240);
       }
 
-      .event-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 18px 55px rgba(0,0,0,0.18);
+      .premium-event-card:hover {
+        transform: translateY(-12px);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.12);
       }
 
-      .image-wrapper {
-        height: 390px;
+      .premium-image-wrapper {
         position: relative;
         overflow: hidden;
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
       }
 
-      .image-wrapper img {
+      .premium-image-wrapper img {
         width: 100%;
-        height: 100%;
+        height: 260px;
         object-fit: cover;
-        transition: 0.4s ease;
-        transform: scale(1.08);
+        transition: 0.5s ease;
       }
 
-      .event-card:hover .image-wrapper img {
-        transform: scale(1.18);
+      .premium-event-card:hover .premium-image-wrapper img {
+        transform: scale(1.12);
       }
 
-      .category-tag {
+      .premium-overlay-gradient {
         position: absolute;
-        top: 14px;
-        right: 14px;
-        padding: 6px 14px;
-        font-size: 0.75rem;
-        background: rgba(255,255,255,0.55);
-        backdrop-filter: blur(8px);
-        border-radius: 30px;
-        color: #000;
-        font-weight: 600;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 50%, rgba(10,37,64,0.9) 100%);
+        pointer-events: none;
       }
 
-      .overlay-info {
+      .premium-status-tag {
         position: absolute;
-        bottom: 0;
-        width: 100%;
-        padding: 20px 18px;
-        background: linear-gradient(180deg, transparent, rgba(0,0,0,0.85));
-        color: white;
-      }
-
-      .overlay-title {
-        font-size: 1.1rem;
-        font-weight: 700;
-        margin: 0;
-        color: white;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-      }
-
-      .date-box {
-        display: inline-block;
-        background: rgba(255,255,255,0.9);
+        top: 16px;
+        left: 16px;
+        background: rgba(255,255,255,0.95);
+        backdrop-filter: blur(10px);
         color: var(--primary);
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-size: 0.8rem;
-        margin-bottom: 6px;
-        font-weight: 600;
+        padding: 8px 16px;
+        border-radius: 30px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
       }
 
-      .card-body {
-        padding: 16px 20px;
+      .premium-card-body {
+        padding: 22px 20px 24px;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        height: 170px;
+        gap: 14px;
       }
 
-      .desc {
-        font-size: 0.87rem;
-        color: #555;
-        line-height: 1.5;
+      .premium-card-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 0;
+        line-height: 1.2;
+      }
+
+      .premium-card-desc {
+        font-size: 0.92rem;
+        color: var(--text-muted);
+        line-height: 1.6;
+        margin: 0;
         display: -webkit-box;
-        overflow: hidden;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
+        overflow: hidden;
       }
 
-      .btn-view {
-        background: var(--primary);
-        color: white;
+      .premium-view-btn {
+        width: 100%;
+        background: linear-gradient(135deg, var(--accent), var(--primary));
+        color: #fff;
         border: none;
-        padding: 12px 0;
-        border-radius: 12px;
+        padding: 13px 24px;
+        border-radius: var(--radius-md);
         font-weight: 600;
-        transition: 0.3s ease;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        cursor: pointer;
+        transition: var(--transition);
+        margin-top: 6px;
       }
 
-      .btn-view:hover {
-        background: #08408a;
-        transform: translateY(-3px);
+      .premium-view-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(74,151,228,0.35);
       }
-        .premium-btn {
-  background: linear-gradient(135deg, #0f5fc0, #0a3e84);
-  color: #fff;
-  border: none;
-  padding: 12px 0;
-  border-radius: 14px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-size: 0.9rem;
-  box-shadow: 0 8px 20px rgba(15, 95, 192, 0.35);
-  transition: 0.35s ease;
-}
 
-.premium-btn:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(15, 95, 192, 0.45);
-}
+      .premium-view-btn .btn-icon {
+        transition: transform 0.3s ease;
+      }
 
-.premium-btn .arrow {
-  transition: 0.35s ease;
-  font-size: 1rem;
-}
+      .premium-view-btn:hover .btn-icon {
+        transform: translateX(5px);
+      }
 
-.premium-btn:hover .arrow {
-  transform: translateX(6px);
-}
-
+      @media (max-width: 992px) {
+        .premium-image-wrapper img {
+          height: 240px;
+        }
+      }
 
       @media (max-width: 768px) {
-        .event-card { height: 360px; }
-        .image-wrapper { height: 390px; }
+        .premium-image-wrapper img {
+          height: 220px;
+        }
+
+        .premium-card-body {
+          padding: 18px 16px 20px;
+        }
       }
     `}
   </style>
 );
 
 const ProjectCard = ({ project, onView }) => (
-  <div className="event-card">
-    <div className="image-wrapper">
-      <img src={project.image || 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><rect width="100%" height="100%" fill="%23ffffff"/><rect x="1" y="1" width="1198" height="798" fill="none" stroke="%23000" stroke-width="2"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="28" fill="%23000">No Image Available</text></svg>'} alt={project.title} onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><rect width="100%" height="100%" fill="%23ffffff"/><rect x="1" y="1" width="1198" height="798" fill="none" stroke="%23000" stroke-width="2"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="28" fill="%23000">No Image Available</text></svg>'; }} />
-      <div className="overlay-info">
-        <h4 className="overlay-title">{project.title}</h4>
-      </div>
+  <div className="premium-event-card">
+    <div className="premium-image-wrapper">
+      <img 
+        src={project.image || 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><rect width="100%" height="100%" fill="%23f8fafc"/><rect x="1" y="1" width="1198" height="798" fill="none" stroke="%23e2e8f0" stroke-width="2"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="24" fill="%230A2540">No Image Available</text></svg>'} 
+        alt={project.title} 
+        onError={(e) => { 
+          e.currentTarget.onerror = null; 
+          e.currentTarget.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><rect width="100%" height="100%" fill="%23f8fafc"/><rect x="1" y="1" width="1198" height="798" fill="none" stroke="%23e2e8f0" stroke-width="2"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="24" fill="%230A2540">No Image Available</text></svg>'; 
+        }} 
+      />
+      <div className="premium-overlay-gradient"></div>
+      <div className="premium-status-tag">Running</div>
     </div>
-    <div className="card-body">
-      <p className="desc">{project.tagline || formatLocationSummary(project.location)}</p>
-      <button className="btn-view premium-btn" type="button" onClick={onView}>
+    <div className="premium-card-body">
+      <h3 className="premium-card-title">{project.title}</h3>
+      <p className="premium-card-desc">{project.tagline || formatLocationSummary(project.location)}</p>
+      <button className="premium-view-btn" type="button" onClick={onView}>
         View Project Details
-        <span className="arrow">→</span>
+        <span className="btn-icon">→</span>
       </button>
     </div>
   </div>
@@ -230,9 +232,6 @@ const Gallery = () => {
       <div className="container py-5">
         <div className="text-center mb-5">
           <h2 className="fw-bold fs-1">Running Project Gallery</h2>
-          <p className="text-muted fs-5">
-            {/* Explore every ongoing milestone curated by SOS Infrabulls. */}
-          </p>
         </div>
 
         {stateMessage ? (

@@ -30,10 +30,10 @@ const CounterCard = ({ item, index, delay }) => {
     const step = (timestamp) => {
       if (!startTimestamp) startTimestamp = timestamp;
       const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-      
+
       // Easing out quad function for smooth luxury ending
-      const easeProgress = progress * (2 - progress); 
-      
+      const easeProgress = progress * (2 - progress);
+
       setCount(Math.floor(easeProgress * endValue));
 
       if (progress < 1) {
@@ -47,17 +47,17 @@ const CounterCard = ({ item, index, delay }) => {
   }, [hasStarted, item.value]);
 
   // Determine which card receives the special highlight
-  const isHighlighted = index === 1 || index === 2; 
+  const isHighlighted = index === 1 || index === 2;
 
   return (
-    <div 
-      className={`pc-card ${hasStarted ? "pc-visible" : ""} ${isHighlighted ? "pc-highlight-card" : ""}`} 
+    <div
+      className={`pc-card ${hasStarted ? "pc-visible" : ""} ${isHighlighted ? "pc-highlight-card" : ""}`}
       ref={cardRef}
       style={{ "--pc-delay": `${delay}s` }}
     >
       {/* Animated Conic Border Edge */}
       <div className="pc-border-glow"></div>
-      
+
       <div className="pc-card-inner">
         {/* Floating Icon Base */}
         <div className="pc-icon-container">
@@ -94,13 +94,10 @@ export default function Counter() {
       <div className="pc-ambient-glow pc-ambient-2"></div>
 
       <div className="pc-container">
-        <div className="pc-header">
-          <span className="pc-badge">Performance Metrics</span>
-          <h2 className="pc-main-title">
-            Driving growth with <br />
-            <span className="pc-gradient-text">Precision & Scale</span>
-          </h2>
-          <p className="pc-subtitle">
+        <div className="section-header">
+          <span className="section-label">Performance Metrics</span>
+          <h2 className="section-title">Driving growth with Precision & Scale</h2>
+          <p className="section-subtitle text-center">
             Empowering real estate investments across generations with validated market dominance.
           </p>
         </div>

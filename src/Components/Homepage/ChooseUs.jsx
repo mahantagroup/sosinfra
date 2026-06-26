@@ -10,7 +10,7 @@ function ChooseUs() {
                 <div className="section-header">
                     <span className="section-label">Why Choose Us</span>
                     <h2 className="section-title">Our Core Values</h2>
-                    <p className="section-subtitle">Discover what makes SOS Infrabulls your trusted partner in real estate.</p>
+                    <p className="section-subtitle text-center">Discover what makes SOS Infrabulls your trusted partner in real estate.</p>
                 </div>
                 
                 <div className="cards-grid">

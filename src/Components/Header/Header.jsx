@@ -272,7 +272,7 @@ const PremiumHeader = () => {
                                             </Link>
                                             <Link to="/join" className="dropdown-link">
                                                 <div>
-                                                    <div className="dropdown-title">Join as Partner</div>
+                                                    <div className="dropdown-title">Join as ACP</div>
                                                 </div>
                                             </Link>
                                         </div>
@@ -307,7 +307,7 @@ const PremiumHeader = () => {
                                         <path d="M9 3V15M3 9H15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                                     </svg>
                                 </span>
-                                Join as Partner
+                                Join as ACP
                             </Link>
                         </div>
 
@@ -475,7 +475,7 @@ const PremiumHeader = () => {
 
                                     <div className="mobile-dropdown-content">
                                         <Link to="/career" onClick={closeMobileMenu}>Work With Us</Link>
-                                        <Link to="/join" onClick={closeMobileMenu}>Join as Partner</Link>
+                                        <Link to="/join" onClick={closeMobileMenu}>Join as ACP</Link>
                                     </div>
                                 </div>
                             </li>
@@ -488,6 +488,21 @@ const PremiumHeader = () => {
                                 >
                                     <span className="mobile-nav-icon">📞</span>
                                     Contact
+                                </Link>
+                            </li>
+                            {/* Join as ACP */}
+                            <li className="premium-mobile-nav-item">
+                                <Link
+                                    to="/join"
+                                    className="premium-mobile-cta-btn"
+                                    onClick={closeMobileMenu}
+                                >
+                                    <span className="mobile-cta-icon">
+                                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                            <path d="M9 3V15M3 9H15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                                        </svg>
+                                    </span>
+                                    Join as ACP
                                 </Link>
                             </li>
 

@@ -543,8 +543,45 @@
 }
 
 
+:root {
+    --primary: #0A2540;
+    --accent: #4A97E4;
+    --border: #e5e7eb;
+    --shadow: 0 8px 24px rgba(17, 116, 214, 0.12);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .career-page-wrapper {
     font-family: 'Inter', sans-serif;
+}
+
+/* Premium Button Style */
+.premium-btn,
+.career-toggle-btn,
+.compact-job-card button,
+.btn-submit,
+.cta-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--primary));
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 4px 15px rgba(17, 116, 214, 0.25);
+}
+
+.premium-btn:hover,
+.career-toggle-btn:hover,
+.compact-job-card button:hover,
+.btn-submit:hover,
+.cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(17, 116, 214, 0.4);
 }
 
 /* --- Section Styling --- */
