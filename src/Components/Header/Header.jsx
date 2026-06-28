@@ -67,7 +67,7 @@ const PremiumHeader = () => {
                         <div className="premium-header-brand">
                             <Link to="/" className="premium-logo">
                                 <img
-                                    src="images/logo/logo@2x.png"
+                                    src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555285/logo_2x_vvvpyz.png"
                                     alt="SOS Infrabulls"
                                     width="180"
                                     height="52"
@@ -203,12 +203,7 @@ const PremiumHeader = () => {
                                                     {/* <div className="dropdown-desc">Latest Updates</div> */}
                                                 </div>
                                             </Link>
-                                            {/* <Link to="/services" className="dropdown-link">
-                                                <div>
-                                                    <div className="dropdown-title">Services</div>
-                                                    // <div className="dropdown-desc">Our Services</div>
-                                                </div>
-                                            </Link> */}
+                                        
                                         </div>
                                     </div>
                                 </li>
@@ -336,7 +331,7 @@ const PremiumHeader = () => {
                     <div className="premium-mobile-header">
                         <Link to="/" className="premium-mobile-logo" onClick={closeMobileMenu}>
                             <img
-                                src="images/logo/logo@2x.png"
+                                src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555285/logo_2x_vvvpyz.png"
                                 alt="SOS Infrabulls"
                                 width="160"
                                 height="46"
@@ -539,8 +534,8 @@ const PremiumHeader = () => {
                             <span className="contact-icon">📞</span>
                             <div>
                                 <div className="contact-label">Call Us</div>
-                                <a href="tel:+916262900000" className="contact-value">
-                                    +91 62629-00000
+                                <a href="tel:+916262962629" className="contact-value">
+                                    +91 62629-62629
                                  </a>
 
                             </div>

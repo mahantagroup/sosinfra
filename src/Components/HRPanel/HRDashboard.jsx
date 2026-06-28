@@ -188,7 +188,7 @@ const HRDashboard = () => {
     <div className="hr-panel-wrapper">
       {/* Mobile Top Bar */}
       <div className="hr-mobile-top-bar d-lg-none">
-        <img src="/images/logo/logo@2x.png" alt="SOS Infrabulls" className="hr-mobile-logo" />
+        <img src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555285/logo_2x_vvvpyz.png" alt="SOS Infrabulls" className="hr-mobile-logo" />
         <div className="hr-mobile-actions">
            <button className="hr-refresh-btn small" onClick={loadAgents} disabled={loading}>
              <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
@@ -203,7 +203,7 @@ const HRDashboard = () => {
       <aside className={`hr-sidebar ${sidebarOpen ? 'mobile-open' : ''}`}>
         <div className="hr-sidebar-brand d-none d-lg-flex">
           <div className="d-flex flex-column align-items-center gap-3">
-            <img src="/images/logo/logo@2x.png" alt="SOS Infrabulls" className="hr-sidebar-logo" />
+            <img src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555285/logo_2x_vvvpyz.png" alt="SOS Infrabulls" className="hr-sidebar-logo" />
             <div className="text-center">
               <p className="hr-brand-label mb-0">HR Portal</p>
             </div>

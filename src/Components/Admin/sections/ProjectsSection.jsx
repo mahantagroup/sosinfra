@@ -68,7 +68,7 @@ const ProjectsSection = () => {
           {items.map((project) => (
             <ListRow
               key={project.id}
-              image={project.logo || project.image || '/images/home/house-1.jpg'}
+              image={project.logo || project.image }
               title={project.title}
               meta={extractProjectLocation(project)}
               badges={

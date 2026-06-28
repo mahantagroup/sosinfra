@@ -301,7 +301,7 @@ function Overview() {
                 Talk to our team
               </Link>
 
-              <Link to="/services" className="about-btn ghost">
+              <Link to="/" className="about-btn ghost">
                 Explore portfolio
               </Link>
             </div>

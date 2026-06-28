@@ -7,7 +7,7 @@ const AdminSidebar = ({ active, onNavigate }) => (
   <aside className="admin-sidebar d-none d-lg-flex">
     <div className="sidebar-brand">
       <div className="d-flex flex-column align-items-center gap-3">
-        <img src="/images/logo/logo@2x.png" alt="SOS Infrabulls" className="sidebar-brand-logo" />
+        <img src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555285/logo_2x_vvvpyz.png" alt="SOS Infrabulls" className="sidebar-brand-logo" />
         <div className="text-center">
           <p className="sidebar-brand-label mb-0">Admin Panel</p>
         </div>

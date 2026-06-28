@@ -140,7 +140,7 @@ export default function Career() {
             >
                 {/* 1. The Image Element */}
                 <img
-                    src="/images/img/bnr.jpeg" // Your image source
+                    src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555421/bnr_oecisp.jpg" // Your image source
                     alt="Banner Background"
 
                 />

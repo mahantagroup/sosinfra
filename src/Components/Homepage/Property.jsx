@@ -11,7 +11,7 @@ const fixedProperties = [
   {
     id: 1,
     title: "Munim Ji State",
-    image: "images/home/house-1.jpg",
+    image: "",
     avatar: "images/avatar/avt-png1.png",
     agent: "Rajesh Sharma",
     price: "₹35,00,000",

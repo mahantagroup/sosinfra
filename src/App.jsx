@@ -18,7 +18,6 @@ import Footer from './Components/Footer/Footer';
 // Pages
 import Home from './Components/Homepage/Home';
 import About from './Components/About/About';
-import Service from "./Components/Services/Service";
 import Contact from './Components/Contact/Contact';
 import Gallery from './Components/Gallary/Gallery';
 import ProjectGallery from './Components/Project/Gallery'
@@ -63,10 +62,8 @@ function App() {
     const preloadAssets = async () => {
       try {
         const images = [
-          "/images/logo/logo@2x.png",
-          "/images/home/house-1.jpg",
-          "/images/home/house-2.jpg",
-          "/images/home/house-3.jpg",
+          "https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555285/logo_2x_vvvpyz.png",
+         
         ];
 
         await Promise.all(
@@ -115,7 +112,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/aboutdirector" element={<Director />} />
-          <Route path="/services" element={<Service />} />
+         
           <Route path="/projectgallery" element={<ProjectGallery />} />
           <Route path="/projects/:projectId" element={<ProjectDetail />} />
           <Route path="/gallery" element={<Gallery />} />

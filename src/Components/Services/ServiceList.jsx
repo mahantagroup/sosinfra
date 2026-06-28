@@ -8,7 +8,7 @@ const serviceData = [
     title: "Buy a New Home",
     description:
       "Discover your dream home effortlessly with expert guidance and diverse property options.",
-    img: "images/service/home-1.png",
+    img: "",
     link: "/buy-home",
   },
   {
@@ -16,7 +16,7 @@ const serviceData = [
     title: "Sell Your Home",
     description:
       "Sell confidently with professional strategies that highlight your property's best features.",
-    img: "images/service/home-2.png",
+    img: "",
     link: "/sell-home",
   },
   {
@@ -24,7 +24,7 @@ const serviceData = [
     title: "Rent a Home",
     description:
       "Find your ideal rental home tailored to your lifestyle and comfort needs.",
-    img: "images/service/home-3.png",
+    img: "",
     link: "/rent-home",
   },
 ];

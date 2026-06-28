@@ -110,7 +110,7 @@ export default function PropertyPage() {
           ) : (
             <div className="row g-4">
               {filtered.map((item) => {
-                const img = (item.images && item.images[0]) || item.image || "images/home/house-1.jpg";
+                const img = (item.images && item.images[0]) || item.image ;
                 const addr = item.location || item.address || "";
                 const price = item.price || item.priceText || "";
                 return (

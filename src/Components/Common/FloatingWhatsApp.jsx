@@ -8,7 +8,7 @@ const FloatingWhatsApp = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const whatsappNumber = "916262900000";
+  const whatsappNumber = "916262962629";
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=Hello%20SOS%20Infrabulls`;
 
   return (

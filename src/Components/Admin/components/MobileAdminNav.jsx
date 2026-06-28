@@ -15,7 +15,7 @@ const MobileAdminNav = ({ active, onNavigate }) => {
         <>
             {/* Top Bar */}
             <div className="admin-mobile-top d-lg-none">
-                <img src="/images/logo/logo@2x.png" alt="Logo" className="mobile-admin-logo" />
+                <img src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555285/logo_2x_vvvpyz.png" alt="Logo" className="mobile-admin-logo" />
                 <button className="mobile-toggle" onClick={() => setIsOpen(!isOpen)}>
                     {isOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
@@ -24,7 +24,7 @@ const MobileAdminNav = ({ active, onNavigate }) => {
             {/* Sidebar Drawer */}
             <div className={`admin-mobile-drawer d-lg-none ${isOpen ? 'open' : ''}`}>
                 <div className="drawer-header">
-                    <img src="/images/logo/logo@2x.png" alt="Logo" className="drawer-logo" />
+                    <img src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555285/logo_2x_vvvpyz.png" alt="Logo" className="drawer-logo" />
                     <span className="drawer-label">Admin Management</span>
                 </div>
                 

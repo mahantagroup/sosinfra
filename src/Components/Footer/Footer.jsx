@@ -41,7 +41,7 @@ const Footer = () => {
           {/* Brand + Social in one line */}
           <div className="footer-top-row">
             <a href="/" className="footer-logo-link">
-              <img src="images/logo/logo@2x.png" alt="SOS Infrabulls" width="160" height="46" />
+              <img src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555285/logo_2x_vvvpyz.png" alt="SOS Infrabulls" width="160" height="46" />
             </a>
             <div className="footer-social-group">
               <span className="footer-social-label">Connect</span>
@@ -75,7 +75,7 @@ const Footer = () => {
                 </div>
                 <div className="footer-contact-item">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79C8.06 13.62 10.38 15.94 13.21 17.38l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C10.61 21 3 13.39 3 4c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-                  <a href="tel:+916262900000">+91 62629-00000</a>
+                  <a href="tel:+916262962629">+91 62629-62629</a>
                 </div>
                 <div className="footer-contact-item">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4C2.9 4 2 4.9 2 6v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>

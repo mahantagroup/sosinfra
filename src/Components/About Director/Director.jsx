@@ -248,7 +248,7 @@ function Director() {
             <div className="dir-media-box">
               <div className="dir-img-wrapper">
                 <span className="dir-badge">Founder & MD</span>
-                <img src="images/img/01 (1).png" alt="MD Pawan Tilve" />
+                <img src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555501/01_1_bb0dgs.png" alt="MD Pawan Tilve" />
               </div>
               <div className="dir-geometric-frame"></div>
             </div>
@@ -278,7 +278,7 @@ function Director() {
             <div className="dir-media-box">
               <div className="dir-img-wrapper">
                 <span className="dir-badge">CMD</span>
-                <img src="images/img/01 (2).png" alt="CMD Vikas Garg" />
+                <img src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555487/01_2_hoyhjx.png" alt="CMD Vikas Garg" />
               </div>
               <div className="dir-geometric-frame"></div>
             </div>

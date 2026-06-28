@@ -51,7 +51,7 @@ const PremiumPreloader = () => {
                 <div className="preloader-logo">
                     <div className="logo-container">
                         <img 
-                            src="images/logo/logo@2x.png" 
+                            src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555285/logo_2x_vvvpyz.png" 
                             alt="SOS Infrabulls" 
                             className="logo-image"
                         />

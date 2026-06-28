@@ -172,7 +172,7 @@ const ContactSection = () => {
                 </div>
                 <div>
                   <h6>Phone</h6>
-                  <p>62629-00000</p>
+                  <p>62629-62629</p>
                 </div>
               </div>
 

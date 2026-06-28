@@ -46,7 +46,7 @@ const AgentLogin = () => {
       <div className="w-100" style={{ maxWidth: '420px' }}>
         <div className="text-center mb-5">
           <img
-            src="/images/logo/logo@2x.png"
+            src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555285/logo_2x_vvvpyz.png"
             alt="SOS Infrabulls "
             className="mb-4 mx-auto"
             style={{ height: '100px', width: 'auto' }}
