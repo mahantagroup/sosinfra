@@ -809,6 +809,77 @@ body {
     }
 }
 
+/* --- MOBILE SWIPER STYLES --- */
+.mobile-projects-swiper-container {
+    width: 100%;
+    padding: 0 1.25rem;
+    margin: 0 auto;
+}
+
+.mobile-projects-swiper {
+    width: 100%;
+    padding: 1.25rem 0 2.5rem;
+}
+
+.mobile-card {
+    width: 100% !important;
+    height: 480px !important;
+    max-height: 80vh;
+    flex-basis: 100% !important;
+    display: block !important;
+    transform: none !important;
+    pointer-events: auto !important;
+}
+
+.mobile-card .project-card__bg {
+    display: block !important;
+    filter: brightness(0.65) contrast(1.1) !important;
+}
+
+.mobile-card .card-gradient-overlay {
+    display: block !important;
+}
+
+.mobile-card .project-card__content {
+    display: flex !important;
+    height: 100% !important;
+    padding: 2rem !important;
+}
+
+.mobile-card .project-card__header {
+    display: block !important;
+    opacity: 1 !important;
+    transform: none !important;
+    margin-bottom: 1.5rem !important;
+}
+
+.mobile-card .project-card__title {
+    font-size: 1.75rem !important;
+    color: white !important;
+    text-shadow: 2px 4px 15px rgba(0, 0, 0, 0.6) !important;
+    white-space: normal !important;
+}
+
+.mobile-card .project-card__details {
+    display: block !important;
+    opacity: 1 !important;
+    transform: none !important;
+    margin-top: 0 !important;
+}
+
+.mobile-card .project-stats {
+    display: flex !important;
+    opacity: 1 !important;
+    transform: none !important;
+    flex-direction: row !important;
+}
+
+.mobile-card .status-ribbon {
+    opacity: 1 !important;
+    display: flex !important;
+    right: -2.75rem !important;
+}
+
 /* --- ACCESSIBILITY --- */
 @media (prefers-reduced-motion: reduce) {
 

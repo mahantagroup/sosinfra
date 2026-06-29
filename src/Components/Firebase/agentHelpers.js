@@ -23,10 +23,11 @@ export const createAgentAccount = async ({
 }) => {
   const normalizedEmail = email.trim().toLowerCase();
   
-  // Generate Unique Agent ID
+  // Generate Unique Partner ID
   const agentsSnap = await getDocs(collection(db, 'agents'));
   const agentCount = agentsSnap.size;
-  const agentId = `sosagent${agentCount + 1}`;
+  const agentIdSuffix = String(10000 + agentCount).padStart(6, '0');
+  const agentId = `SOS-ACP-${agentIdSuffix}`;
   
   // Generate Unique 6-digit Referral Code
   const ownReferralCode = Math.floor(100000 + Math.random() * 900000).toString();

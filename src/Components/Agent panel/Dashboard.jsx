@@ -199,7 +199,7 @@ const AgentDashboard = () => {
         <div className="agent-sidebar-header">
           <div className="d-flex flex-column align-items-center gap-3 w-100">
             <img src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555285/logo_2x_vvvpyz.png" alt="SOS Infrabulls" className="agent-sidebar-logo" />
-            <span className="fw-800 d-block small" style={{ color: '#0A2540', letterSpacing: '-0.02em' }}>Agent Portal</span>
+            <span className="fw-800 d-block small" style={{ color: '#0A2540', letterSpacing: '-0.02em' }}>Partner Portal</span>
           </div>
           {sidebarOpen && <button className="btn ms-auto p-0" onClick={() => setSidebarOpen(false)}><X size={20} /></button>}
         </div>
@@ -277,7 +277,7 @@ const AgentDashboard = () => {
                     <h2 className="fw-800 mb-2 text-light" style={{ letterSpacing: '-0.03em' }}>Welcome, <span className="fw-light">{agentInfo.name.split(' ')[0]}</span></h2>
                     <div className="d-flex flex-wrap gap-3 mt-3">
                       <div className="bg-white bg-opacity-10 px-3 py-2 rounded-3 border border-white border-opacity-10">
-                        <label className="d-block text-white text-opacity-50 fw-700 uppercase" style={{ fontSize: '0.875rem', letterSpacing: '0.08em' }}>Agent ID</label>
+                        <label className="d-block text-white text-opacity-50 fw-700 uppercase" style={{ fontSize: '0.875rem', letterSpacing: '0.08em' }}>Partner ID</label>
                         <div className="d-flex align-items-center gap-2">
                           <span className="text-white fw-bold font-monospace small" style={{ fontSize: '1rem' }}>{agentInfo.agentId}</span>
                           <button
@@ -345,7 +345,7 @@ const AgentDashboard = () => {
                     <Clock size={22} className="text-warning flex-shrink-0 mt-1" />
                     <div>
                       <h6 className="fw-800 mb-1" style={{ fontSize: '0.88rem' }}>HR Review Pending</h6>
-                      <p className="small text-muted m-0" style={{ lineHeight: 1.6 }}>Your profile is currently under active review. Full portal features including your Digital Agent Card will be unlocked once HR completes the verification process.</p>
+                      <p className="small text-muted m-0" style={{ lineHeight: 1.6 }}>Your profile is currently under active review. Full portal features including your Digital Partner Card will be unlocked once HR completes the verification process.</p>
                     </div>
                   </div>
                 </div>
@@ -456,7 +456,7 @@ const AgentDashboard = () => {
           {/* Digital ID Card Tab */}
           {activeTab === 'digital-card' && isApproved && (
             <div className="text-center py-4">
-              <h5 className="fw-800 mb-4" style={{ letterSpacing: '-0.02em' }}>Authorized Agent ID Card</h5>
+              <h5 className="fw-800 mb-4" style={{ letterSpacing: '-0.02em' }}>Authorized Partner ID Card</h5>
               <div className="digital-id-card text-start">
                 <div className="d-flex justify-content-between mb-4 border-bottom border-white border-opacity-20 pb-3">
                   <div>
@@ -471,12 +471,12 @@ const AgentDashboard = () => {
                     <S3Image src={agentInfo.photographUrl} className="w-100 h-100 object-cover" />
                   </div>
                   <div className="flex-grow-1 min-w-0">
-                    <label className="text-blue-100 opacity-50 uppercase fw-700 d-block mb-1" style={{ fontSize: '0.875rem' }}>Agent Identity</label>
+                    <label className="text-blue-100 opacity-50 uppercase fw-700 d-block mb-1" style={{ fontSize: '0.875rem' }}>Partner Identity</label>
                     <h5 className="fw-800 mb-3" style={{ fontSize: '1.25rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{agentInfo.name}</h5>
 
                     <div className="row g-2">
-                      <div className="col-6">
-                        <label className="text-blue-100 opacity-50 uppercase fw-700 d-block mb-1" style={{ fontSize: '0.875rem' }}>Agent ID</label>
+                       <div className="col-6">
+                        <label className="text-blue-100 opacity-50 uppercase fw-700 d-block mb-1" style={{ fontSize: '0.875rem' }}>Partner ID</label>
                         <span className="bg-white bg-opacity-10 px-2 py-1 rounded d-block text-center fw-600 font-monospace" style={{ fontSize: '0.875rem' }}>{agentInfo.agentId}</span>
                       </div>
                       <div className="col-6">
@@ -522,7 +522,7 @@ const AgentDashboard = () => {
                     <thead>
                       <tr className="border-bottom">
                         <th className="text-muted small fw-700 uppercase pb-3" style={{ fontSize: '0.875rem', letterSpacing: '0.08em' }}>Member Identity</th>
-                        <th className="text-muted small fw-700 uppercase pb-3" style={{ fontSize: '0.875rem', letterSpacing: '0.08em' }}>Agent ID</th>
+                        <th className="text-muted small fw-700 uppercase pb-3" style={{ fontSize: '0.875rem', letterSpacing: '0.08em' }}>Partner ID</th>
                         <th className="text-muted small fw-700 uppercase pb-3" style={{ fontSize: '0.875rem', letterSpacing: '0.08em' }}>Contact</th>
                         <th className="text-muted small fw-700 uppercase pb-3" style={{ fontSize: '0.875rem', letterSpacing: '0.08em' }}>Status</th>
                       </tr>

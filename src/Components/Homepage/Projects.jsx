@@ -4,6 +4,9 @@ import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../Firebase/Firebase';
 import './Projects.css';
 import { ChevronLeft, ChevronRight, MapPin, Calendar, Ruler, Users, ArrowRight, Home, Clock } from 'lucide-react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay } from 'swiper/modules';
+import 'swiper/css';
 
 // Helper function from old component
 const formatLocationSummary = (location) => {
@@ -21,11 +24,23 @@ const Projects = () => {
     const [error, setError] = useState('');
     const [currentCard, setCurrentCard] = useState(0);
     const [isHovering, setIsHovering] = useState(false);
+    const [isMobileView, setIsMobileView] = useState(false);
+    const [swiperInstance, setSwiperInstance] = useState(null);
 
     const trackRef = useRef(null);
     const cardsRef = useRef([]);
     const autoPlayRef = useRef(null);
     
+    // Check screen size
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobileView(window.innerWidth < 768);
+        };
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
     // --- UTILITY FUNCTIONS ---
 
     const centerCard = useCallback((index) => {
@@ -49,6 +64,14 @@ const Projects = () => {
 
     const activateCard = useCallback((index, shouldCenter = true) => {
         const i = Math.min(Math.max(index, 0), projects.length - 1);
+        if (isMobileView) {
+            if (swiperInstance) {
+                swiperInstance.slideToLoop(i);
+            }
+            setCurrentCard(i);
+            return;
+        }
+
         if (i === currentCard) {
             if (shouldCenter) centerCard(i);
             return;
@@ -56,14 +79,23 @@ const Projects = () => {
 
         setCurrentCard(i);
         if (shouldCenter) centerCard(i);
-    }, [projects.length, currentCard, centerCard]);
+    }, [projects.length, currentCard, centerCard, isMobileView, swiperInstance]);
 
     const go = (step) => {
-        activateCard(currentCard + step, true);
+        if (isMobileView && swiperInstance) {
+            if (step > 0) {
+                swiperInstance.slideNext();
+            } else {
+                swiperInstance.slidePrev();
+            }
+        } else {
+            activateCard(currentCard + step, true);
+        }
     };
     
     // Auto-play functionality
     useEffect(() => {
+        if (isMobileView) return; // Swiper handles mobile autoplay
         if (projects.length <= 1 || isHovering) return;
 
         autoPlayRef.current = setInterval(() => {
@@ -79,7 +111,7 @@ const Projects = () => {
                 clearInterval(autoPlayRef.current);
             }
         };
-    }, [projects.length, isHovering, centerCard]);
+    }, [projects.length, isHovering, centerCard, isMobileView]);
 
     // --- FETCH PROJECTS ---
 
@@ -117,7 +149,7 @@ const Projects = () => {
 
     // --- EFFECT: Center active card & handle resize ---
     useEffect(() => {
-        if (projects.length > 0) {
+        if (projects.length > 0 && !isMobileView) {
             const timer = setTimeout(() => {
                 centerCard(currentCard);
             }, 100);
@@ -130,7 +162,7 @@ const Projects = () => {
                 window.removeEventListener('resize', handleResize);
             }
         }
-    }, [projects, currentCard, centerCard]);
+    }, [projects, currentCard, centerCard, isMobileView]);
 
     // --- INTERACTION HANDLERS ---
 
@@ -213,7 +245,7 @@ const Projects = () => {
                             className="nav-btn" 
                             aria-label="Previous Project" 
                             onClick={() => go(-1)} 
-                            disabled={currentCard === 0}
+                            disabled={!isMobileView && currentCard === 0}
                         >
                             <ChevronLeft size={20} />
                         </button>
@@ -222,7 +254,7 @@ const Projects = () => {
                             className="nav-btn" 
                             aria-label="Next Project" 
                             onClick={() => go(1)} 
-                            disabled={currentCard === projects.length - 1}
+                            disabled={!isMobileView && currentCard === projects.length - 1}
                         >
                             <ChevronRight size={20} />
                         </button>
@@ -230,86 +262,169 @@ const Projects = () => {
                 </div>
             </div>
 
-            <div className="slider">
-                <div className="track" id="track" ref={trackRef}>
-                    {projects.map((project, index) => (
-                        <article
-                            key={project.id}
-                            className={`project-card ${index === currentCard ? 'active' : ''}`}
-                            data-index={index}
-                            ref={(el) => (cardsRef.current[index] = el)}
-                            onClick={() => handleCardClick(index)}
-                            onMouseEnter={() => handleMouseEnter(index)}
-                            onMouseLeave={handleMouseLeave}
-                        >
-                            <div className="card-gradient-overlay"></div>
-                                                        <img 
-                                className="project-card__bg" 
-                                src={project.image || 'data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1200\" height=\"800\"><rect width=\"100%\" height=\"100%\" fill=\"%23ffffff\"/><rect x=\"1\" y=\"1\" width=\"1198\" height=\"798\" fill=\"none\" stroke=\"%23000\" stroke-width=\"2\"/><text x=\"50%\" y=\"50%\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-family=\"Arial, Helvetica, sans-serif\" font-size=\"28\" fill=\"%23000\">No Image Available</text></svg>'} 
-                                alt={project.title}
-                                loading="lazy"
-                                onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = 'data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1200\" height=\"800\"><rect width=\"100%\" height=\"100%\" fill=\"%23ffffff\"/><rect x=\"1\" y=\"1\" width=\"1198\" height=\"798\" fill=\"none\" stroke=\"%23000\" stroke-width=\"2\"/><text x=\"50%\" y=\"50%\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-family=\"Arial, Helvetica, sans-serif\" font-size=\"28\" fill=\"%23000\">No Image Available</text></svg>'; }}
-                            />
-                            
-                            {/* Project Status Ribbon */}
-                            <div className="status-ribbon">
-                                <div className="ribbon-content">
-                                    <Clock size={14} />
-                                    <span>Running</span>
-                                </div>
-                            </div>
-                            
-                            {/* Project Stats Badge */}
-                            <div className="project-stats">
-                                {project.size && (
-                                    <div className="stat-item">
-                                        <Ruler size={14} />
-                                        <span>{project.size}</span>
+            {isMobileView ? (
+                <div className="mobile-projects-swiper-container">
+                    <Swiper
+                        modules={[Autoplay]}
+                        spaceBetween={16}
+                        slidesPerView={1}
+                        loop={projects.length > 1}
+                        onSwiper={setSwiperInstance}
+                        onSlideChange={(swiper) => {
+                            setCurrentCard(swiper.realIndex);
+                        }}
+                        autoplay={{
+                            delay: 5000,
+                            disableOnInteraction: false,
+                        }}
+                        className="mobile-projects-swiper"
+                    >
+                        {projects.map((project, index) => (
+                            <SwiperSlide key={project.id}>
+                                <article className="project-card active mobile-card">
+                                    <div className="card-gradient-overlay"></div>
+                                    <img 
+                                        className="project-card__bg" 
+                                        src={project.image || 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><rect width="100%" height="100%" fill="%23ffffff"/><rect x="1" y="1" width="1198" height="798" fill="none" stroke="%23000" stroke-width="2"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="28" fill="%23000">No Image Available</text></svg>'} 
+                                        alt={project.title}
+                                        loading="lazy"
+                                        onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><rect width="100%" height="100%" fill="%23ffffff"/><rect x="1" y="1" width="1198" height="798" fill="none" stroke="%23000" stroke-width="2"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="28" fill="%23000">No Image Available</text></svg>'; }}
+                                    />
+                                    
+                                    {/* Project Status Ribbon */}
+                                    <div className="status-ribbon">
+                                        <div className="ribbon-content">
+                                            <Clock size={14} />
+                                            <span>Running</span>
+                                        </div>
                                     </div>
-                                )}
-                                {project.units && (
-                                    <div className="stat-item">
-                                        <Home size={14} />
-                                        <span>{project.units} units</span>
+                                    
+                                    {/* Project Stats Badge */}
+                                    <div className="project-stats">
+                                        {project.size && (
+                                            <div className="stat-item">
+                                                <Ruler size={14} />
+                                                <span>{project.size}</span>
+                                            </div>
+                                        )}
+                                        {project.units && (
+                                            <div className="stat-item">
+                                                <Home size={14} />
+                                                <span>{project.units} units</span>
+                                            </div>
+                                        )}
                                     </div>
-                                )}
-                            </div>
-                            
-                            <div className="project-card__content">
-                                <div className="project-card__header">
-                                    <div className="project-badge">
-                                        <span className="project-date">
-                                            <Calendar size={14} />
-                                            06/xx
-                                        </span>
+                                    
+                                    <div className="project-card__content">
+                                        <div className="project-card__header">
+                                            <div className="project-badge">
+                                                <span className="project-date">
+                                                    <Calendar size={14} />
+                                                    06/xx
+                                                </span>
+                                            </div>
+                                            <h3 className="project-card__title">{project.title}</h3>
+                                            <div className="project-location">
+                                                <MapPin size={16} />
+                                                <span>{formatLocationSummary(project.location)}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="project-card__details">
+                                            <div className="card-actions">
+                                                <Link
+                                                    to={`/projects/${project.id}`}
+                                                    className="project-card__btn"
+                                                >
+                                                    View Full Details
+                                                    <ArrowRight size={18} />
+                                                </Link>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <h3 className="project-card__title">{project.title}</h3>
-                                    <div className="project-location">
-                                        <MapPin size={16} />
-                                        <span>{formatLocationSummary(project.location)}</span>
+                                </article>
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+                </div>
+            ) : (
+                <div className="slider">
+                    <div className="track" id="track" ref={trackRef}>
+                        {projects.map((project, index) => (
+                            <article
+                                key={project.id}
+                                className={`project-card ${index === currentCard ? 'active' : ''}`}
+                                data-index={index}
+                                ref={(el) => (cardsRef.current[index] = el)}
+                                onClick={() => handleCardClick(index)}
+                                onMouseEnter={() => handleMouseEnter(index)}
+                                onMouseLeave={handleMouseLeave}
+                            >
+                                <div className="card-gradient-overlay"></div>
+                                <img 
+                                    className="project-card__bg" 
+                                    src={project.image || 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><rect width="100%" height="100%" fill="%23ffffff"/><rect x="1" y="1" width="1198" height="798" fill="none" stroke="%23000" stroke-width="2"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="28" fill="%23000">No Image Available</text></svg>'} 
+                                    alt={project.title}
+                                    loading="lazy"
+                                    onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><rect width="100%" height="100%" fill="%23ffffff"/><rect x="1" y="1" width="1198" height="798" fill="none" stroke="%23000" stroke-width="2"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="28" fill="%23000">No Image Available</text></svg>'; }}
+                                />
+                                
+                                {/* Project Status Ribbon */}
+                                <div className="status-ribbon">
+                                    <div className="ribbon-content">
+                                        <Clock size={14} />
+                                        <span>Running</span>
                                     </div>
                                 </div>
                                 
-                                <div className="project-card__details">
-                                    {/* <p className="project-card__desc">
-                                        {project.description || 'A premium development project with modern amenities and superior craftsmanship.'}
-                                    </p> */}
+                                {/* Project Stats Badge */}
+                                <div className="project-stats">
+                                    {project.size && (
+                                        <div className="stat-item">
+                                            <Ruler size={14} />
+                                            <span>{project.size}</span>
+                                        </div>
+                                    )}
+                                    {project.units && (
+                                        <div className="stat-item">
+                                            <Home size={14} />
+                                            <span>{project.units} units</span>
+                                        </div>
+                                    )}
+                                </div>
+                                
+                                <div className="project-card__content">
+                                    <div className="project-card__header">
+                                        <div className="project-badge">
+                                            <span className="project-date">
+                                                <Calendar size={14} />
+                                                06/xx
+                                            </span>
+                                        </div>
+                                        <h3 className="project-card__title">{project.title}</h3>
+                                        <div className="project-location">
+                                            <MapPin size={16} />
+                                            <span>{formatLocationSummary(project.location)}</span>
+                                        </div>
+                                    </div>
                                     
-                                    <div className="card-actions">
-                                        <Link
-                                            to={`/projects/${project.id}`}
-                                            className="project-card__btn"
-                                        >
-                                            View Full Details
-                                            <ArrowRight size={18} />
-                                        </Link>
+                                    <div className="project-card__details">
+                                        <div className="card-actions">
+                                            <Link
+                                                to={`/projects/${project.id}`}
+                                                className="project-card__btn"
+                                            >
+                                                View Full Details
+                                                <ArrowRight size={18} />
+                                            </Link>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </article>
-                    ))}
+                            </article>
+                        ))}
+                    </div>
                 </div>
-            </div>
+            )}
 
             <div className="slider-footer">
                 <div className="dots" id="dots">

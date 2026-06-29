@@ -124,7 +124,7 @@ const HRDashboard = () => {
       if (selectedAgent?.id === agent.id) setSelectedAgent(null);
     } catch (err) {
       console.error('Deletion failed detailed error:', err);
-      alert(`Failed to delete agent: ${err.message || 'Unknown error'}`);
+      alert(`Failed to delete partner: ${err.message || 'Unknown error'}`);
     } finally {
       setActionLoading(false);
     }
@@ -133,12 +133,12 @@ const HRDashboard = () => {
   const downloadCSV = () => {
     const approvedAgents = agents.filter(a => a.status === 'Approved');
     if (approvedAgents.length === 0) {
-      alert("No approved agents to download.");
+      alert("No approved partners to download.");
       return;
     }
 
     const headers = [
-      'Agent ID', 'Name', 'Email', 'Mobile', 'Referral Code', 'Applied On', 'Status'
+      'Partner ID', 'Name', 'Email', 'Mobile', 'Referral Code', 'Applied On', 'Status'
     ];
 
     const rows = approvedAgents.map(a => [
@@ -160,7 +160,7 @@ const HRDashboard = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `approved_agents_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute('download', `approved_partners_${new Date().toISOString().split('T')[0]}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -169,8 +169,8 @@ const HRDashboard = () => {
   const menuItems = [
     { id: 'dashboard', name: 'Dashboard', icon: LayoutDashboard },
     { id: 'registrations', name: 'Registrations', icon: UserCheck },
-    { id: 'approved', name: 'Approved Agents', icon: Users },
-    { id: 'add-agent', name: 'Add Agent', icon: UserPlus },
+    { id: 'approved', name: 'Approved Partners', icon: Users },
+    { id: 'add-agent', name: 'Add Partner', icon: UserPlus },
   ];
 
   const currentList = (() => {
@@ -260,7 +260,7 @@ const HRDashboard = () => {
             <h1>{activeTab === 'dashboard' ? 'HR Dashboard' : 
                  activeTab === 'registrations' ? 'Partner Registrations' :
                  activeTab === 'approved' ? 'Approved Partners' : 
-                 activeTab === 'add-agent' ? 'Add New Agent' : 'Applicant Details'}</h1>
+                 activeTab === 'add-agent' ? 'Add New Partner' : 'Applicant Details'}</h1>
             <p>{activeTab === 'details' ? 'Detailed view of partner application' : 
                 activeTab === 'add-agent' ? 'Manually register a new partner node' : 'Manage partner onboarding & approvals'}</p>
           </div>
@@ -275,7 +275,7 @@ const HRDashboard = () => {
              {activeTab === 'dashboard' ? 'HR Dashboard' : 
               activeTab === 'registrations' ? 'Registrations' :
               activeTab === 'approved' ? 'Active Partners' : 
-              activeTab === 'add-agent' ? 'Add Agent' : 'Partner Details'}
+              activeTab === 'add-agent' ? 'Add Partner' : 'Partner Details'}
            </h2>
         </div>
 
@@ -394,7 +394,7 @@ const HRDashboard = () => {
                             className="btn-hr-delete" 
                             onClick={() => handleDelete(agent)}
                             disabled={actionLoading}
-                            title="Delete Agent"
+                            title="Delete Partner"
                           >
                             <Trash2 size={14} />
                           </button>
@@ -460,7 +460,7 @@ const HRDashboard = () => {
                   <div className="hr-details-sec">
                     <h3>Personal & Agent Information</h3>
                     <div className="hr-info-item">
-                       <label>Agent ID</label>
+                       <label>Partner ID</label>
                        <span className="text-primary fw-bold">{selectedAgent.agentId || 'Pending'}</span>
                     </div>
                     <div className="hr-info-item">
