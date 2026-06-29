@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { signInAdmin } from "../Firebase/authHelpers";
 import { rateLimit } from "../../utils/security";
+import { Eye, EyeOff } from "lucide-react";
 import "./Admin.css";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -19,7 +21,7 @@ const AdminLogin = () => {
     if (!rateLimit('admin_login', 5, 60000)) {
        setError("Too many attempts. Please try again later.");
        return;
-    }
+     }
 
     if (email.length > 50 || password.length > 20) {
       setError("Credentials exceed maximum length of 20 characters.");
@@ -64,15 +66,38 @@ const AdminLogin = () => {
 
             <div className="admin-form-field mb-4">
               <label>Password</label>
-              <input
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                maxLength={20}
-                className="admin-input"
-              />
+              <div style={{ position: "relative" }}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  maxLength={20}
+                  className="admin-input"
+                  style={{ paddingRight: "45px" }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: "absolute",
+                    right: "12px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    color: "var(--admin-text-muted)",
+                    display: "flex",
+                    alignItems: "center",
+                    padding: "4px"
+                  }}
+                  title={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
             </div>
 
             {error && (

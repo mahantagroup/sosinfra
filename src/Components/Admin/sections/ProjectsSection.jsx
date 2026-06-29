@@ -70,6 +70,7 @@ const ProjectsSection = () => {
               key={project.id}
               image={project.logo || project.image }
               title={project.title}
+              id={project.projectId}
               meta={extractProjectLocation(project)}
               badges={
                 <Badge variant={project.status === 'completed' ? 'completed' : 'running'}>

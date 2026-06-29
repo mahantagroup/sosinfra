@@ -205,6 +205,14 @@ const Gallery = () => {
         const runningProjects = projectData.filter(
           (project) => (project.status || "running") === "running"
         );
+        runningProjects.sort((a, b) => {
+          const idA = a.projectId || "";
+          const idB = b.projectId || "";
+          if (!idA && idB) return 1;
+          if (idA && !idB) return -1;
+          if (!idA && !idB) return 0;
+          return idA.localeCompare(idB, undefined, { numeric: true, sensitivity: 'base' });
+        });
         setProjects(runningProjects);
         setLoading(false);
       },

@@ -75,15 +75,22 @@
 }
 
 .section-title {
-    font-size: 3.5rem;
-    font-weight: 900;
-    color: #0f172a;
-    margin-bottom: 1.5rem;
-    letter-spacing: -0.04em;
-    background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #0f172a;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.04em;
+  background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+
+.section-title::after,
+.section-title::before {
+  display: none !important;
 }
 
 .section-subtitle {

@@ -19,7 +19,7 @@ import {
 } from '../components/ui';
 
 const defaultForm = {
-  id: '',
+  projectId: '',
   title: '',
   location: '',
   ctaUrl: '',
@@ -61,7 +61,7 @@ const buildPricingPayload = (form) => {
 };
 
 export const projectToForm = (project) => ({
-  id: project.id || '',
+  projectId: project.projectId || '',
   title: project.title || '',
   location: typeof project.location === 'string' ? project.location : project.location?.summary || '',
   ctaUrl: project.ctaUrl || '',
@@ -159,6 +159,7 @@ const ProjectModal = ({ open, onClose, editingProject, onSuccess }) => {
       const pricing = buildPricingPayload(form);
 
       const payload = {
+        projectId: form.projectId,
         title: form.title,
         project_name: form.projectName || form.title,
         developer: form.developer || '',
@@ -215,6 +216,12 @@ const ProjectModal = ({ open, onClose, editingProject, onSuccess }) => {
               <option value="completed">Completed</option>
             </select>
           </FormField>
+          <FormField label="Project ID" hint="Unique identifier for the project (e.g., PROJ001)">
+            <input name="projectId" value={form.projectId} onChange={handleChange} className={inputClass} placeholder="Enter project ID" />
+          </FormField>
+        </div>
+
+        <div className="grid sm:grid-cols-2 gap-4">
           <FormField label="Project Name / Code">
             <input name="projectName" value={form.projectName} onChange={handleChange} className={inputClass} placeholder="RUDRAAKSH Aaagan" />
           </FormField>
@@ -241,12 +248,59 @@ const ProjectModal = ({ open, onClose, editingProject, onSuccess }) => {
           </FormField>
         </div>
 
+        <div className="grid sm:grid-cols-2 gap-4">
+          <FormField label="Project Layout">
+            <input name="projectLayout" value={form.projectLayout} onChange={handleChange} className={inputClass} placeholder="e.g. Gated Community" />
+          </FormField>
+          <FormField label="Location Address">
+            <input name="locationAddress" value={form.locationAddress} onChange={handleChange} className={inputClass} />
+          </FormField>
+        </div>
+
         <FormField label="Tagline">
           <textarea name="tagline" value={form.tagline} onChange={handleChange} className={textareaClass} rows={2} />
         </FormField>
 
+        <FormField label="Location Advantages" hint="One per line">
+          <textarea name="locationAdvantages" value={form.locationAdvantages} onChange={handleChange} className={textareaClass} rows={3} />
+        </FormField>
+
         <FormField label="Amenities" hint="One per line">
           <textarea name="amenitiesInput" value={form.amenitiesInput} onChange={handleChange} className={textareaClass} rows={3} />
+        </FormField>
+
+        <FormField label="Configurations & Typologies" hint="One per line: '2BHK: 900, 1000'">
+          <textarea name="configurationsInput" value={form.configurationsInput} onChange={handleChange} className={textareaClass} rows={3} />
+        </FormField>
+
+        <div className="grid sm:grid-cols-2 gap-4">
+          <FormField label="CTA URL">
+            <input name="ctaUrl" value={form.ctaUrl} onChange={handleChange} className={inputClass} />
+          </FormField>
+          <FormField label="CTA Label">
+            <input name="ctaLabel" value={form.ctaLabel} onChange={handleChange} className={inputClass} />
+          </FormField>
+        </div>
+
+        <h4 className="text-lg font-semibold mt-6 mb-2">Pricing Snapshot</h4>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <FormField label="Rate per Sq.ft" hint="'2BHK: 4500' one per line">
+            <textarea name="pricingRateInput" value={form.pricingRateInput} onChange={handleChange} className={textareaClass} rows={2} />
+          </FormField>
+          <FormField label="Electricity Charge" hint="'2BHK: 5000' one per line">
+            <textarea name="pricingElectricityInput" value={form.pricingElectricityInput} onChange={handleChange} className={textareaClass} rows={2} />
+          </FormField>
+        </div>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <FormField label="Maintenance" hint="'2BHK: 3000' one per line">
+            <textarea name="pricingMaintenanceInput" value={form.pricingMaintenanceInput} onChange={handleChange} className={textareaClass} rows={2} />
+          </FormField>
+          <FormField label="Prime Location Charges" hint="'2BHK: 10000' one per line">
+            <textarea name="pricingPrimeInput" value={form.pricingPrimeInput} onChange={handleChange} className={textareaClass} rows={2} />
+          </FormField>
+        </div>
+        <FormField label="Plot Sizes (Sq.ft)" hint="'2BHK: 900, 1000' one per line">
+          <textarea name="pricingPlotSizeInput" value={form.pricingPlotSizeInput} onChange={handleChange} className={textareaClass} rows={2} />
         </FormField>
 
         <div className="grid sm:grid-cols-2 gap-4">

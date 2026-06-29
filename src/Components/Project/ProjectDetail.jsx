@@ -13,8 +13,10 @@ import {
     FaCheckCircle, 
     FaStar, 
     FaPhoneAlt, 
-    FaArrowRight 
+    FaArrowRight,
+    FaTag
 } from "react-icons/fa";
+import PremiumPreloader from "../Homepage/Preloader";
 import "./ProjectDetail.css";
 
 const formatLocationSummary = (location) => {
@@ -42,6 +44,7 @@ const ProjectDetail = () => {
     const { projectId } = useParams();
     const [project, setProject] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [preloaderActive, setPreloaderActive] = useState(true);
     const [error, setError] = useState("");
 
     useEffect(() => {
@@ -65,7 +68,6 @@ const ProjectDetail = () => {
         fetchProject();
     }, [projectId]);
 
-    // ✅ MOVE HOOKS BEFORE ANY CONDITIONAL RETURN
     const pricing = project?.pricing || {};
     const pricingTypes = useMemo(() => collectPricingTypes(pricing), [pricing]);
 
@@ -75,22 +77,28 @@ const ProjectDetail = () => {
     const advantages = safeArray(project?.location?.advantages);
     const amenities = safeArray(project?.amenities);
 
-    // ❗ CONDITIONAL RETURNS MUST COME AFTER ALL HOOKS
-    if (loading) {
-        return <div className="project-detail-state">Loading project...</div>;
+    if (error) {
+        return <div className="project-detail-state error">{error}</div>;
     }
 
-    if (error || !project) {
-        return <div className="project-detail-state error">{error || "Project not found."}</div>;
+    if (!project) {
+        return <PremiumPreloader isLoaded={false} />;
     }
 
     return (
-        <div className="project-detail-page mb-5">
+        <>
+            {preloaderActive && (
+                <PremiumPreloader 
+                    isLoaded={!loading} 
+                    onComplete={() => setPreloaderActive(false)} 
+                />
+            )}
+            <div className="project-detail-page mb-5">
             {/* HERO SECTION */}
             <section
                 className="project-hero-new"
                 style={{
-                    backgroundImage: `linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.7)), url(${project.image || 'https://images.unsplash.com/photo-1582407947304-fd86f028f716?auto=format&fit=crop&q=80'})`
+                    backgroundImage: `linear-gradient(rgba(0,0,0,0.15), rgba(0,0,0,0.8)), url(${project.image || 'https://images.unsplash.com/photo-1582407947304-fd86f028f716?auto=format&fit=crop&q=80'})`
                 }}
             >
                 <div className="container h-100 position-relative d-flex flex-column justify-content-end pb-5">
@@ -98,9 +106,16 @@ const ProjectDetail = () => {
                         <Link to="/projectgallery" className="hero-back-btn">
                             <FaArrowLeft className="me-2" /> Back to Projects
                         </Link>
-                        <span className={`hero-status-pill ${project.status === "completed" ? "completed" : "running"}`}>
-                            {project.status === "completed" ? "Completed" : "Running"}
-                        </span>
+                        <div className="hero-status-group">
+                            <span className={`hero-status-pill ${project.status === "completed" ? "completed" : "running"}`}>
+                                {project.status === "completed" ? "Completed" : "Running"}
+                            </span>
+                            {project.projectId && (
+                                <span className="hero-id-pill">
+                                    <FaTag className="me-1" /> {project.projectId}
+                                </span>
+                            )}
+                        </div>
                     </div>
 
                     <div className="hero-main-content">
@@ -181,15 +196,14 @@ const ProjectDetail = () => {
                         <section className="detail-section-modern">
                             <h2 className="section-title-bar">Project Overview</h2>
                             <p className="overview-text">
-                                {project.location?.summary ||
-                                    formatLocationSummary(project.location) ||
-                                    "Detailed description will be published soon."}
+                                {project.description || project.location?.summary || formatLocationSummary(project.location) || "Detailed description will be published soon."}
                             </p>
                             <div className="overview-pills mt-3">
                                 <span className="status-pill-small">{project.project_name || project.title}</span>
                                 <span className="status-pill-small">
                                     {project.status === "completed" ? "Delivered milestone" : "Actively selling"}
                                 </span>
+                                {project.size && <span className="status-pill-small">{project.size}</span>}
                             </div>
                         </section>
 
@@ -197,8 +211,8 @@ const ProjectDetail = () => {
                             <h2 className="section-title-bar">Location Advantage</h2>
                             {advantages.length ? (
                                 <ul className="advantage-list-modern">
-                                    {advantages.map((item) => (
-                                        <li key={item}>
+                                    {advantages.map((item, idx) => (
+                                        <li key={idx}>
                                             <FaCheckCircle className="text-primary me-2" />
                                             {item}
                                         </li>
@@ -215,8 +229,8 @@ const ProjectDetail = () => {
                             <h2 className="section-title-bar">Amenities</h2>
                             {amenities.length ? (
                                 <div className="amenities-grid-modern">
-                                    {amenities.map((amenity) => (
-                                        <div key={amenity} className="box-amenity">
+                                    {amenities.map((amenity, idx) => (
+                                        <div key={idx} className="box-amenity">
                                             <FaStar className="star-icon" />
                                             {amenity}
                                         </div>
@@ -236,8 +250,8 @@ const ProjectDetail = () => {
                             <h2 className="section-title-bar">Configurations & Typologies</h2>
                             {configurationEntries.length ? (
                                 <div className="config-grid-modern">
-                                    {configurationEntries.map(([type, config]) => (
-                                        <div key={type} className="modern-config-card">
+                                    {configurationEntries.map(([type, config], idx) => (
+                                        <div key={idx} className="modern-config-card">
                                             <h3>{type}</h3>
                                             <div className="config-divider"></div>
                                             <p>{safeArray(config?.sizes_sqft).join(", ")} sq.ft</p>
@@ -267,8 +281,8 @@ const ProjectDetail = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {pricingTypes.map((type) => (
-                                                <tr key={type}>
+                                            {pricingTypes.map((type, idx) => (
+                                                <tr key={idx}>
                                                     <td><strong>{type}</strong></td>
                                                     <td>{pricing.rate_per_sqft?.[type] ?? "—"}</td>
                                                     <td>{pricing.electricity_charge?.[type] ?? "—"}</td>
@@ -305,8 +319,8 @@ const ProjectDetail = () => {
                 </div>
             </main>
         </div>
+        </>
     );
 };
 
 export default ProjectDetail;
-

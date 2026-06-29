@@ -62,6 +62,7 @@ const TeamSection = () => {
               key={member.firebaseDocId}
               image={member.image || '/images/agents/agent-1.jpg'}
               title={member.name}
+              id={member.id}
               meta={member.role}
               actions={
                 <>

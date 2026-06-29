@@ -1,34 +1,71 @@
 import React, { useEffect, useState } from 'react';
 import './Preloader.css';
 
-const PremiumPreloader = () => {
+const PremiumPreloader = ({ isLoaded, onComplete }) => {
+    const isPropDriven = typeof isLoaded !== 'undefined';
     const [isLoading, setIsLoading] = useState(true);
     const [progress, setProgress] = useState(0);
     const [showContent, setShowContent] = useState(false);
 
     useEffect(() => {
-        // Simulate loading progress
-        const progressInterval = setInterval(() => {
-            setProgress(prev => {
-                if (prev >= 100) {
-                    clearInterval(progressInterval);
-                    return 100;
-                }
-                return prev + Math.random() * 15;
-            });
-        }, 100);
+        if (!isPropDriven) {
+            // Simulate loading progress (Fallback automated mode)
+            const progressInterval = setInterval(() => {
+                setProgress(prev => {
+                    if (prev >= 100) {
+                        clearInterval(progressInterval);
+                        return 100;
+                    }
+                    return prev + Math.random() * 15;
+                });
+            }, 100);
 
-        // Simulate total loading time
-        const loadingTimer = setTimeout(() => {
-            setIsLoading(false);
-            setTimeout(() => setShowContent(true), 500);
-        }, 2500);
+            // Simulate total loading time
+            const loadingTimer = setTimeout(() => {
+                setIsLoading(false);
+                setTimeout(() => {
+                    setShowContent(true);
+                    if (onComplete) onComplete();
+                }, 800);
+            }, 2500);
 
-        return () => {
-            clearInterval(progressInterval);
-            clearTimeout(loadingTimer);
-        };
-    }, []);
+            return () => {
+                clearInterval(progressInterval);
+                clearTimeout(loadingTimer);
+            };
+        } else {
+            // Prop-driven mode: Keep incrementing progress up to 90% until loaded
+            let progressInterval;
+            if (!isLoaded) {
+                progressInterval = setInterval(() => {
+                    setProgress(prev => {
+                        if (prev >= 90) {
+                            clearInterval(progressInterval);
+                            return 90;
+                        }
+                        return prev + Math.random() * 10;
+                    });
+                }, 100);
+            } else {
+                // Once isLoaded is true, finish loading immediately but smoothly
+                setProgress(100);
+                const fadeStartTimer = setTimeout(() => {
+                    setIsLoading(false);
+                    const finishTimer = setTimeout(() => {
+                        setShowContent(true);
+                        if (onComplete) onComplete();
+                    }, 800);
+                    return () => clearTimeout(finishTimer);
+                }, 400);
+
+                return () => clearTimeout(fadeStartTimer);
+            }
+
+            return () => {
+                if (progressInterval) clearInterval(progressInterval);
+            };
+        }
+    }, [isLoaded, isPropDriven, onComplete]);
 
     if (showContent) return null;
 

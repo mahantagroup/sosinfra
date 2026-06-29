@@ -123,7 +123,7 @@ export const SectionHeader = ({ title, subtitle, homepage, action }) => (
   </div>
 );
 
-export const ListRow = ({ image, title, meta, badges, actions }) => (
+export const ListRow = ({ image, title, meta, id, badges, actions }) => (
   <li className="admin-list-row">
     {image && (
       <div className="list-thumb">
@@ -132,6 +132,7 @@ export const ListRow = ({ image, title, meta, badges, actions }) => (
     )}
     <div className="list-info">
       <p className="list-title">{title}</p>
+      {id && <p className="list-meta font-mono text-sm text-gray-500">ID: {id}</p>}
       {meta && <p className="list-meta">{meta}</p>}
       {badges && <div className="list-badges">{badges}</div>}
     </div>

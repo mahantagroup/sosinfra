@@ -72,6 +72,13 @@
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+
+.section-title::after,
+.section-title::before {
+  display: none !important;
 }
 
 .section-subtitle {
