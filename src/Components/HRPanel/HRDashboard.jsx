@@ -371,16 +371,35 @@ const HRDashboard = () => {
                   ) : (
                     currentList.map((agent) => (
                       <div className="hr-row" key={agent.id}>
-                        <div className="hr-applicant-info">
-                          <h4>{formatAgentName(agent)}</h4>
-                          <div className="d-flex gap-2 align-items-center">
-                            <p className="m-0 text-primary small fw-bold">{agent.agentId || 'No ID'}</p>
-                            <span className="text-muted small">•</span>
-                            <p className="m-0">{agent.email}</p>
+                        <div className="hr-applicant-info d-flex align-items-center gap-3">
+                          <div className="hr-table-avatar rounded-circle overflow-hidden flex-shrink-0 border" style={{ width: '38px', height: '38px', borderColor: 'var(--hr-border)' }}>
+                            {agent.photographUrl ? (
+                              <S3Image src={agent.photographUrl} className="w-100 h-100 object-cover" />
+                            ) : (
+                              <div className="w-100 h-100 d-flex align-items-center justify-content-center fw-bold text-uppercase" style={{ background: 'linear-gradient(135deg, rgba(74, 151, 228, 0.1) 0%, rgba(74, 151, 228, 0.25) 100%)', color: 'var(--hr-accent)', fontSize: '0.85rem' }}>
+                                {formatAgentName(agent).charAt(0)}
+                              </div>
+                            )}
+                          </div>
+                          <div className="min-w-0">
+                            <h4 className="text-truncate m-0" style={{ maxWidth: '180px', fontSize: '0.88rem' }}>{formatAgentName(agent)}</h4>
+                            <div className="d-flex gap-2 align-items-center mt-1">
+                              <span className="badge font-monospace text-primary bg-primary-subtle border border-primary-subtle" style={{ fontSize: '0.7rem', padding: '2px 6px', borderRadius: '4px' }}>
+                                {agent.agentId || 'Pending'}
+                              </span>
+                              <span className="text-muted small">•</span>
+                              <p className="m-0 text-muted text-truncate" style={{ maxWidth: '140px', fontSize: '0.75rem' }} title={agent.email}>{agent.email}</p>
+                            </div>
                           </div>
                         </div>
-                        <div className="hr-contact-info">{agent.mobile1}</div>
-                        <div className="hr-date-info">{formatDate(agent.createdAt)}</div>
+                        <div className="hr-contact-info d-flex align-items-center gap-2">
+                          <Phone size={13} className="text-muted" style={{ opacity: 0.6 }} />
+                          <span>{agent.mobile1}</span>
+                        </div>
+                        <div className="hr-date-info d-flex align-items-center gap-2 text-muted">
+                          <Calendar size={13} className="text-muted" style={{ opacity: 0.6 }} />
+                          <span>{formatDate(agent.createdAt)}</span>
+                        </div>
                         <div>
                           <span className={`hr-status-badge ${agent.status === 'Approved' ? 'approved' : 'pending'}`}>
                             {agent.status || 'Pending'}
