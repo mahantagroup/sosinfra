@@ -7,6 +7,8 @@ import {
 } from 'lucide-react';
 import { db } from './Firebase/Firebase';
 import { collection, addDoc, doc, serverTimestamp, updateDoc, getDocs, query, where } from 'firebase/firestore';
+import { fetchSignInMethodsForEmail } from 'firebase/auth';
+import { auth } from './Firebase/Firebase';
 import { createAgentAccount, generateAgentPassword } from './Firebase/agentHelpers';
 import { sendCredentialsViaEmail } from './Firebase/emailService';
 import { uploadToCloudinary } from './Firebase/cloudinaryService';
@@ -96,16 +98,22 @@ const JoinAsPartner = () => {
 
       // Validate email is not already used
       const loginId = formData.email.trim().toLowerCase();
+      
+      try {
+        // Check from Firebase Authentication
+        const signInMethods = await fetchSignInMethodsForEmail(auth, loginId);
+        if (signInMethods.length > 0) {
+          setErrors(prev => ({ ...prev, email: 'Email ID already exists, use different' }));
+          return;
+        }
+      } catch (authError) {
+        console.error('Auth check error:', authError);
+      }
+      
+      // Also check Firestore agents collection for safety
       const emailAgentsQuery = query(collection(db, 'agents'), where('loginId', '==', loginId));
       const emailAgentsSnapshot = await getDocs(emailAgentsQuery);
       if (!emailAgentsSnapshot.empty) {
-        setErrors(prev => ({ ...prev, email: 'Email ID already exists, use different' }));
-        return;
-      }
-
-      const emailPartnerRequestsQuery = query(collection(db, 'partnerRequests'), where('loginId', '==', loginId));
-      const emailPartnerRequestsSnapshot = await getDocs(emailPartnerRequestsQuery);
-      if (!emailPartnerRequestsSnapshot.empty) {
         setErrors(prev => ({ ...prev, email: 'Email ID already exists, use different' }));
         return;
       }
@@ -197,7 +205,13 @@ const JoinAsPartner = () => {
       }), 500);
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert('Submission failed. Check your network configuration.');
+      // Check if error is email-already-in-use from Firebase Auth
+      if (
+        error.code === 'auth/email-already-in-use' || 
+        error.code === 'auth/email-already-exists'
+      ) {
+        setErrors(prev => ({ ...prev, email: 'Email ID already exists, use different' }));
+      }
     } finally {
       setLoading(false);
       setUploadProgress(0);
