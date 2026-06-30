@@ -6,7 +6,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { db } from './Firebase/Firebase';
-import { collection, addDoc, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, serverTimestamp, updateDoc, getDocs, query, where } from 'firebase/firestore';
 import { createAgentAccount, generateAgentPassword } from './Firebase/agentHelpers';
 import { sendCredentialsViaEmail } from './Firebase/emailService';
 import { uploadToCloudinary } from './Firebase/cloudinaryService';
@@ -50,10 +50,15 @@ const JoinAsPartner = () => {
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [submitted, setSubmitted] = useState(false);
+  const [errors, setErrors] = useState({ referralCode: '', email: '' });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
   const handleFileChange = (e) => {
@@ -73,10 +78,42 @@ const JoinAsPartner = () => {
       alert("First Name, Mobile Number, and Referral Code are required.");
       return;
     }
-    setLoading(true);
-    setUploadProgress(0);
-
+    
+    // Reset errors
+    setErrors({ referralCode: '', email: '' });
+    
     try {
+      // Validate referral code exists
+      const referralQuery = query(
+        collection(db, 'agents'), 
+        where('ownReferralCode', '==', formData.referralCode.trim())
+      );
+      const referralSnapshot = await getDocs(referralQuery);
+      if (referralSnapshot.empty) {
+        setErrors(prev => ({ ...prev, referralCode: 'Wrong referral ID' }));
+        return;
+      }
+
+      // Validate email is not already used
+      const loginId = formData.email.trim().toLowerCase();
+      const emailAgentsQuery = query(collection(db, 'agents'), where('loginId', '==', loginId));
+      const emailAgentsSnapshot = await getDocs(emailAgentsQuery);
+      if (!emailAgentsSnapshot.empty) {
+        setErrors(prev => ({ ...prev, email: 'Email ID already exists, use different' }));
+        return;
+      }
+
+      const emailPartnerRequestsQuery = query(collection(db, 'partnerRequests'), where('loginId', '==', loginId));
+      const emailPartnerRequestsSnapshot = await getDocs(emailPartnerRequestsQuery);
+      if (!emailPartnerRequestsSnapshot.empty) {
+        setErrors(prev => ({ ...prev, email: 'Email ID already exists, use different' }));
+        return;
+      }
+
+      // Proceed with submission
+      setLoading(true);
+      setUploadProgress(0);
+
       let photographUrl = '';
       let panCardUrl = '';
       let aadhaarCardUrl = '';
@@ -107,7 +144,6 @@ const JoinAsPartner = () => {
 
       const sanitizedFormData = sanitizeObject(formData);
       const password = generateAgentPassword();
-      const loginId = sanitizedFormData.email.trim().toLowerCase();
 
       const partnerRef = await addDoc(collection(db, 'partnerRequests'), {
         ...sanitizedFormData,
@@ -380,7 +416,8 @@ const JoinAsPartner = () => {
                           <Users size={16} className="me-2" />
                           Referral Code <span className="premium-required">*</span>
                         </label>
-                        <input type="text" className="premium-form-control" placeholder="Enter Referral Code" name="referralCode" value={formData.referralCode} onChange={handleChange} required />
+                        <input type="text" className={`premium-form-control ${errors.referralCode ? 'is-invalid' : ''}`} placeholder="Enter Referral Code" name="referralCode" value={formData.referralCode} onChange={handleChange} required />
+                        {errors.referralCode && <div className="text-danger mt-1 small">{errors.referralCode}</div>}
                       </div>
                     </div>
                   </div>
@@ -453,7 +490,8 @@ const JoinAsPartner = () => {
                           <Mail size={16} className="me-2" />
                           Email ID
                         </label>
-                        <input type="email" className="premium-form-control" placeholder="Email ID" name="email" value={formData.email} onChange={handleChange} />
+                        <input type="email" className={`premium-form-control ${errors.email ? 'is-invalid' : ''}`} placeholder="Email ID" name="email" value={formData.email} onChange={handleChange} />
+                        {errors.email && <div className="text-danger mt-1 small">{errors.email}</div>}
                       </div>
                     </div>
                     <div className="col-md-4">
