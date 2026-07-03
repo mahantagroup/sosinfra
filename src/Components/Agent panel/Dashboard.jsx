@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, User, Shield, IdCard, LogOut, Menu, X, Settings,
   CheckCircle, Clock, Loader2, Lock, ExternalLink, Mail, Phone, MapPin, Calendar,
-  KeyRound, Eye, EyeOff, AlertCircle, ChevronRight, Users, Copy, Check
+  KeyRound, Eye, EyeOff, AlertCircle, ChevronRight, Users, Copy, Check, Download, Award
 } from 'lucide-react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, onSnapshot, collection, query, where, getDocs } from 'firebase/firestore';
@@ -58,6 +58,7 @@ const AgentDashboard = () => {
   const [team, setTeam] = useState([]);
   const [teamLoading, setTeamLoading] = useState(false);
   const [copiedField, setCopiedField] = useState('');
+  const [certLoading, setCertLoading] = useState(false);
 
   const isApproved = agentInfo?.status === 'Approved';
   const hasSetPassword = agentInfo?.passwordChanged;
@@ -182,6 +183,57 @@ const AgentDashboard = () => {
     { label: 'HR Document Review', done: isApproved, pending: !isApproved && hasSetPassword },
     { label: 'Full Portal Access', done: isApproved },
   ];
+
+  const handleDownloadCertificate = () => {
+    setCertLoading(true);
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = '/images/ACP Certificate-01-01-01.png';
+    img.onload = () => {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        const ctx = canvas.getContext('2d');
+        
+        // Draw template image
+        ctx.drawImage(img, 0, 0);
+        
+        // Print the name at top 45% left align
+        const name = (agentInfo?.name || 'Partner Agent').toUpperCase();
+        const textY = canvas.height * 0.45;
+        const textX = canvas.width * 0.08; // 8% offset from left boundary for clean layout
+        
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        
+        // Dynamically compute font size based on canvas height
+        const fontSize = Math.round(canvas.height * 0.045);
+        ctx.font = `800 ${fontSize}px 'Inter', sans-serif`;
+        ctx.fillStyle = '#0a2540'; // Matching SOS Infrabulls identity colors
+        
+        ctx.fillText(name, textX, textY);
+        
+        // Trigger download
+        const link = document.createElement('a');
+        link.download = `${name.replace(/\s+/g, '_')}_SOS_Certificate.png`;
+        link.href = canvas.toDataURL('image/png');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (err) {
+        console.error('Failed to export certificate:', err);
+        alert('Could not export certificate.');
+      } finally {
+        setCertLoading(false);
+      }
+    };
+    img.onerror = (err) => {
+      console.error('Error loading certificate template image:', err);
+      alert('Failed to load certificate template image.');
+      setCertLoading(false);
+    };
+  };
 
   return (
     <div className="agent-portal-wrapper">
@@ -310,30 +362,45 @@ const AgentDashboard = () => {
                 </div>
               </div>
 
-              {/* Quick Stats */}
+              {/* Quick Stats (Premium Design) */}
               <div className="row g-4 mb-4">
                 <div className="col-md-4">
-                  <div className="stat-pill">
-                    <span className="text-muted fw-700 text-uppercase d-block mb-3" style={{ fontSize: '0.75rem', letterSpacing: '0.1em' }}>Profile Progress</span>
-                    <div className="d-flex align-items-baseline gap-2">
-                      <h2 className="fw-800 m-0" style={{ fontSize: '1.75rem', letterSpacing: '-0.03em' }}>{agentInfo.profileCompletion}%</h2>
-                      {agentInfo.profileCompletion === 100 && <CheckCircle size={16} className="text-success" />}
+                  <div className="stat-pill d-flex align-items-center justify-content-between">
+                    <div className="w-100">
+                      <span className="text-muted fw-700 text-uppercase d-block mb-2" style={{ fontSize: '0.75rem', letterSpacing: '0.1em' }}>Profile Progress</span>
+                      <div className="d-flex align-items-baseline gap-2">
+                        <h2 className="fw-800 m-0" style={{ fontSize: '1.75rem', letterSpacing: '-0.03em' }}>{agentInfo.profileCompletion}%</h2>
+                        {agentInfo.profileCompletion === 100 && <CheckCircle size={16} className="text-success" />}
+                      </div>
+                      <div className="progress mt-3" style={{ height: '5px', borderRadius: '10px', background: 'var(--agent-surface-2)' }}>
+                        <div className="progress-bar" style={{ width: `${agentInfo.profileCompletion}%`, background: 'linear-gradient(90deg, var(--agent-accent), var(--agent-accent-secondary))', borderRadius: '10px' }} />
+                      </div>
                     </div>
-                    <div className="progress mt-3" style={{ height: '5px', borderRadius: '10px', background: 'var(--agent-surface-2)' }}>
-                      <div className="progress-bar" style={{ width: `${agentInfo.profileCompletion}%`, background: 'linear-gradient(90deg, var(--agent-accent), var(--agent-accent-secondary))', borderRadius: '10px' }} />
+                    <div className="d-flex align-items-center justify-content-center rounded-3 ms-3" style={{ width: '42px', height: '42px', backgroundColor: 'rgba(74, 151, 228, 0.08)', color: 'var(--agent-accent)', flexShrink: 0 }}>
+                      <Shield size={20} />
                     </div>
                   </div>
                 </div>
                 <div className="col-md-4">
-                  <div className="stat-pill">
-                    <span className="text-muted fw-700 text-uppercase d-block mb-3" style={{ fontSize: '0.75rem', letterSpacing: '0.1em' }}>Joining date</span>
-                    <h2 className="fw-800 m-0" style={{ fontSize: '1.75rem', letterSpacing: '-0.03em' }}>{agentInfo.joiningDate}</h2>
+                  <div className="stat-pill d-flex align-items-center justify-content-between">
+                    <div>
+                      <span className="text-muted fw-700 text-uppercase d-block mb-3" style={{ fontSize: '0.75rem', letterSpacing: '0.1em' }}>Joining date</span>
+                      <h2 className="fw-800 m-0" style={{ fontSize: '1.75rem', letterSpacing: '-0.03em' }}>{agentInfo.joiningDate}</h2>
+                    </div>
+                    <div className="d-flex align-items-center justify-content-center rounded-3 ms-3" style={{ width: '42px', height: '42px', backgroundColor: 'rgba(23, 162, 184, 0.08)', color: '#17a2b8', flexShrink: 0 }}>
+                      <Calendar size={20} />
+                    </div>
                   </div>
                 </div>
                 <div className="col-md-4">
-                  <div className="stat-pill">
-                    <span className="text-muted fw-700 text-uppercase d-block mb-3" style={{ fontSize: '0.75rem', letterSpacing: '0.1em' }}>Current Level</span>
-                    <h2 className={`fw-800 m-0 text-capitalize ${agentInfo.status === 'Approved' ? 'text-success' : ''}`} style={{ fontSize: '1.75rem', letterSpacing: '-0.03em' }}>{agentInfo.status}</h2>
+                  <div className="stat-pill d-flex align-items-center justify-content-between">
+                    <div>
+                      <span className="text-muted fw-700 text-uppercase d-block mb-3" style={{ fontSize: '0.75rem', letterSpacing: '0.1em' }}>Current Level</span>
+                      <h2 className={`fw-800 m-0 text-capitalize ${agentInfo.status === 'Approved' ? 'text-success' : ''}`} style={{ fontSize: '1.75rem', letterSpacing: '-0.03em' }}>{agentInfo.status}</h2>
+                    </div>
+                    <div className="d-flex align-items-center justify-content-center rounded-3 ms-3" style={{ width: '42px', height: '42px', backgroundColor: 'rgba(245, 158, 11, 0.08)', color: 'var(--agent-warning)', flexShrink: 0 }}>
+                      <Award size={20} />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -466,6 +533,8 @@ const AgentDashboard = () => {
                   <span className="badge bg-success small" style={{ fontSize: '0.875rem', height: 'fit-content' }}>ACTIVE</span>
                 </div>
 
+                <div className="id-card-chip"></div>
+
                 <div className="d-flex gap-4 align-items-center">
                   <div className="rounded-4 overflow-hidden border border-white border-opacity-20 shadow-lg flex-shrink-0" style={{ width: '80px', height: '100px' }}>
                     <S3Image src={agentInfo.photographUrl} className="w-100 h-100 object-cover" />
@@ -493,6 +562,33 @@ const AgentDashboard = () => {
                 </div>
               </div>
               <p className="mt-4 text-muted small" style={{ fontSize: '0.875rem' }}>This digital card is automatically generated and verified by the HR office.</p>
+              
+              <div className="d-flex justify-content-center gap-3 mt-4">
+                <button
+                  onClick={handleDownloadCertificate}
+                  disabled={certLoading}
+                  className="btn-admin-primary d-inline-flex align-items-center gap-2 px-4 py-2 border-0 rounded-3 text-white fw-bold shadow"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--agent-accent), var(--agent-accent-dark))',
+                    cursor: 'pointer',
+                    minWidth: '220px',
+                    justifyContent: 'center',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  {certLoading ? (
+                    <>
+                      <Loader2 className="animate-spin" size={16} />
+                      <span>Generating Certificate...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Download size={16} />
+                      <span>Download Certificate</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           )}
 
@@ -517,50 +613,92 @@ const AgentDashboard = () => {
                   </p>
                 </div>
               ) : (
-                <div className="table-responsive">
-                  <table className="table table-borderless align-middle m-0">
-                    <thead>
-                      <tr className="border-bottom">
-                        <th className="text-muted small fw-700 uppercase pb-3" style={{ fontSize: '0.875rem', letterSpacing: '0.08em' }}>Member Identity</th>
-                        <th className="text-muted small fw-700 uppercase pb-3" style={{ fontSize: '0.875rem', letterSpacing: '0.08em' }}>Partner ID</th>
-                        <th className="text-muted small fw-700 uppercase pb-3" style={{ fontSize: '0.875rem', letterSpacing: '0.08em' }}>Contact</th>
-                        <th className="text-muted small fw-700 uppercase pb-3" style={{ fontSize: '0.875rem', letterSpacing: '0.08em' }}>Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {team.map((member) => (
-                        <tr key={member.id}>
-                          <td className="py-3">
-                            <div className="d-flex align-items-center gap-3">
-                              <div className="rounded-circle overflow-hidden flex-shrink-0" style={{ width: '36px', height: '36px', background: 'var(--agent-surface-2)', border: '1px solid var(--agent-border)' }}>
-                                {member.photographUrl ? (
-                                  <S3Image src={member.photographUrl} className="w-100 h-100 object-cover" />
-                                ) : (
-                                  <div className="w-100 h-100 d-flex align-items-center justify-content-center fw-bold small" style={{ color: 'var(--agent-accent)', fontSize: '1rem' }}>
-                                    {member.fullName?.charAt(0)}
-                                  </div>
-                                )}
+                <>
+                  {/* Desktop Table View */}
+                  <div className="table-responsive d-none d-md-block">
+                    <table className="table table-borderless align-middle m-0">
+                      <thead>
+                        <tr className="border-bottom">
+                          <th className="text-muted small fw-700 uppercase pb-3" style={{ fontSize: '0.875rem', letterSpacing: '0.08em' }}>Member Identity</th>
+                          <th className="text-muted small fw-700 uppercase pb-3" style={{ fontSize: '0.875rem', letterSpacing: '0.08em' }}>Partner ID</th>
+                          <th className="text-muted small fw-700 uppercase pb-3" style={{ fontSize: '0.875rem', letterSpacing: '0.08em' }}>Contact</th>
+                          <th className="text-muted small fw-700 uppercase pb-3" style={{ fontSize: '0.875rem', letterSpacing: '0.08em' }}>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {team.map((member) => (
+                          <tr key={member.id}>
+                            <td className="py-3">
+                              <div className="d-flex align-items-center gap-3">
+                                <div className="rounded-circle overflow-hidden flex-shrink-0" style={{ width: '36px', height: '36px', background: 'var(--agent-surface-2)', border: '1px solid var(--agent-border)' }}>
+                                  {member.photographUrl ? (
+                                    <S3Image src={member.photographUrl} className="w-100 h-100 object-cover" />
+                                  ) : (
+                                    <div className="w-100 h-100 d-flex align-items-center justify-content-center fw-bold small" style={{ color: 'var(--agent-accent)', fontSize: '1rem' }}>
+                                      {member.fullName?.charAt(0)}
+                                    </div>
+                                  )}
+                                </div>
+                                <div>
+                                  <span className="fw-700 small d-block" style={{ fontSize: '1rem' }}>{member.fullName}</span>
+                                  <span className="text-muted" style={{ fontSize: '0.875rem' }}>{member.email}</span>
+                                </div>
                               </div>
-                              <div>
-                                <span className="fw-700 small d-block" style={{ fontSize: '1rem' }}>{member.fullName}</span>
-                                <span className="text-muted" style={{ fontSize: '0.875rem' }}>{member.email}</span>
+                            </td>
+                            <td className="py-3">
+                              <span className="font-monospace small px-2 py-1 rounded" style={{ fontSize: '0.875rem', background: 'var(--agent-surface-2)', border: '1px solid var(--agent-border)' }}>{member.agentId}</span>
+                            </td>
+                            <td className="py-3 fw-600 small" style={{ fontSize: '0.875rem' }}>{member.mobile1}</td>
+                            <td className="py-3">
+                              <span className={`badge rounded-pill px-2 py-1 ${member.status === 'Approved' ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning'}`} style={{ fontSize: '0.875rem', fontWeight: 700 }}>
+                                {member.status}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Mobile Cards View */}
+                  <div className="d-md-none d-flex flex-column gap-3">
+                    {team.map((member) => (
+                      <div key={member.id} className="p-3 rounded-4 border" style={{ background: 'var(--agent-surface-3)', borderColor: 'var(--agent-border)' }}>
+                        <div className="d-flex align-items-center gap-3 mb-3">
+                          <div className="rounded-circle overflow-hidden flex-shrink-0" style={{ width: '40px', height: '40px', background: 'var(--agent-surface-2)', border: '1px solid var(--agent-border)' }}>
+                            {member.photographUrl ? (
+                              <S3Image src={member.photographUrl} className="w-100 h-100 object-cover" />
+                            ) : (
+                              <div className="w-100 h-100 d-flex align-items-center justify-content-center fw-bold text-primary">
+                                {member.fullName?.charAt(0)}
                               </div>
-                            </div>
-                          </td>
-                          <td className="py-3">
-                            <span className="font-monospace small px-2 py-1 rounded" style={{ fontSize: '0.875rem', background: 'var(--agent-surface-2)', border: '1px solid var(--agent-border)' }}>{member.agentId}</span>
-                          </td>
-                          <td className="py-3 fw-600 small" style={{ fontSize: '0.875rem' }}>{member.mobile1}</td>
-                          <td className="py-3">
-                            <span className={`badge rounded-pill px-2 py-1 ${member.status === 'Approved' ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning'}`} style={{ fontSize: '0.875rem', fontWeight: 700 }}>
+                            )}
+                          </div>
+                          <div className="min-w-0">
+                            <span className="fw-800 d-block text-truncate text-dark" style={{ fontSize: '0.95rem' }}>{member.fullName}</span>
+                            <span className="text-muted d-block text-truncate" style={{ fontSize: '0.78rem' }}>{member.email}</span>
+                          </div>
+                        </div>
+                        <div className="row g-2 pt-2 border-top" style={{ fontSize: '0.82rem' }}>
+                          <div className="col-6">
+                            <span className="text-muted d-block small uppercase fw-700">Partner ID</span>
+                            <code className="fw-600 text-dark">{member.agentId}</code>
+                          </div>
+                          <div className="col-6">
+                            <span className="text-muted d-block small uppercase fw-700">Status</span>
+                            <span className={`badge rounded-pill ${member.status === 'Approved' ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning'}`} style={{ fontSize: '0.72rem', fontWeight: 700 }}>
                               {member.status}
                             </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                          </div>
+                          <div className="col-12 mt-2">
+                            <span className="text-muted d-block small uppercase fw-700">Contact</span>
+                            <a href={`tel:${member.mobile1}`} className="fw-600 text-decoration-none" style={{ color: 'var(--agent-accent)' }}>{member.mobile1}</a>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
               )}
             </div>
           )}
