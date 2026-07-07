@@ -53,6 +53,17 @@ const JoinAsPartner = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState({ referralCode: '', email: '' });
+  const [agreed, setAgreed] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
+
+  const handleCheckboxClick = (e) => {
+    e.preventDefault();
+    if (agreed) {
+      setAgreed(false);
+    } else {
+      setShowTermsModal(true);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -199,6 +210,7 @@ const JoinAsPartner = () => {
       });
       setFiles({ photograph: null, panCard: null, aadhaarCard: null });
       setPreviews({ photograph: null, panCard: null, aadhaarCard: null });
+      setAgreed(false);
 
       setTimeout(() => navigate('/thank-you', {
         state: { loginId, emailSent: emailResult.success, associateId: agentId, agentId, ownReferralCode, associateName: fullName },
@@ -219,7 +231,7 @@ const JoinAsPartner = () => {
   };
 
   return (
-    <div className="contact-wrapper mt-5">
+    <div className="contact-wrapper">
       <Breadcrumb />
 
       <section className="container py-5">
@@ -322,13 +334,22 @@ const JoinAsPartner = () => {
                     </div>
                     <div className="row g-3">
                       <div className="col-md-4">
-                        <input type="text" className="premium-form-control" placeholder="First Name" name="fatherHusbandName" value={formData.fatherHusbandName} onChange={handleChange} />
+                        <div className="premium-field-group">
+                          <label className="premium-field-label">First Name</label>
+                          <input type="text" className="premium-form-control" placeholder="First Name" name="fatherHusbandName" value={formData.fatherHusbandName} onChange={handleChange} />
+                        </div>
                       </div>
                       <div className="col-md-4">
-                        <input type="text" className="premium-form-control" placeholder="Middle Name" name="fatherHusbandMiddleName" value={formData.fatherHusbandMiddleName} onChange={handleChange} />
+                        <div className="premium-field-group">
+                          <label className="premium-field-label">Middle Name</label>
+                          <input type="text" className="premium-form-control" placeholder="Middle Name" name="fatherHusbandMiddleName" value={formData.fatherHusbandMiddleName} onChange={handleChange} />
+                        </div>
                       </div>
                       <div className="col-md-4">
-                        <input type="text" className="premium-form-control" placeholder="Last Name" name="fatherHusbandLastName" value={formData.fatherHusbandLastName} onChange={handleChange} />
+                        <div className="premium-field-group">
+                          <label className="premium-field-label">Last Name</label>
+                          <input type="text" className="premium-form-control" placeholder="Last Name" name="fatherHusbandLastName" value={formData.fatherHusbandLastName} onChange={handleChange} />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -446,16 +467,28 @@ const JoinAsPartner = () => {
                         <span>Local Address</span>
                       </div>
                       <div className="d-flex flex-column gap-3">
-                        <input type="text" className="premium-form-control" placeholder="Address Line" name="localAddressLine" value={formData.localAddressLine} onChange={handleChange} />
-                        <div className="row g-2">
+                        <div className="premium-field-group">
+                          <label className="premium-field-label">Address Line</label>
+                          <input type="text" className="premium-form-control" placeholder="Address Line" name="localAddressLine" value={formData.localAddressLine} onChange={handleChange} />
+                        </div>
+                        <div className="row g-3">
                           <div className="col-12 col-sm-4">
-                            <input type="text" className="premium-form-control" placeholder="City" name="localCity" value={formData.localCity} onChange={handleChange} />
+                            <div className="premium-field-group">
+                              <label className="premium-field-label">City</label>
+                              <input type="text" className="premium-form-control" placeholder="City" name="localCity" value={formData.localCity} onChange={handleChange} />
+                            </div>
                           </div>
                           <div className="col-12 col-sm-4">
-                            <input type="text" className="premium-form-control" placeholder="State" name="localState" value={formData.localState} onChange={handleChange} />
+                            <div className="premium-field-group">
+                              <label className="premium-field-label">State</label>
+                              <input type="text" className="premium-form-control" placeholder="State" name="localState" value={formData.localState} onChange={handleChange} />
+                            </div>
                           </div>
                           <div className="col-12 col-sm-4">
-                            <input type="text" className="premium-form-control" placeholder="Pin Code" name="localPinCode" value={formData.localPinCode} onChange={handleChange} />
+                            <div className="premium-field-group">
+                              <label className="premium-field-label">Pin Code</label>
+                              <input type="text" className="premium-form-control" placeholder="Pin Code" name="localPinCode" value={formData.localPinCode} onChange={handleChange} />
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -469,16 +502,28 @@ const JoinAsPartner = () => {
                         <span>Permanent Address</span>
                       </div>
                       <div className="d-flex flex-column gap-3">
-                        <input type="text" className="premium-form-control" placeholder="Address Line" name="permanentAddressLine" value={formData.permanentAddressLine} onChange={handleChange} />
-                        <div className="row g-2">
+                        <div className="premium-field-group">
+                          <label className="premium-field-label">Address Line</label>
+                          <input type="text" className="premium-form-control" placeholder="Address Line" name="permanentAddressLine" value={formData.permanentAddressLine} onChange={handleChange} />
+                        </div>
+                        <div className="row g-3">
                           <div className="col-12 col-sm-4">
-                            <input type="text" className="premium-form-control" placeholder="City" name="permanentCity" value={formData.permanentCity} onChange={handleChange} />
+                            <div className="premium-field-group">
+                              <label className="premium-field-label">City</label>
+                              <input type="text" className="premium-form-control" placeholder="City" name="permanentCity" value={formData.permanentCity} onChange={handleChange} />
+                            </div>
                           </div>
                           <div className="col-12 col-sm-4">
-                            <input type="text" className="premium-form-control" placeholder="State" name="permanentState" value={formData.permanentState} onChange={handleChange} />
+                            <div className="premium-field-group">
+                              <label className="premium-field-label">State</label>
+                              <input type="text" className="premium-form-control" placeholder="State" name="permanentState" value={formData.permanentState} onChange={handleChange} />
+                            </div>
                           </div>
                           <div className="col-12 col-sm-4">
-                            <input type="text" className="premium-form-control" placeholder="Pin Code" name="permanentPinCode" value={formData.permanentPinCode} onChange={handleChange} />
+                            <div className="premium-field-group">
+                              <label className="premium-field-label">Pin Code</label>
+                              <input type="text" className="premium-form-control" placeholder="Pin Code" name="permanentPinCode" value={formData.permanentPinCode} onChange={handleChange} />
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -546,7 +591,27 @@ const JoinAsPartner = () => {
                     </div>
                   )}
 
-                  <button type="submit" disabled={loading} className="premium-submit-btn">
+                  <div className="premium-terms-container mb-4">
+                    <label className="premium-terms-label" onClick={handleCheckboxClick}>
+                      <input
+                        type="checkbox"
+                        className="premium-terms-checkbox"
+                        checked={agreed}
+                        onChange={() => {}} // Controlled component with click handled on label
+                      />
+                      <span>
+                        I agree with{" "}
+                        <span className="terms-link-text" onClick={(e) => {
+                          e.stopPropagation();
+                          setShowTermsModal(true);
+                        }}>
+                          Terms and Conditions
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+
+                  <button type="submit" disabled={loading || !agreed} className="premium-submit-btn">
                     {loading ? (
                       <>
                         <Loader2 size={18} className="premium-spinner me-2" />
@@ -569,6 +634,113 @@ const JoinAsPartner = () => {
           </div>
         </div>
       </section>
+
+      {/* Terms and Conditions Modal */}
+      {showTermsModal && (
+        <div className="terms-modal-overlay" onClick={() => setShowTermsModal(false)}>
+          <div className="terms-modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="terms-modal-header">
+              <h3>Terms and Conditions</h3>
+              <button 
+                type="button" 
+                className="terms-modal-close" 
+                onClick={() => setShowTermsModal(false)}
+              >
+                &times;
+              </button>
+            </div>
+            <div className="terms-modal-body">
+              <div className="terms-scroll-content">
+                <h4>1. Acceptance of Terms</h4>
+                <p>
+                  By accessing and using this website, you agree to be bound by these
+                  Terms &amp; Conditions. If you do not agree, please refrain from using
+                  this site.
+                </p>
+
+                <h4>2. Website Information</h4>
+                <p>
+                  This website is operated by SOS Infrabulls International Pvt. Ltd. (established 02 June 2019).
+                  All content, including project details, investment opportunities,
+                  and descriptions related to residential, commercial, and industrial
+                  land development in Indore, is for informational purposes only.
+                </p>
+
+                <h4>3. No Guarantees</h4>
+                <p>
+                  While SOS Infrabulls strives for accuracy, all information, including
+                  statements regarding strategic value, long-term appreciation, and
+                  investment security, is subject to change without notice and does
+                  not constitute a legal commitment, guarantee, or warranty.
+                </p>
+
+                <h4>4. Investment &amp; Legal Advice</h4>
+                <p>
+                  The content on this website is not professional investment,
+                  financial, or legal advice. Users are strongly advised to conduct
+                  independent due diligence and consult with qualified professionals
+                  before making any real estate or investment decisions.
+                </p>
+
+                <h4>5. Limitation of Liability</h4>
+                <p>
+                  SOS Infrabulls International Pvt. Ltd. shall not be
+                  liable for any direct, indirect, or consequential loss or damage
+                  arising from the use of, or reliance on, the information provided
+                  on this website.
+                </p>
+
+                <h4>6. External Links</h4>
+                <p>
+                  This website may contain links to third-party sites. SOS Infrabulls
+                  is not responsible for the content, accuracy, or practices of these
+                  external sites.
+                </p>
+
+                <h4>7. Modifications</h4>
+                <p>
+                  SOS Infrabulls reserves the right to modify these Terms &amp;
+                  Conditions at any time. Changes will be effective immediately upon
+                  posting to the website. Your continued use constitutes acceptance
+                  of the revised terms.
+                </p>
+
+                <h4>8. Governing Law</h4>
+                <p>
+                  These Terms &amp; Conditions shall be governed by and construed in
+                  accordance with the laws of India. Any disputes shall be subject to
+                  the exclusive jurisdiction of the courts in Indore, Madhya Pradesh.
+                </p>
+
+                <h4>Contact</h4>
+                <p>
+                  For any questions regarding these terms, please contact us through
+                  the official mail at <a href="mailto:info@sosinfrabulls.com">info@sosinfrabulls.com</a>.
+                </p>
+              </div>
+            </div>
+            <div className="terms-modal-footer">
+              <button 
+                type="button" 
+                className="terms-decline-btn" 
+                onClick={() => setShowTermsModal(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                type="button" 
+                className="terms-agree-btn" 
+                onClick={() => {
+                  setAgreed(true);
+                  setShowTermsModal(false);
+                }}
+              >
+                I Agree &amp; Accept
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
