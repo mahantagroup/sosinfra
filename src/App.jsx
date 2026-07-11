@@ -25,6 +25,7 @@ import PropertyListing from "./Components/Property/Property";
 import BlogPage from "./Components/Blog/Blog";
 import AdminPanel from './Components/Admin/AdminPanel';
 import AdminLogin from './Components/Admin/AdminLogin';
+import AdminSignup from './Components/Admin/AdminSignup';
 import ProtectedAdminRoute from './Components/Admin/ProtectedAdminRoute';
 import PropertyDetail from './Components/PropertyDetail/PropertyDetail';
 import Director from './Components/About Director/Director';
@@ -90,7 +91,7 @@ function App() {
   }, []);
 
   const location = useLocation();
-  const hidePaths = ['/admin', '/hr-panel', '/agent', '-login', '/login'];
+  const hidePaths = ['/admin', '/hr-panel', '/agent', '-login', '/login', '-signup'];
   const shouldHide = hidePaths.some(path => location.pathname.includes(path));
 
   return (
@@ -122,6 +123,7 @@ function App() {
           <Route path="/property/:id" element={<PropertyDetail />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/admin-login" element={<AdminLogin />} />
+          <Route path="/admin-signup" element={<AdminSignup />} />
           <Route path="/admin" element={<ProtectedAdminRoute />}>
             <Route index element={<AdminPanel />} />
           </Route>
