@@ -640,7 +640,7 @@ const JoinAsPartner = () => {
         <div className="terms-modal-overlay" onClick={() => setShowTermsModal(false)}>
           <div className="terms-modal-card" onClick={(e) => e.stopPropagation()}>
             <div className="terms-modal-header">
-              <h3>Terms and Conditions</h3>
+              <h3>नियम और शर्तें</h3>
               <button 
                 type="button" 
                 className="terms-modal-close" 
@@ -651,71 +651,49 @@ const JoinAsPartner = () => {
             </div>
             <div className="terms-modal-body">
               <div className="terms-scroll-content">
-                <h4>1. Acceptance of Terms</h4>
+                <h4>1. नियमों की स्वीकृति</h4>
                 <p>
-                  By accessing and using this website, you agree to be bound by these
-                  Terms &amp; Conditions. If you do not agree, please refrain from using
-                  this site.
+                  इस वेबसाइट का उपयोग करके, आप इन नियमों और शर्तों से बंधे रहने के लिए सहमत हैं। यदि आप सहमत नहीं हैं, तो कृपया इस साइट का उपयोग करने से बचें।
                 </p>
 
-                <h4>2. Website Information</h4>
+                <h4>2. वेबसाइट की जानकारी</h4>
                 <p>
-                  This website is operated by SOS Infrabulls International Pvt. Ltd. (established 02 June 2019).
-                  All content, including project details, investment opportunities,
-                  and descriptions related to residential, commercial, and industrial
-                  land development in Indore, is for informational purposes only.
+                  यह वेबसाइट SOS इंफ्राबुल्स इंटरनेशनल प्राइवेट लिमिटेड (स्थापना 02 जून 2019) द्वारा संचालित है। इंदौर में आवासीय, व्यावसायिक और औद्योगिक भूमि विकास से संबंधित परियोजना विवरण, निवेश के अवसर और विवरण सहित सभी सामग्री केवल सूचनात्मक उद्देश्यों के लिए है।
                 </p>
 
-                <h4>3. No Guarantees</h4>
+                <h4>3. कोई गारंटी नहीं</h4>
                 <p>
-                  While SOS Infrabulls strives for accuracy, all information, including
-                  statements regarding strategic value, long-term appreciation, and
-                  investment security, is subject to change without notice and does
-                  not constitute a legal commitment, guarantee, or warranty.
+                  जबकि SOS इंफ्राबुल्स सटीकता के लिए प्रयास करता है, सभी जानकारी, जिसमें रणनीतिक मूल्य, दीर्घकालिक मूल्यांकन (appreciation) और निवेश सुरक्षा से संबंधित विवरण शामिल हैं, बिना किसी पूर्व सूचना के परिवर्तन के अधीन हैं और यह किसी कानूनी प्रतिबद्धता, गारंटी या वारंटी का गठन नहीं करते हैं।
                 </p>
 
-                <h4>4. Investment &amp; Legal Advice</h4>
+                <h4>4. निवेश और कानूनी सलाह</h4>
                 <p>
-                  The content on this website is not professional investment,
-                  financial, or legal advice. Users are strongly advised to conduct
-                  independent due diligence and consult with qualified professionals
-                  before making any real estate or investment decisions.
+                  इस वेबसाइट पर दी गई सामग्री पेशेवर निवेश, वित्तीय या कानूनी सलाह नहीं है। उपयोगकर्ताओं को दृढ़ता से सलाह दी जाती है कि वे कोई भी रियल एस्टेट या निवेश निर्णय लेने से पहले स्वतंत्र रूप से जांच (due diligence) करें और योग्य पेशेवरों से परामर्श लें।
                 </p>
 
-                <h4>5. Limitation of Liability</h4>
+                <h4>5. दायित्व की सीमा</h4>
                 <p>
-                  SOS Infrabulls International Pvt. Ltd. shall not be
-                  liable for any direct, indirect, or consequential loss or damage
-                  arising from the use of, or reliance on, the information provided
-                  on this website.
+                  SOS इंफ्राबुल्स इंटरनेशनल प्राइवेट लिमिटेड इस वेबसाइट पर प्रदान की गई जानकारी के उपयोग या उस पर निर्भरता से उत्पन्न होने वाले किसी भी प्रत्यक्ष, अप्रत्यक्ष या परिणामी नुकसान या क्षति के लिए उत्तरदायी नहीं होगा।
                 </p>
 
-                <h4>6. External Links</h4>
+                <h4>6. बाहरी लिंक</h4>
                 <p>
-                  This website may contain links to third-party sites. SOS Infrabulls
-                  is not responsible for the content, accuracy, or practices of these
-                  external sites.
+                  इस वेबसाइट में तीसरे पक्ष (third-party) की साइटों के लिंक हो सकते हैं। SOS इंफ्राबुल्स इन बाहरी साइटों की सामग्री, सटीकता या प्रथाओं के लिए ज़िम्मेदार नहीं है।
                 </p>
 
-                <h4>7. Modifications</h4>
+                <h4>7. संशोधन</h4>
                 <p>
-                  SOS Infrabulls reserves the right to modify these Terms &amp;
-                  Conditions at any time. Changes will be effective immediately upon
-                  posting to the website. Your continued use constitutes acceptance
-                  of the revised terms.
+                  SOS इंफ्राबुल्स के पास किसी भी समय इन नियमों और शर्तों को संशोधित करने का अधिकार सुरक्षित है। बदलाव वेबसाइट पर पोस्ट होते ही तुरंत प्रभावी होंगे। आपका निरंतर उपयोग संशोधित शर्तों की स्वीकृति माना जाएगा।
                 </p>
 
-                <h4>8. Governing Law</h4>
+                <h4>8. लागू कानून</h4>
                 <p>
-                  These Terms &amp; Conditions shall be governed by and construed in
-                  accordance with the laws of India. Any disputes shall be subject to
-                  the exclusive jurisdiction of the courts in Indore, Madhya Pradesh.
+                  ये नियम और शर्तें भारत के कानूनों के अनुसार शासित और विश्लेषित होंगी। किसी भी विवाद का निपटारा विशेष रूप से इंदौर, मध्य प्रदेश के न्यायालयों के क्षेत्राधिकार के अधीन होगा।
                 </p>
 
-                <h4>Contact</h4>
+                <h4>संपर्क</h4>
                 <p>
-                  For any questions regarding these terms, please contact us through
-                  the official mail at <a href="mailto:info@sosinfrabulls.com">info@sosinfrabulls.com</a>.
+                  इन शर्तों के संबंध में किसी भी प्रश्न के लिए, कृपया हमें आधिकारिक ईमेल <a href="mailto:info@sosinfrabulls.com">info@sosinfrabulls.com</a> पर संपर्क करें।
                 </p>
               </div>
             </div>
@@ -725,7 +703,7 @@ const JoinAsPartner = () => {
                 className="terms-decline-btn" 
                 onClick={() => setShowTermsModal(false)}
               >
-                Cancel
+                रद्द करें
               </button>
               <button 
                 type="button" 
@@ -735,7 +713,7 @@ const JoinAsPartner = () => {
                   setShowTermsModal(false);
                 }}
               >
-                I Agree &amp; Accept
+                मैं सहमत हूँ और स्वीकार करता हूँ
               </button>
             </div>
           </div>
