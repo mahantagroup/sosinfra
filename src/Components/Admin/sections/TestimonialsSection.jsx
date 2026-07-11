@@ -109,8 +109,7 @@ const TestimonialsSection = () => {
   return (
     <div>
       <SectionHeader
-        title="Testimonials"
-        subtitle="Manage client video testimonials for the homepage."
+       
         homepage="Happy Faces"
         action={
           <BtnPrimary onClick={() => { setEditing(null); setModalOpen(true); }}>

@@ -62,6 +62,7 @@ const AddAgent = ({ onAgentAdded }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
     if (!formData.firstName || !formData.mobile1) {
       alert("First Name and Mobile Number are required.");
       return;

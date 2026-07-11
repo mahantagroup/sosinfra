@@ -32,8 +32,7 @@ const TeamSection = () => {
   return (
     <div>
       <SectionHeader
-        title="Team"
-        subtitle="Manage team members shown on the About page."
+       
         homepage="About Page"
         action={
           <BtnPrimary onClick={() => { setEditing(null); setModalOpen(true); }}>

@@ -28,12 +28,12 @@
   --agent-radius: 12px;
   --agent-radius-lg: 18px;
   --agent-radius-xl: 24px;
-  --agent-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --agent-shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.06), 0 0 1px rgba(0, 0, 0, 0.04);
-  --agent-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
-  --agent-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.08);
-  --agent-shadow-focus: 0 0 0 3px rgba(17, 116, 214, 0.12);
-  --agent-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --agent-shadow-xs: 0 2px 4px rgba(0, 0, 0, 0.02);
+  --agent-shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.02);
+  --agent-shadow-md: 0 10px 30px rgba(0, 0, 0, 0.06), 0 4px 10px rgba(0, 0, 0, 0.04);
+  --agent-shadow-lg: 0 24px 50px rgba(17, 116, 214, 0.12);
+  --agent-shadow-focus: 0 0 0 4px rgba(17, 116, 214, 0.2);
+  --agent-transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ── Global Layout ─────────────────────────────────────────── */
@@ -153,11 +153,11 @@
 
 /* ── Header ────────────────────────────────────────────────── */
 .agent-header {
-  height: 64px;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid var(--agent-border);
+  height: 70px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
   padding: 0 2rem;
   display: flex;
   align-items: center;
@@ -179,9 +179,9 @@
 }
 
 .agent-card:hover {
-  box-shadow: var(--agent-shadow-md);
-  transform: translateY(-2px);
-  border-color: var(--agent-border-hover);
+  box-shadow: var(--agent-shadow-lg);
+  transform: translateY(-4px);
+  border-color: var(--agent-accent-glow);
 }
 
 /* Hero Card */

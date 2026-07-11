@@ -32,8 +32,7 @@ const BlogsSection = () => {
   return (
     <div>
       <SectionHeader
-        title="Blog Publisher"
-        subtitle="Publish insights that appear in the Journal section."
+       
         homepage="Journal"
         action={
           <BtnPrimary onClick={() => { setEditing(null); setModalOpen(true); }}>

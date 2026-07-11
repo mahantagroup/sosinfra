@@ -6,7 +6,7 @@ import {
   reauthenticateWithCredential,
   EmailAuthProvider,
 } from 'firebase/auth';
-import { doc, setDoc, getDoc, getDocs, collection, query, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, getDoc, getDocs, collection, query, updateDoc, serverTimestamp, runTransaction } from 'firebase/firestore';
 import { auth, db, secondaryAuth } from './Firebase';
 
 export const generateAgentPassword = () =>
@@ -23,10 +23,26 @@ export const createAgentAccount = async ({
 }) => {
   const normalizedEmail = email.trim().toLowerCase();
   
-  // Generate Unique Partner ID
-  const agentsSnap = await getDocs(collection(db, 'agents'));
-  const agentCount = agentsSnap.size;
-  const agentIdSuffix = String(10000 + agentCount).padStart(6, '0');
+  // Generate Unique Partner ID securely using transaction
+  let nextAgentNumber = 10000;
+  const counterRef = doc(db, 'counters', 'agentIdCounter');
+
+  try {
+    await runTransaction(db, async (transaction) => {
+      const counterDoc = await transaction.get(counterRef);
+      if (!counterDoc.exists()) {
+        transaction.set(counterRef, { count: nextAgentNumber });
+      } else {
+        nextAgentNumber = counterDoc.data().count + 1;
+        transaction.update(counterRef, { count: nextAgentNumber });
+      }
+    });
+  } catch (error) {
+    console.error("Error generating unique Agent ID: ", error);
+    throw new Error("Failed to assign a unique Agent ID. Please try again.");
+  }
+  
+  const agentIdSuffix = String(nextAgentNumber).padStart(6, '0');
   const agentId = `SOS-ACP-${agentIdSuffix}`;
   
   // Generate Unique 6-digit Referral Code

@@ -36,8 +36,7 @@ const GallerySection = () => {
   return (
     <div>
       <SectionHeader
-        title="Gallery & Events"
-        subtitle="Upload event photos and achievements for the homepage gallery."
+       
         homepage="Events Gallery"
         action={
           <BtnPrimary onClick={() => { setEditing(null); setModalOpen(true); }}>

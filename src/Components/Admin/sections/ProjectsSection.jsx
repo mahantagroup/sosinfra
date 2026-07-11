@@ -44,8 +44,7 @@ const ProjectsSection = () => {
   return (
     <div>
       <SectionHeader
-        title="Projects"
-        subtitle="Manage running and completed developments shown on the homepage."
+       
         homepage="Projects & Logo Carousel"
         action={
           <BtnPrimary onClick={openAdd}>

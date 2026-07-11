@@ -3,7 +3,7 @@
    Refined, polished, production-grade
    ═══════════════════════════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
 
 :root {
   --hr-bg: #f4f7fb;
@@ -19,27 +19,39 @@
   --hr-text-muted: #64748b;
   --hr-text-dim: #94a3b8;
   --hr-border: #e8edf4;
-  --hr-border-hover: #c8d3e1;
-  --hr-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --hr-shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.06), 0 0 1px rgba(0, 0, 0, 0.04);
-  --hr-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
-  --hr-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.08);
-  --hr-shadow-focus: 0 0 0 3px rgba(17, 116, 214, 0.12);
+  --hr-shadow-xs: 0 2px 4px rgba(0, 0, 0, 0.02);
+  --hr-shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.02);
+  --hr-shadow-md: 0 10px 30px rgba(0, 0, 0, 0.06), 0 4px 10px rgba(0, 0, 0, 0.04);
+  --hr-shadow-lg: 0 24px 50px rgba(17, 116, 214, 0.12);
+  --hr-shadow-focus: 0 0 0 4px rgba(17, 116, 214, 0.2);
   --hr-radius: 12px;
   --hr-radius-lg: 18px;
   --hr-radius-xl: 24px;
-  --hr-font: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-  --hr-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --hr-font: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+  --hr-transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ── Global Layout ─────────────────────────────────────────── */
+.hr-panel-wrapper,
+.hr-panel-wrapper *,
+.hr-panel-wrapper input,
+.hr-panel-wrapper select,
+.hr-panel-wrapper textarea,
+.hr-panel-wrapper button,
+.hr-mobile-top-bar,
+.hr-mobile-top-bar *,
+.hr-mobile-bottom-nav,
+.hr-mobile-bottom-nav * {
+  font-family: var(--hr-font);
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 .hr-panel-wrapper {
   background-color: var(--hr-bg);
   min-height: 100vh;
   display: flex;
-  font-family: var(--hr-font);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 /* ── Sidebar ───────────────────────────────────────────────── */
@@ -89,7 +101,7 @@
 }
 
 .hr-brand-info p {
-  font-size: 0.6rem;
+  font-size: 0.875rem;
   font-weight: 700;
   color: var(--hr-accent);
   margin: 2px 0 0 0;
@@ -112,7 +124,7 @@
   color: var(--hr-text-muted);
   text-decoration: none;
   font-weight: 600;
-  font-size: 0.82rem;
+  font-size: 0.875rem;
   border-radius: var(--hr-radius);
   transition: var(--hr-transition);
   margin-bottom: 2px;
@@ -198,7 +210,7 @@
 }
 
 .hr-page-title p {
-  font-size: 0.82rem;
+  font-size: 0.875rem;
   color: var(--hr-text-muted);
   margin: 0.35rem 0 0 0;
 }
@@ -314,7 +326,7 @@
 }
 
 .hr-search-badge span {
-  font-size: 0.65rem;
+  font-size: 0.875rem;
   font-weight: 700;
   color: var(--hr-text-dim);
   background: #f1f5f9;
@@ -377,9 +389,9 @@
 }
 
 .hr-stat-card:hover {
-  box-shadow: var(--hr-shadow-md);
-  transform: translateY(-3px);
-  border-color: var(--hr-border-hover);
+  box-shadow: var(--hr-shadow-lg);
+  transform: translateY(-5px);
+  border-color: rgba(var(--hr-accent-rgb), 0.3);
 }
 
 .hr-stat-card:hover::after {
@@ -387,7 +399,7 @@
 }
 
 .hr-stat-card .hr-col-label {
-  font-size: 0.62rem;
+  font-size: 0.875rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.14em;
@@ -406,7 +418,7 @@
 }
 
 .hr-stat-card .text-muted {
-  font-size: 0.72rem;
+  font-size: 0.875rem;
 }
 
 /* ── Table Section ─────────────────────────────────────────── */
@@ -418,6 +430,20 @@
   padding: 0;
   overflow: hidden;
 }
+
+.hr-table-responsive-wrapper {
+  overflow-x: auto;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 992px) {
+  .hr-table-cols,
+  .hr-row {
+    min-width: 950px;
+  }
+}
+
 
 .hr-table-header {
   padding: 1.5rem 2rem;
@@ -437,7 +463,7 @@
 }
 
 .hr-table-header p {
-  font-size: 0.72rem;
+  font-size: 0.875rem;
   color: var(--hr-text-muted);
   margin: 0.3rem 0 0 0;
 }
@@ -451,7 +477,7 @@
 }
 
 .hr-col-label {
-  font-size: 0.65rem;
+  font-size: 0.875rem;
   font-weight: 700;
   color: var(--hr-text-dim);
   text-transform: uppercase;
@@ -485,6 +511,38 @@
   transition: var(--hr-transition);
 }
 
+@media (max-width: 991px) {
+  .hr-table-cols {
+    display: none; /* hide headers on mobile */
+  }
+  .hr-rows-container {
+    padding: 1rem;
+    background: var(--hr-bg);
+  }
+  .hr-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+    padding: 1.25rem;
+    background: white;
+    border-radius: var(--hr-radius-lg);
+    border: 1px solid var(--hr-border);
+    margin-bottom: 1rem;
+    box-shadow: var(--hr-shadow-sm);
+  }
+  .hr-row:hover {
+    box-shadow: var(--hr-shadow-md);
+  }
+  .hr-action-btns {
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--hr-border);
+  }
+}
+
 .hr-row:last-child {
   border-bottom: none;
 }
@@ -503,20 +561,20 @@
 }
 
 .hr-applicant-info p {
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: var(--hr-text-muted);
   margin: 0;
 }
 
 .hr-contact-info {
-  font-size: 0.82rem;
+  font-size: 0.875rem;
   color: var(--hr-text-body);
   font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
 
 .hr-date-info {
-  font-size: 0.82rem;
+  font-size: 0.875rem;
   color: var(--hr-text-body);
   font-weight: 500;
 }
@@ -528,7 +586,7 @@
   gap: 0.35rem;
   padding: 0.3rem 0.75rem;
   border-radius: 50px;
-  font-size: 0.68rem;
+  font-size: 0.875rem;
   font-weight: 700;
   letter-spacing: 0.02em;
 }
@@ -588,7 +646,7 @@
   align-items: center;
   gap: 0.35rem;
   padding: 0.4rem 0.85rem;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: 700;
   color: var(--hr-text-body);
   background: white;
@@ -607,7 +665,7 @@
 
 .btn-hr-unapprove {
   padding: 0.4rem 0.85rem;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: 700;
   color: #b45309;
   background: rgba(245, 158, 11, 0.08);
@@ -631,7 +689,7 @@
   border-radius: var(--hr-radius);
   background: linear-gradient(135deg, var(--hr-accent), var(--hr-accent-dark));
   color: white;
-  font-size: 0.78rem;
+  font-size: 0.875rem;
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(var(--hr-accent-rgb), 0.25);
@@ -691,7 +749,7 @@
 }
 
 .hr-details-sec h3 {
-  font-size: 0.68rem;
+  font-size: 0.875rem;
   font-weight: 800;
   color: var(--hr-accent);
   text-transform: uppercase;
@@ -725,14 +783,14 @@
 
 .hr-info-item label {
   color: var(--hr-text-muted);
-  font-size: 0.78rem;
+  font-size: 0.875rem;
   font-weight: 500;
 }
 
 .hr-info-item span {
   font-weight: 600;
   color: var(--hr-text-dark);
-  font-size: 0.82rem;
+  font-size: 0.875rem;
 }
 
 /* Document Preview */
@@ -759,7 +817,7 @@
 }
 
 .btn-hr-view-doc {
-  font-size: 0.72rem;
+  font-size: 0.875rem;
   font-weight: 700;
   color: var(--hr-accent);
   text-decoration: none;
@@ -800,7 +858,7 @@
   border-radius: var(--hr-radius);
   border: 1px solid var(--hr-border);
   padding: 0.6rem 0.9rem;
-  font-size: 0.82rem;
+  font-size: 0.875rem;
   font-family: var(--hr-font);
   transition: var(--hr-transition);
   background: #fafbfd;
@@ -813,7 +871,7 @@
 }
 
 .hr-add-agent-container .form-label {
-  font-size: 0.72rem;
+  font-size: 0.875rem;
   font-weight: 600;
   color: var(--hr-text-muted);
   margin-bottom: 0.35rem;
@@ -952,7 +1010,7 @@
     border: none;
     background: none;
     color: var(--hr-text-muted);
-    font-size: 0.65rem;
+    font-size: 0.875rem;
     font-weight: 700;
     transition: var(--hr-transition);
     position: relative;
@@ -1030,7 +1088,7 @@
 
   .hr-contact-info,
   .hr-date-info {
-    font-size: 0.75rem;
+    font-size: 0.875rem;
   }
 
   .hr-action-btns {
@@ -1075,11 +1133,11 @@
   }
 
   .hr-info-item label {
-    font-size: 0.7rem;
+    font-size: 0.875rem;
   }
 
   .hr-info-item span {
-    font-size: 0.75rem;
+    font-size: 0.875rem;
   }
 }
 
