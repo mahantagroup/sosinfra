@@ -181,7 +181,17 @@ const HRDashboard = () => {
     if (viewingTeamOf) {
       list = agents.filter(a => a.referralCode === viewingTeamOf.ownReferralCode);
     }
-    return list;
+
+    // Sort by latest registration first
+    return [...list].sort((a, b) => {
+      const getMs = (ts) => {
+        if (!ts) return 0;
+        if (typeof ts.toMillis === 'function') return ts.toMillis();
+        if (ts instanceof Date) return ts.getTime();
+        return 0;
+      };
+      return getMs(b.createdAt) - getMs(a.createdAt);
+    });
   })();
 
   return (

@@ -12,6 +12,28 @@ import { auth, db, secondaryAuth } from './Firebase';
 export const generateAgentPassword = () =>
   String(Math.floor(10000000 + Math.random() * 90000000));
 
+/**
+ * ONE-TIME UTILITY: Call this once from an admin page/console to sync
+ * the Firestore counter with the highest existing agentId in the database.
+ * Safe to call multiple times — it is idempotent.
+ */
+export const syncAgentIdCounter = async () => {
+  let maxNumber = 10000;
+  const agentsSnap = await getDocs(collection(db, 'agents'));
+  agentsSnap.forEach((d) => {
+    const id = d.data().agentId || '';
+    const match = id.match(/SOS-ACP-(\d{6})$/);
+    if (match) {
+      const num = parseInt(match[1], 10);
+      if (num > maxNumber) maxNumber = num;
+    }
+  });
+  const counterRef = doc(db, 'counters', 'agentIdCounter');
+  await setDoc(counterRef, { count: maxNumber }, { merge: true });
+  console.log(`✅ Counter synced. Last issued ID: SOS-ACP-${String(maxNumber).padStart(6,'0')}. Next will be: SOS-ACP-${String(maxNumber + 1).padStart(6,'0')}`);
+  return maxNumber;
+};
+
 export const createAgentAccount = async ({
   email,
   password,
@@ -24,17 +46,36 @@ export const createAgentAccount = async ({
   const normalizedEmail = email.trim().toLowerCase();
   
   // Generate Unique Partner ID securely using transaction
-  let nextAgentNumber = 10000;
+  let nextAgentNumber;
   const counterRef = doc(db, 'counters', 'agentIdCounter');
+
+  // Self-healing: find the highest agentId number currently in Firestore
+  // so the counter can never go backwards even if it was previously out of sync
+  let maxExistingNumber = 10000;
+  try {
+    const agentsSnap = await getDocs(collection(db, 'agents'));
+    agentsSnap.forEach((d) => {
+      const id = d.data().agentId || '';
+      const match = id.match(/SOS-ACP-(\d{6})$/);
+      if (match) {
+        const num = parseInt(match[1], 10);
+        if (num > maxExistingNumber) maxExistingNumber = num;
+      }
+    });
+  } catch (e) {
+    console.warn('Could not scan existing agentIds for self-healing:', e);
+  }
 
   try {
     await runTransaction(db, async (transaction) => {
       const counterDoc = await transaction.get(counterRef);
-      if (!counterDoc.exists()) {
-        transaction.set(counterRef, { count: nextAgentNumber });
-      } else {
-        nextAgentNumber = counterDoc.data().count + 1;
+      const counterValue = counterDoc.exists() ? counterDoc.data().count : 10000;
+      // Always pick the higher of the stored counter or the max existing ID
+      nextAgentNumber = Math.max(counterValue, maxExistingNumber) + 1;
+      if (counterDoc.exists()) {
         transaction.update(counterRef, { count: nextAgentNumber });
+      } else {
+        transaction.set(counterRef, { count: nextAgentNumber });
       }
     });
   } catch (error) {
