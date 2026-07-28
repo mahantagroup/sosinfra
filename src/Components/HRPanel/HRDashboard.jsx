@@ -138,25 +138,85 @@ const HRDashboard = () => {
     }
 
     const headers = [
-      'Partner ID', 'Name', 'Email', 'Mobile', 'Referral Code', 'Applied On', 'Status'
+      'Partner ID',
+      'Own Referral Code',
+      'Status',
+      'Full Name',
+      'First Name',
+      'Middle Name',
+      'Last Name',
+      'Father/Husband First Name',
+      'Father/Husband Middle Name',
+      'Father/Husband Last Name',
+      'Date of Birth',
+      'Email',
+      'Mobile 1',
+      'Mobile 2',
+      'Local Address Line',
+      'Local City',
+      'Local State',
+      'Local Pin Code',
+      'Permanent Address Line',
+      'Permanent City',
+      'Permanent State',
+      'Permanent Pin Code',
+      'PAN Card No',
+      'Aadhaar Card No',
+      'Referral Code Used',
+      'Reference',
+      'Department',
+      'Leader Name',
+      'Plan By',
+      'Application Date',
+      'Registered On'
     ];
+
+    const escapeCSV = (val) => {
+      if (val === null || val === undefined) return '""';
+      const str = String(val).replace(/"/g, '""');
+      return `"${str}"`;
+    };
 
     const rows = approvedAgents.map(a => [
       a.agentId || '',
-      formatAgentName(a),
-      a.email || '',
-      a.mobile1 || '',
       a.ownReferralCode || '',
-      formatDate(a.createdAt),
-      a.status || 'Pending'
+      a.status || 'Approved',
+      formatAgentName(a),
+      a.firstName || '',
+      a.middleName || '',
+      a.lastName || '',
+      a.fatherHusbandName || '',
+      a.fatherHusbandMiddleName || '',
+      a.fatherHusbandLastName || '',
+      a.dob || '',
+      a.email || a.loginId || '',
+      a.mobile1 || '',
+      a.mobile2 || '',
+      a.localAddressLine || '',
+      a.localCity || '',
+      a.localState || '',
+      a.localPinCode || '',
+      a.permanentAddressLine || '',
+      a.permanentCity || '',
+      a.permanentState || '',
+      a.permanentPinCode || '',
+      a.panCardNo || '',
+      a.aadhaarCardNo || '',
+      a.referralCode || '',
+      a.reference || '',
+      a.department || '',
+      a.leaderName || '',
+      a.planBy || '',
+      a.date || '',
+      formatDate(a.createdAt)
     ]);
 
     const csvContent = [
-      headers.join(','),
-      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+      headers.map(h => escapeCSV(h)).join(','),
+      ...rows.map(row => row.map(cell => escapeCSV(cell)).join(','))
     ].join('\n');
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
