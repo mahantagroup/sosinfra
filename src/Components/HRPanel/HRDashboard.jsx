@@ -3,13 +3,14 @@ import { Link } from 'react-router-dom';
 import {
   LayoutDashboard, Users, UserCheck, LogOut, Search, Menu, X,
   Eye, CheckCircle2, XCircle, Clock, Loader2, RefreshCw, ExternalLink,
-  ChevronRight, Mail, Phone, Calendar, UserPlus, Download, Users2, Trash2
+  ChevronRight, Mail, Phone, Calendar, UserPlus, Download, Users2, Trash2, Edit
 } from 'lucide-react';
 import {
   fetchAllAgents,
   approveAgent,
   unapproveAgent,
   deleteAgent,
+  updateAgentData,
   formatAgentName,
   formatDate,
 } from '../Firebase/hrHelpers';
@@ -17,6 +18,7 @@ import S3Image from '../S3Image';
 import { getImageViewUrl } from '../Firebase/s3UploadService';
 import { signOutAdmin } from '../Firebase/authHelpers';
 import AddAgent from './AddAgent';
+import EditAgentModal from './EditAgentModal';
 import './HRPanel.css';
 
 const HRDashboard = () => {
@@ -24,11 +26,30 @@ const HRDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedAgent, setSelectedAgent] = useState(null);
+  const [editingAgent, setEditingAgent] = useState(null);
   const [agents, setAgents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [viewingTeamOf, setViewingTeamOf] = useState(null);
   const searchInputRef = useRef(null);
+
+  const handleEdit = (agent) => {
+    setEditingAgent(agent);
+  };
+
+  const handleSaveEditedAgent = async (updatedData) => {
+    if (!editingAgent) return;
+    await updateAgentData(editingAgent.id, editingAgent.partnerRequestId, updatedData);
+    await loadAgents();
+    if (selectedAgent?.id === editingAgent.id) {
+      setSelectedAgent((prev) => ({
+        ...prev,
+        ...updatedData,
+        fullName: [updatedData.firstName, updatedData.middleName, updatedData.lastName].filter(Boolean).join(' '),
+      }));
+    }
+    setEditingAgent(null);
+  };
 
   const handleLogout = async () => {
     try {
@@ -258,7 +279,7 @@ const HRDashboard = () => {
     <div className="hr-panel-wrapper">
       {/* Mobile Top Bar */}
       <div className="hr-mobile-top-bar d-lg-none">
-        <img src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555285/logo_2x_vvvpyz.png" alt="SOS Infrabulls" className="hr-mobile-logo" />
+        <img src="images/logo.png" alt="SOS Infrabulls" className="hr-mobile-logo" />
         <div className="hr-mobile-actions">
            <button className="hr-refresh-btn small" onClick={loadAgents} disabled={loading}>
              <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
@@ -273,7 +294,7 @@ const HRDashboard = () => {
       <aside className={`hr-sidebar ${sidebarOpen ? 'mobile-open' : ''}`}>
         <div className="hr-sidebar-brand d-none d-lg-flex">
           <div className="d-flex flex-column align-items-center gap-3">
-            <img src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555285/logo_2x_vvvpyz.png" alt="SOS Infrabulls" className="hr-sidebar-logo" />
+            <img src="images/logo.png" alt="SOS Infrabulls" className="hr-sidebar-logo" />
             <div className="text-center">
               <p className="hr-brand-label mb-0">HR Portal</p>
             </div>
@@ -480,6 +501,9 @@ const HRDashboard = () => {
                             <button className="btn-hr-view" onClick={() => handleView(agent)}>
                               <Eye size={14} /> View
                             </button>
+                            <button className="btn-hr-edit" onClick={() => handleEdit(agent)} title="Edit Partner">
+                              <Edit size={14} /> Edit
+                            </button>
                             <button 
                               className="btn-hr-delete" 
                               onClick={() => handleDelete(agent)}
@@ -523,9 +547,12 @@ const HRDashboard = () => {
 
             {activeTab === 'details' && selectedAgent && (
               <div className="hr-details-card">
-                <div className="p-3 border-bottom d-flex align-items-center">
+                <div className="p-3 border-bottom d-flex align-items-center justify-content-between">
                    <button className="btn btn-link text-decoration-none text-muted small fw-bold" onClick={() => navigateTo('registrations')}>
                      ← Back to List
+                   </button>
+                   <button className="btn btn-outline-primary btn-sm px-3 fw-bold d-flex align-items-center gap-2" onClick={() => handleEdit(selectedAgent)}>
+                     <Edit size={14} /> Edit Partner Data
                    </button>
                 </div>
                 <div className="hr-details-hero">
@@ -664,6 +691,14 @@ const HRDashboard = () => {
           </>
         )}
       </main>
+
+      {editingAgent && (
+        <EditAgentModal
+          agent={editingAgent}
+          onClose={() => setEditingAgent(null)}
+          onSave={handleSaveEditedAgent}
+        />
+      )}
     </div>
   );
 };

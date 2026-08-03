@@ -64,6 +64,40 @@ export const deleteAgent = async (agentUid, partnerRequestId = null) => {
   }
 };
 
+export const updateAgentData = async (agentUid, partnerRequestId, updatedData) => {
+  const fullName = [updatedData.firstName, updatedData.middleName, updatedData.lastName]
+    .filter(Boolean)
+    .join(' ');
+
+  const updates = {
+    ...updatedData,
+    fullName,
+    updatedAt: serverTimestamp(),
+  };
+
+  // Ensure image URLs and referral codes are never updated through edit
+  delete updates.photographUrl;
+  delete updates.panCardUrl;
+  delete updates.aadhaarCardUrl;
+  delete updates.referralCode;
+  delete updates.ownReferralCode;
+  delete updates.agentId;
+  delete updates.status;
+  delete updates.id;
+  delete updates.uid;
+
+  await updateDoc(doc(db, 'agents', agentUid), updates);
+
+  if (partnerRequestId) {
+    try {
+      await updateDoc(doc(db, 'partnerRequests', partnerRequestId), updates);
+    } catch (err) {
+      console.warn("Could not update partnerRequests document:", err);
+    }
+  }
+};
+
+
 export const formatAgentName = (agent) =>
   agent.fullName ||
   [agent.firstName, agent.middleName, agent.lastName].filter(Boolean).join(' ') ||

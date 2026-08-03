@@ -67,7 +67,7 @@ const PremiumHeader = () => {
                         <div className="premium-header-brand">
                             <Link to="/" className="premium-logo">
                                 <img
-                                    src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555285/logo_2x_vvvpyz.png"
+                                    src="images/logo.png"
                                     alt="SOS Infrabulls"
                                     width="180"
                                     height="52"
@@ -331,7 +331,7 @@ const PremiumHeader = () => {
                     <div className="premium-mobile-header">
                         <Link to="/" className="premium-mobile-logo" onClick={closeMobileMenu}>
                             <img
-                                src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555285/logo_2x_vvvpyz.png"
+                                src="images/logo.png"
                                 alt="SOS Infrabulls"
                                 width="160"
                                 height="46"

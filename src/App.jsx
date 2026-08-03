@@ -62,7 +62,7 @@ function App() {
     const preloadAssets = async () => {
       try {
         const images = [
-          "https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555285/logo_2x_vvvpyz.png",
+          "images/logo.png",
          
         ];
 

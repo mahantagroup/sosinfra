@@ -250,7 +250,7 @@ const AgentDashboard = () => {
       <aside className={`agent-sidebar ${sidebarOpen ? 'd-flex vh-100 position-fixed overflow-hidden' : ''}`}>
         <div className="agent-sidebar-header">
           <div className="d-flex flex-column align-items-center gap-3 w-100">
-            <img src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555285/logo_2x_vvvpyz.png" alt="SOS Infrabulls" className="agent-sidebar-logo" />
+            <img src="images/logo.png" alt="SOS Infrabulls" className="agent-sidebar-logo" />
             <span className="fw-800 d-block small" style={{ color: '#0A2540', letterSpacing: '-0.02em' }}>Partner Portal</span>
           </div>
           {sidebarOpen && <button className="btn ms-auto p-0" onClick={() => setSidebarOpen(false)}><X size={20} /></button>}

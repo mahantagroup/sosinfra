@@ -46,7 +46,7 @@ const AdminSignup = () => {
     <div className="admin-main-content d-flex align-items-center justify-content-center px-3" style={{ minHeight: '100vh', background: '#f8fafc' }}>
       <div className="w-100" style={{ maxWidth: '400px' }}>
         <div className="text-center mb-4">
-          <img src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555285/logo_2x_vvvpyz.png" alt="SOS Infrabulls" className="mx-auto mb-3" style={{ height: '100px' }} />
+          <img src="images/logo.png" alt="SOS Infrabulls" className="mx-auto mb-3" style={{ height: '100px' }} />
           <h2 className="fw-bold text-dark mb-1">Admin Signup</h2>
           <p className="small text-muted text-center">Create a new secure admin account (TEMPORARY)</p>
         </div>

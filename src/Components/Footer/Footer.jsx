@@ -41,7 +41,7 @@ const Footer = () => {
           {/* Brand + Social in one line */}
           <div className="footer-top-row">
             <a href="/" className="footer-logo-link">
-              <img src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555285/logo_2x_vvvpyz.png" alt="SOS Infrabulls" width="160" height="46" />
+              <img src="images/logo.png" alt="SOS Infrabulls" width="160" height="46" />
             </a>
             <div className="footer-social-group">
               <span className="footer-social-label">Connect</span>
