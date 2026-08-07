@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { getOptimizedCloudinaryUrl } from '../../utils/cloudinaryUtils';
 import './Hero.css';
 
 const HeroPremium = () => {
@@ -9,22 +10,22 @@ const HeroPremium = () => {
 
     const slides = [
         {
-            image: "https://res.cloudinary.com/dlsbj8nug/image/upload/v1782036214/1_kcqtxc.jpg",
+            image: getOptimizedCloudinaryUrl("https://res.cloudinary.com/dlsbj8nug/image/upload/v1782036214/1_kcqtxc.jpg", 1200),
             title: "Luxury Living Awaits",
             subtitle: "Discover premium properties tailored to your dreams"
         },
         {
-            image: "https://res.cloudinary.com/dlsbj8nug/image/upload/v1782036210/2_pvdgzb.jpg",
+            image: getOptimizedCloudinaryUrl("https://res.cloudinary.com/dlsbj8nug/image/upload/v1782036210/2_pvdgzb.jpg", 1200),
             title: "Your Dream Home",
             subtitle: "Exceptional residences in prime locations"
         },
         {
-            image: "https://res.cloudinary.com/dlsbj8nug/image/upload/v1782036217/3_xuvjci.jpg",
+            image: getOptimizedCloudinaryUrl("https://res.cloudinary.com/dlsbj8nug/image/upload/v1782036217/3_xuvjci.jpg", 1200),
             title: "Premium Real Estate",
             subtitle: "Where quality meets sophistication"
         },
         {
-            image: "https://res.cloudinary.com/dlsbj8nug/image/upload/v1782036200/5_j0h4n4.jpg",
+            image: getOptimizedCloudinaryUrl("https://res.cloudinary.com/dlsbj8nug/image/upload/v1782036200/5_j0h4n4.jpg", 1200),
             title: "Elite Properties",
             subtitle: "Curated excellence in every detail"
         }

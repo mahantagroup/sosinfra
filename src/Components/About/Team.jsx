@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { db } from '../Firebase/Firebase';
+import { getOptimizedCloudinaryUrl } from '../../utils/cloudinaryUtils';
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -286,9 +287,10 @@ const Team = () => {
                 <div className="member-card-wrapper">
                   <div className="premium-member-card">
                     <img
-                      src={m.image || 'https://via.placeholder.com/400x550'}
+                      src={getOptimizedCloudinaryUrl(m.image || 'https://via.placeholder.com/400x550', 400)}
                       alt={m.name}
                       className="team-img"
+                      loading="lazy"
                     />
                     <div className="image-overlay"></div>
 

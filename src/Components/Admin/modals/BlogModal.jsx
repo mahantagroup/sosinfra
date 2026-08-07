@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../Firebase/Firebase';
 import { uploadMediaToCloudinary } from '../utils/cloudinary';
+import { getOptimizedCloudinaryUrl } from '../../../utils/cloudinaryUtils';
 import { Modal, FormField, inputClass, textareaClass, BtnPrimary, BtnGhost, ProgressBar } from '../components/ui';
 
 const defaultForm = { title: '', author: '', category: '', date: '', excerpt: '', ctaUrl: '' };
@@ -113,7 +114,7 @@ const BlogModal = ({ open, onClose, editingBlog, onSuccess }) => {
           }} className={inputClass} />
         </FormField>
 
-        {preview && <img src={preview} alt="" className="h-32 rounded-xl object-cover border border-slate-100" />}
+        {preview && <img src={getOptimizedCloudinaryUrl(preview, 300)} alt="" className="h-32 rounded-xl object-cover border border-slate-100" loading="lazy" />}
 
         {saving && progress > 0 && <ProgressBar progress={progress} label="Uploading" />}
 

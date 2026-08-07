@@ -11,6 +11,7 @@ import { auth, db } from '../Firebase';
 import { signOutAgent, setAgentPasswordOnce } from '../Firebase/agentHelpers';
 import S3Image from '../S3Image';
 import { getImageViewUrl } from '../Firebase/s3UploadService';
+import { getOptimizedCloudinaryUrl } from '../../utils/cloudinaryUtils';
 import './AgentPanel.css';
 
 
@@ -304,7 +305,7 @@ const AgentDashboard = () => {
               </div>
               <div className="rounded-circle shadow-sm overflow-hidden border" style={{ width: '34px', height: '34px', borderColor: 'var(--agent-border)' }}>
                 {agentInfo.photographUrl ? (
-                  <S3Image src={agentInfo.photographUrl} alt="" className="w-100 h-100 object-cover" />
+                  <S3Image src={agentInfo.photographUrl} width={100} alt="" className="w-100 h-100 object-cover" />
                 ) : (
                   <div className="w-100 h-100 d-flex align-items-center justify-content-center fw-bold small" style={{ background: 'var(--agent-accent-glow)', color: 'var(--agent-accent)' }}>
                     {agentInfo.name.charAt(0)}
@@ -491,7 +492,7 @@ const AgentDashboard = () => {
                   <div className="agent-card p-0 overflow-hidden h-100" style={{ boxShadow: 'var(--agent-shadow-sm)' }}>
                     <div className="d-flex align-items-center justify-content-center" style={{ height: '160px', background: 'var(--agent-surface-2)' }}>
                       {kycDoc.url ? (
-                        <S3Image src={kycDoc.url} className="w-100 h-100 object-cover" />
+                        <S3Image src={kycDoc.url} width={300} className="w-100 h-100 object-cover" />
                       ) : (
                         <Shield size={36} className="text-muted opacity-25" />
                       )}
@@ -507,7 +508,7 @@ const AgentDashboard = () => {
                           style={{ fontSize: '0.875rem', color: 'var(--agent-accent)' }}
                           onClick={async () => {
                             const url = await getImageViewUrl(kycDoc.url);
-                            if (url) window.open(url, '_blank');
+                            if (url) window.open(getOptimizedCloudinaryUrl(url, 1200), '_blank');
                           }}
                         >
                           View Original <ExternalLink size={10} />
@@ -537,7 +538,7 @@ const AgentDashboard = () => {
 
                 <div className="d-flex gap-4 align-items-center">
                   <div className="rounded-4 overflow-hidden border border-white border-opacity-20 shadow-lg flex-shrink-0" style={{ width: '80px', height: '100px' }}>
-                    <S3Image src={agentInfo.photographUrl} className="w-100 h-100 object-cover" />
+                    <S3Image src={agentInfo.photographUrl} width={150} className="w-100 h-100 object-cover" />
                   </div>
                   <div className="flex-grow-1 min-w-0">
                     <label className="text-blue-100 opacity-50 uppercase fw-700 d-block mb-1" style={{ fontSize: '0.875rem' }}>Partner Identity</label>
@@ -632,7 +633,7 @@ const AgentDashboard = () => {
                               <div className="d-flex align-items-center gap-3">
                                 <div className="rounded-circle overflow-hidden flex-shrink-0" style={{ width: '36px', height: '36px', background: 'var(--agent-surface-2)', border: '1px solid var(--agent-border)' }}>
                                   {member.photographUrl ? (
-                                    <S3Image src={member.photographUrl} className="w-100 h-100 object-cover" />
+                                    <S3Image src={member.photographUrl} width={100} className="w-100 h-100 object-cover" />
                                   ) : (
                                     <div className="w-100 h-100 d-flex align-items-center justify-content-center fw-bold small" style={{ color: 'var(--agent-accent)', fontSize: '1rem' }}>
                                       {member.fullName?.charAt(0)}
@@ -667,7 +668,7 @@ const AgentDashboard = () => {
                         <div className="d-flex align-items-center gap-3 mb-3">
                           <div className="rounded-circle overflow-hidden flex-shrink-0" style={{ width: '40px', height: '40px', background: 'var(--agent-surface-2)', border: '1px solid var(--agent-border)' }}>
                             {member.photographUrl ? (
-                              <S3Image src={member.photographUrl} className="w-100 h-100 object-cover" />
+                              <S3Image src={member.photographUrl} width={100} className="w-100 h-100 object-cover" />
                             ) : (
                               <div className="w-100 h-100 d-flex align-items-center justify-content-center fw-bold text-primary">
                                 {member.fullName?.charAt(0)}

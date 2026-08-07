@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../Firebase/Firebase';
 import { uploadMediaToCloudinary } from '../utils/cloudinary';
+import { getOptimizedCloudinaryUrl } from '../../../utils/cloudinaryUtils';
 import { Modal, FormField, inputClass, BtnPrimary, BtnGhost, ProgressBar } from '../components/ui';
 
 const defaultForm = { id: '', type: 'achievements', title: '', location: '' };
@@ -140,7 +141,7 @@ const GalleryModal = ({ open, onClose, editingItem, onSuccess }) => {
                 onClick={() => setPrimaryIndex(i)}
                 className={`relative rounded-lg overflow-hidden border-2 ${primaryIndex === i ? 'border-[#4A97E4]' : 'border-slate-200'}`}
               >
-                <img src={src} alt="" className="w-full h-16 object-cover" />
+                <img src={getOptimizedCloudinaryUrl(src, 150)} alt="" className="w-full h-16 object-cover" loading="lazy" />
                 {primaryIndex === i && (
                   <span className="absolute inset-0 flex items-center justify-center bg-[#4A97E4]/20 text-[10px] font-bold text-[#4A97E4]">PRIMARY</span>
                 )}

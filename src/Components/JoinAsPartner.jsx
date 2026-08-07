@@ -147,15 +147,15 @@ const JoinAsPartner = () => {
       };
 
       if (files.photograph) {
-        photographUrl = await uploadToCloudinary(files.photograph, updateOverallProgress);
+        photographUrl = await uploadToCloudinary(files.photograph, updateOverallProgress, { isDocument: false, maxWidth: 1200 });
         uploadedCount++;
       }
       if (files.panCard) {
-        panCardUrl = await uploadToCloudinary(files.panCard, updateOverallProgress);
+        panCardUrl = await uploadToCloudinary(files.panCard, updateOverallProgress, { isDocument: true, maxWidth: 1920 });
         uploadedCount++;
       }
       if (files.aadhaarCard) {
-        aadhaarCardUrl = await uploadToCloudinary(files.aadhaarCard, updateOverallProgress);
+        aadhaarCardUrl = await uploadToCloudinary(files.aadhaarCard, updateOverallProgress, { isDocument: true, maxWidth: 1920 });
         uploadedCount++;
       }
 

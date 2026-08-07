@@ -3,6 +3,7 @@ import './Gallery.css';
 import { Link, useSearchParams, useLocation } from 'react-router-dom';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { db } from '../Firebase/Firebase';
+import { getOptimizedCloudinaryUrl } from '../../utils/cloudinaryUtils';
 
 const GalleryCard = React.memo(({ item, onClick }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -19,7 +20,7 @@ const GalleryCard = React.memo(({ item, onClick }) => {
         <div className="gallery-image-container">
           <div className="image-overlay-gradient"></div>
           <img
-            src={(item.images && item.images[item.primaryImageIndex || 0]) || item.image}
+            src={getOptimizedCloudinaryUrl((item.images && item.images[item.primaryImageIndex || 0]) || item.image, 600)}
             alt={item.title || "Gallery Item"}
             className={`gallery-card-image ${imageLoaded ? 'loaded' : 'loading'}`}
             loading="lazy"
@@ -338,9 +339,10 @@ const Gallery = () => {
               </button>
 
               <img
-                src={active.images ? active.images[activeIndex] : active.image}
+                src={getOptimizedCloudinaryUrl(active.images ? active.images[activeIndex] : active.image, 1200)}
                 alt={active.title || "Preview"}
                 className={`modal-main-image ${active.type === 'anniversaries' ? 'anniversary-modal-image' : ''}`}
+                loading="lazy"
               />
 
               <button
@@ -374,9 +376,10 @@ const Gallery = () => {
                     onClick={() => setActiveIndex(i)}
                   >
                     <img
-                      src={src}
+                      src={getOptimizedCloudinaryUrl(src, 150)}
                       alt={`Thumbnail ${i + 1}`}
                       className="modal-thumbnail"
+                      loading="lazy"
                     />
                   </div>
                 ))}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../Firebase/Firebase";
+import { getOptimizedCloudinaryUrl } from "../../utils/cloudinaryUtils";
 import Breadcrumb from "./Breadcrumb";
 
 const formatLocationSummary = (location) => {
@@ -166,8 +167,9 @@ const ProjectCard = ({ project, onView }) => (
   <div className="premium-event-card">
     <div className="premium-image-wrapper">
       <img 
-        src={project.image || 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><rect width="100%" height="100%" fill="%23f8fafc"/><rect x="1" y="1" width="1198" height="798" fill="none" stroke="%23e2e8f0" stroke-width="2"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="24" fill="%230A2540">No Image Available</text></svg>'} 
+        src={project.image ? getOptimizedCloudinaryUrl(project.image, 600) : 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><rect width="100%" height="100%" fill="%23f8fafc"/><rect x="1" y="1" width="1198" height="798" fill="none" stroke="%23e2e8f0" stroke-width="2"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="24" fill="%230A2540">No Image Available</text></svg>'} 
         alt={project.title} 
+        loading="lazy"
         onError={(e) => { 
           e.currentTarget.onerror = null; 
           e.currentTarget.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><rect width="100%" height="100%" fill="%23f8fafc"/><rect x="1" y="1" width="1198" height="798" fill="none" stroke="%23e2e8f0" stroke-width="2"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="24" fill="%230A2540">No Image Available</text></svg>'; 

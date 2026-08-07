@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../Firebase/Firebase';
 import { uploadMediaToCloudinary } from '../utils/cloudinary';
+import { getOptimizedCloudinaryUrl } from '../../../utils/cloudinaryUtils';
 import { Modal, FormField, inputClass, BtnPrimary, BtnGhost, ProgressBar } from '../components/ui';
 
 const TeamModal = ({ open, onClose, editingMember, onSuccess }) => {
@@ -89,7 +90,7 @@ const TeamModal = ({ open, onClose, editingMember, onSuccess }) => {
             if (f) { setFile(f); setPreview(URL.createObjectURL(f)); }
           }} className={inputClass} />
         </FormField>
-        {preview && <img src={preview} alt="" className="h-32 rounded-xl object-cover border border-slate-100" />}
+        {preview && <img src={getOptimizedCloudinaryUrl(preview, 300)} alt="" className="h-32 rounded-xl object-cover border border-slate-100" loading="lazy" />}
         {saving && progress > 0 && <ProgressBar progress={progress} label="Uploading" />}
         <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
           <BtnGhost onClick={onClose}>Cancel</BtnGhost>

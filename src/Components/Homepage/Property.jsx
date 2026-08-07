@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../Firebase/Firebase';
+import { getOptimizedCloudinaryUrl } from '../../utils/cloudinaryUtils';
 import './Property.css';
 
 /* -----------------------------------------
@@ -292,7 +293,7 @@ const PropertyCard = ({ property }) => {
         {/* Image Section */}
         <div className="archive-top">
           <div className="images-style">
-            <img src={mainImage} alt={title} />
+            <img src={getOptimizedCloudinaryUrl(mainImage, 600)} alt={title} loading="lazy" />
           </div>
 
           <div className="top">

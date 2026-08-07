@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { getOptimizedCloudinaryUrl } from "../../utils/cloudinaryUtils";
 import "./Career.css";
 import emailjs from "@emailjs/browser";
 
@@ -140,9 +141,9 @@ export default function Career() {
             >
                 {/* 1. The Image Element */}
                 <img
-                    src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555421/bnr_oecisp.jpg" // Your image source
+                    src={getOptimizedCloudinaryUrl("https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555421/bnr_oecisp.jpg", 1200)}
                     alt="Banner Background"
-
+                    loading="lazy"
                 />
 
                 {/* 2. Light Overlay (Still needed if you want the gradient effect) */}

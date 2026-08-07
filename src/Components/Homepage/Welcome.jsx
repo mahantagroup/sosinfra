@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { getOptimizedCloudinaryUrl } from "../../utils/cloudinaryUtils";
 import "./Welcome.css";
 
 function Welcome() {
@@ -156,7 +157,7 @@ function Welcome() {
                         <div className="image-frame">
                             <img
                                 ref={imageRef}
-                                src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782036901/5th_anniversary_pic-compressed_dttg4k.jpg"
+                                src={getOptimizedCloudinaryUrl("https://res.cloudinary.com/dlsbj8nug/image/upload/v1782036901/5th_anniversary_pic-compressed_dttg4k.jpg", 600)}
                                 alt="SOS Infrabulls"
                                 className="welcome-image"
                                 loading="lazy"

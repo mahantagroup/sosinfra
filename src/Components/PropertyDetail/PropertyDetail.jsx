@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../Firebase/Firebase';
+import { getOptimizedCloudinaryUrl } from '../../utils/cloudinaryUtils';
 import './PropertyDetail.css';
 
 const PremiumPropertyDetail = () => {
@@ -87,7 +88,7 @@ const PremiumPropertyDetail = () => {
                         {/* Image Gallery */}
                         <div className="premium-gallery-section">
                             <div className="premium-main-image">
-                                <img src={mainImage} alt={property.title} />
+                                <img src={getOptimizedCloudinaryUrl(mainImage, 1200)} alt={property.title} loading="lazy" />
                                 <div className="premium-image-badges">
                                     {property.featured && (
                                         <span className="premium-badge premium-featured">Featured</span>
@@ -111,7 +112,7 @@ const PremiumPropertyDetail = () => {
                                             className={`premium-thumbnail ${selectedImage === index ? 'active' : ''}`}
                                             onClick={() => setSelectedImage(index)}
                                         >
-                                            <img src={img} alt={`${property.title} ${index + 1}`} />
+                                            <img src={getOptimizedCloudinaryUrl(img, 150)} alt={`${property.title} ${index + 1}`} loading="lazy" />
                                             {index === 3 && images.length > 4 && (
                                                 <div className="premium-thumbnail-overlay">
                                                     +{images.length - 4}
@@ -407,9 +408,10 @@ const PremiumPropertyDetail = () => {
                                 </div>
                                 <div className="premium-agent-profile">
                                     <img 
-                                        src={property.avatar || '/images/avatar/avt-png1.png'} 
+                                        src={getOptimizedCloudinaryUrl(property.avatar || '/images/avatar/avt-png1.png', 100)} 
                                         alt={property.agent}
                                         className="premium-agent-avatar"
+                                        loading="lazy"
                                     />
                                     <div className="premium-agent-info">
                                         <h4>{property.agent}</h4>

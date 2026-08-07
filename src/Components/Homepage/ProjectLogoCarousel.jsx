@@ -4,6 +4,7 @@ import { db } from "../Firebase/Firebase";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import { useNavigate } from "react-router-dom";
+import { getOptimizedCloudinaryUrl } from "../../utils/cloudinaryUtils";
 
 import "swiper/css";
 import "./ProjectLogoCarousel.css";
@@ -58,9 +59,10 @@ const ProjectLogoCarousel = () => {
                     >
                         <div className="carousel-item">
                             <img
-                                src={project.logo || project.image}
+                                src={getOptimizedCloudinaryUrl(project.logo || project.image, 150)}
                                 alt={project.title}
                                 className="project-logo"
+                                loading="lazy"
                             />
                         </div>
                     </SwiperSlide>

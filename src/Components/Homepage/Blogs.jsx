@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { collection, onSnapshot, orderBy, query, limit } from "firebase/firestore";
 import { db } from "../Firebase/Firebase";
+import { getOptimizedCloudinaryUrl } from "../../utils/cloudinaryUtils";
 import "./Blogs.css";
 import { Link } from "react-router-dom";
 
@@ -77,7 +78,7 @@ const BlogsSpotlight = () => {
                             ref={(el) => (cardsRef.current[idx] = el)}
                         >
                             <div className="premium-card-image">
-                                <img src={blog.image || "/images/blog/blog-1.jpg"} alt={blog.title} />
+                                <img src={getOptimizedCloudinaryUrl(blog.image || "/images/blog/blog-1.jpg", 600)} alt={blog.title} loading="lazy" />
                                 {blog.category && <span>{blog.category}</span>}
                             </div>
 

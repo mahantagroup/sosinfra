@@ -1,5 +1,6 @@
 import React from 'react';
 import { X } from 'lucide-react';
+import { getOptimizedCloudinaryUrl } from '../../../utils/cloudinaryUtils';
 
 export const LoadingSpinner = ({ label = 'Loading...' }) => (
   <div className="admin-spinner-wrap">
@@ -127,7 +128,7 @@ export const ListRow = ({ image, title, meta, id, badges, actions }) => (
   <li className="admin-list-row">
     {image && (
       <div className="list-thumb">
-        <img src={image} alt="" />
+        <img src={getOptimizedCloudinaryUrl(image, 150)} alt="" loading="lazy" />
       </div>
     )}
     <div className="list-info">

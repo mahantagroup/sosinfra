@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { getOptimizedCloudinaryUrl } from "../../utils/cloudinaryUtils";
 
 function Director() {
   useEffect(() => {
@@ -248,7 +249,7 @@ function Director() {
             <div className="dir-media-box">
               <div className="dir-img-wrapper">
                 <span className="dir-badge">Founder & MD</span>
-                <img src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555501/01_1_bb0dgs.png" alt="MD Pawan Tilve" />
+                <img src={getOptimizedCloudinaryUrl("https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555501/01_1_bb0dgs.png", 600)} alt="MD Pawan Tilve" loading="lazy" />
               </div>
               <div className="dir-geometric-frame"></div>
             </div>
@@ -278,7 +279,7 @@ function Director() {
             <div className="dir-media-box">
               <div className="dir-img-wrapper">
                 <span className="dir-badge">CMD</span>
-                <img src="https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555487/01_2_hoyhjx.png" alt="CMD Vikas Garg" />
+                <img src={getOptimizedCloudinaryUrl("https://res.cloudinary.com/dlsbj8nug/image/upload/v1782555487/01_2_hoyhjx.png", 600)} alt="CMD Vikas Garg" loading="lazy" />
               </div>
               <div className="dir-geometric-frame"></div>
             </div>

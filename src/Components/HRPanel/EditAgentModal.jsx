@@ -107,7 +107,7 @@ const EditAgentModal = ({ agent, onClose, onSave }) => {
                 <div className="d-flex align-items-center gap-2 px-3 py-2 bg-white rounded border">
                   <span className="small text-muted">Photo:</span>
                   {agent.photographUrl ? (
-                    <S3Image src={agent.photographUrl} className="rounded" style={{ width: '32px', height: '32px', objectFit: 'cover' }} />
+                    <S3Image src={agent.photographUrl} width={100} className="rounded" style={{ width: '32px', height: '32px', objectFit: 'cover' }} />
                   ) : (
                     <span className="badge bg-secondary-subtle text-secondary small">No Image</span>
                   )}
@@ -115,7 +115,7 @@ const EditAgentModal = ({ agent, onClose, onSave }) => {
                 <div className="d-flex align-items-center gap-2 px-3 py-2 bg-white rounded border">
                   <span className="small text-muted">PAN:</span>
                   {agent.panCardUrl ? (
-                    <S3Image src={agent.panCardUrl} className="rounded" style={{ width: '32px', height: '32px', objectFit: 'cover' }} />
+                    <S3Image src={agent.panCardUrl} width={100} className="rounded" style={{ width: '32px', height: '32px', objectFit: 'cover' }} />
                   ) : (
                     <span className="badge bg-secondary-subtle text-secondary small">No PAN Image</span>
                   )}
@@ -123,7 +123,7 @@ const EditAgentModal = ({ agent, onClose, onSave }) => {
                 <div className="d-flex align-items-center gap-2 px-3 py-2 bg-white rounded border">
                   <span className="small text-muted">Aadhaar:</span>
                   {agent.aadhaarCardUrl ? (
-                    <S3Image src={agent.aadhaarCardUrl} className="rounded" style={{ width: '32px', height: '32px', objectFit: 'cover' }} />
+                    <S3Image src={agent.aadhaarCardUrl} width={100} className="rounded" style={{ width: '32px', height: '32px', objectFit: 'cover' }} />
                   ) : (
                     <span className="badge bg-secondary-subtle text-secondary small">No Aadhaar Image</span>
                   )}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "../Firebase/Firebase";
+import { getOptimizedCloudinaryUrl } from "../../utils/cloudinaryUtils";
 import "./blog.css";
 import Breadcrumb from "./Breadcrumb";
 
@@ -103,8 +104,9 @@ export default function BlogPage() {
                   >
                     <div className="blog-img">
                       <img
-                        src={blog.image || "/images/blog/blog-1.jpg"}
+                        src={getOptimizedCloudinaryUrl(blog.image || "/images/blog/blog-1.jpg", 600)}
                         alt={blog.title}
+                        loading="lazy"
                       />
                       {blog.date && (
                         <span className="blog-date">{blog.date}</span>

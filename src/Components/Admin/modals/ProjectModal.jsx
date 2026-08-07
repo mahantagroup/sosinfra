@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../Firebase/Firebase';
 import { uploadMediaToCloudinary } from '../utils/cloudinary';
+import { getOptimizedCloudinaryUrl } from '../../../utils/cloudinaryUtils';
 import {
   parseListInput,
   parseKeyValueInput,
@@ -331,8 +332,8 @@ const ProjectModal = ({ open, onClose, editingProject, onSuccess }) => {
 
         {(imagePreview || logoPreview) && (
           <div className="flex gap-4">
-            {imagePreview && <img src={imagePreview} alt="" className="h-20 rounded-lg object-cover border border-slate-100" />}
-            {logoPreview && <img src={logoPreview} alt="" className="h-20 rounded-lg object-contain border border-slate-100 bg-slate-50 p-2" />}
+            {imagePreview && <img src={getOptimizedCloudinaryUrl(imagePreview, 300)} alt="" className="h-20 rounded-lg object-cover border border-slate-100" loading="lazy" />}
+            {logoPreview && <img src={getOptimizedCloudinaryUrl(logoPreview, 150)} alt="" className="h-20 rounded-lg object-contain border border-slate-100 bg-slate-50 p-2" loading="lazy" />}
           </div>
         )}
 

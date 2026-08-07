@@ -16,6 +16,7 @@ import {
 } from '../Firebase/hrHelpers';
 import S3Image from '../S3Image';
 import { getImageViewUrl } from '../Firebase/s3UploadService';
+import { getOptimizedCloudinaryUrl } from '../../utils/cloudinaryUtils';
 import { signOutAdmin } from '../Firebase/authHelpers';
 import AddAgent from './AddAgent';
 import EditAgentModal from './EditAgentModal';
@@ -466,7 +467,7 @@ const HRDashboard = () => {
                           <div className="hr-applicant-info d-flex align-items-center gap-3">
                             <div className="hr-table-avatar rounded-circle overflow-hidden flex-shrink-0 border" style={{ width: '38px', height: '38px', borderColor: 'var(--hr-border)' }}>
                               {agent.photographUrl ? (
-                                <S3Image src={agent.photographUrl} className="w-100 h-100 object-cover" />
+                                <S3Image src={agent.photographUrl} width={100} className="w-100 h-100 object-cover" />
                               ) : (
                                 <div className="w-100 h-100 d-flex align-items-center justify-content-center fw-bold text-uppercase" style={{ background: 'linear-gradient(135deg, rgba(74, 151, 228, 0.1) 0%, rgba(74, 151, 228, 0.25) 100%)', color: 'var(--hr-accent)', fontSize: '0.85rem' }}>
                                   {formatAgentName(agent).charAt(0)}
@@ -557,7 +558,7 @@ const HRDashboard = () => {
                 </div>
                 <div className="hr-details-hero">
                   {selectedAgent.photographUrl ? (
-                    <S3Image src={selectedAgent.photographUrl} alt="" className="hr-details-photo" />
+                    <S3Image src={selectedAgent.photographUrl} width={150} alt="" className="hr-details-photo" />
                   ) : (
                     <div className="hr-details-photo bg-slate-100 d-flex align-items-center justify-content-center text-primary fw-bold fs-2">
                        {formatAgentName(selectedAgent).charAt(0)}
@@ -645,12 +646,12 @@ const HRDashboard = () => {
                     <div className="row g-3 mt-2">
                       <div className="col-6">
                         <div className="hr-doc-box">
-                          <S3Image src={selectedAgent.panCardUrl} className="hr-doc-thumb" />
+                          <S3Image src={selectedAgent.panCardUrl} width={300} className="hr-doc-thumb" />
                           <button 
                             className="btn btn-sm btn-link text-decoration-none p-0 fw-bold small" 
                             onClick={async () => {
                               const url = await getImageViewUrl(selectedAgent.panCardUrl);
-                              if (url) window.open(url, '_blank');
+                              if (url) window.open(getOptimizedCloudinaryUrl(url, 1200), '_blank');
                             }}
                           >
                             View PAN <ExternalLink size={10} />
@@ -659,12 +660,12 @@ const HRDashboard = () => {
                       </div>
                       <div className="col-6">
                         <div className="hr-doc-box">
-                          <S3Image src={selectedAgent.aadhaarCardUrl} className="hr-doc-thumb" />
+                          <S3Image src={selectedAgent.aadhaarCardUrl} width={300} className="hr-doc-thumb" />
                           <button 
                             className="btn btn-sm btn-link text-decoration-none p-0 fw-bold small"
                             onClick={async () => {
                               const url = await getImageViewUrl(selectedAgent.aadhaarCardUrl);
-                              if (url) window.open(url, '_blank');
+                              if (url) window.open(getOptimizedCloudinaryUrl(url, 1200), '_blank');
                             }}
                           >
                             View AADHAAR <ExternalLink size={10} />

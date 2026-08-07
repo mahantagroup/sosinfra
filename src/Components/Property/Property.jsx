@@ -7,6 +7,7 @@ import Breadcrumb from "./Breadcrumb";
 import { useEffect, useMemo, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../Firebase/Firebase";
+import { getOptimizedCloudinaryUrl } from "../../utils/cloudinaryUtils";
 
 export default function PropertyPage() {
   const [loading, setLoading] = useState(true);
@@ -117,7 +118,7 @@ export default function PropertyPage() {
                   <div className="col-12 col-sm-6 col-md-6 col-lg-3" key={item.id}>
                     <div className="property-card premium-card-enhanced">
                       <div className="property-img-enhanced">
-                        <img src={img} alt={item.title} />
+                        <img src={getOptimizedCloudinaryUrl(img, 600)} alt={item.title} loading="lazy" />
                         <div className="property-overlay"></div>
                         <div className="badges-enhanced">
                           {item.featured && <span className="badge premium-badge-enhanced">Featured</span>}
