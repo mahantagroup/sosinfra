@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  User, Briefcase, MapPin, Phone, Camera, Upload, Loader2, CheckCircle2,
-  Calendar, CreditCard, Mail, Building, Users, FileText, ShieldCheck,
-  ArrowRight
+  User, MapPin, Phone, Camera, Upload, Loader2, CheckCircle2,
+  Calendar, Mail, Building, Users, FileText, ShieldCheck,
+  ArrowRight, Sparkles, Check, AlertCircle, Image as ImageIcon
 } from 'lucide-react';
 import { db } from './Firebase/Firebase';
 import { collection, addDoc, doc, serverTimestamp, updateDoc, getDocs, query, where } from 'firebase/firestore';
@@ -18,43 +18,48 @@ import Breadcrumb from './About/Breadcrumb';
 
 const JoinAsPartner = () => {
   const navigate = useNavigate();
+  const isSubmittingRef = useRef(false);
+  const [activeStep, setActiveStep] = useState(1);
+
   const [formData, setFormData] = useState({
-    date: '',
+    date: new Date().toISOString().split('T')[0],
     firstName: '',
-    middleName: '',
     lastName: '',
     fatherHusbandName: '',
-    fatherHusbandMiddleName: '',
     fatherHusbandLastName: '',
     dob: '',
     localAddressLine: '',
     localCity: '',
     localState: '',
     localPinCode: '',
-    permanentAddressLine: '',
-    permanentCity: '',
-    permanentState: '',
-    permanentPinCode: '',
     email: '',
     mobile1: '',
     mobile2: '',
-    panCardNo: '',
     aadhaarCardNo: '',
     reference: '',
     department: '',
     leaderName: '',
-    planBy: '',
     referralCode: '',
   });
 
-  const [files, setFiles] = useState({ photograph: null, panCard: null, aadhaarCard: null });
-  const [previews, setPreviews] = useState({ photograph: null, panCard: null, aadhaarCard: null });
+  const [files, setFiles] = useState({ photograph: null, aadhaarCard: null });
+  const [previews, setPreviews] = useState({ photograph: null, aadhaarCard: null });
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState({ referralCode: '', email: '' });
   const [agreed, setAgreed] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
+
+  const scrollToSection = (sectionId, stepNum) => {
+    setActiveStep(stepNum);
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const yOffset = -100; 
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
 
   const handleCheckboxClick = (e) => {
     e.preventDefault();
@@ -68,7 +73,6 @@ const JoinAsPartner = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
@@ -76,25 +80,32 @@ const JoinAsPartner = () => {
 
   const handleFileChange = (e) => {
     const { name, files: uploadedFiles } = e.target;
-    if (uploadedFiles[0]) {
-      setFiles(prev => ({ ...prev, [name]: uploadedFiles[0] }));
+    if (uploadedFiles && uploadedFiles[0]) {
+      const selectedFile = uploadedFiles[0];
+      setFiles(prev => ({ ...prev, [name]: selectedFile }));
       setPreviews(prev => ({
         ...prev,
-        [name]: URL.createObjectURL(uploadedFiles[0])
+        [name]: URL.createObjectURL(selectedFile)
       }));
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Prevent duplicate form submission triggers
+    if (isSubmittingRef.current || loading) return;
+    
     if (!formData.firstName || !formData.mobile1 || !formData.referralCode) {
       alert("First Name, Mobile Number, and Referral Code are required.");
       return;
     }
     
-    // Reset errors
     setErrors({ referralCode: '', email: '' });
-    
+    isSubmittingRef.current = true;
+    setLoading(true);
+    setUploadProgress(0);
+
     try {
       // Validate referral code exists
       const referralQuery = query(
@@ -103,7 +114,9 @@ const JoinAsPartner = () => {
       );
       const referralSnapshot = await getDocs(referralQuery);
       if (referralSnapshot.empty) {
-        setErrors(prev => ({ ...prev, referralCode: 'Wrong referral ID' }));
+        setErrors(prev => ({ ...prev, referralCode: 'Invalid referral code. Please enter a valid associate code.' }));
+        isSubmittingRef.current = false;
+        setLoading(false);
         return;
       }
 
@@ -111,33 +124,30 @@ const JoinAsPartner = () => {
       const loginId = formData.email.trim().toLowerCase();
       
       try {
-        // Check from Firebase Authentication
         const signInMethods = await fetchSignInMethodsForEmail(auth, loginId);
         if (signInMethods.length > 0) {
-          setErrors(prev => ({ ...prev, email: 'Email ID already exists, use different' }));
+          setErrors(prev => ({ ...prev, email: 'Email ID already registered. Please use another email.' }));
+          isSubmittingRef.current = false;
+          setLoading(false);
           return;
         }
       } catch (authError) {
         console.error('Auth check error:', authError);
       }
       
-      // Also check Firestore agents collection for safety
       const emailAgentsQuery = query(collection(db, 'agents'), where('loginId', '==', loginId));
       const emailAgentsSnapshot = await getDocs(emailAgentsQuery);
       if (!emailAgentsSnapshot.empty) {
-        setErrors(prev => ({ ...prev, email: 'Email ID already exists, use different' }));
+        setErrors(prev => ({ ...prev, email: 'Email ID already registered. Please use another email.' }));
+        isSubmittingRef.current = false;
+        setLoading(false);
         return;
       }
 
-      // Proceed with submission
-      setLoading(true);
-      setUploadProgress(0);
-
       let photographUrl = '';
-      let panCardUrl = '';
       let aadhaarCardUrl = '';
 
-      const totalFiles = (files.photograph ? 1 : 0) + (files.panCard ? 1 : 0) + (files.aadhaarCard ? 1 : 0);
+      const totalFiles = (files.photograph ? 1 : 0) + (files.aadhaarCard ? 1 : 0);
       let uploadedCount = 0;
 
       const updateOverallProgress = (p) => {
@@ -148,10 +158,6 @@ const JoinAsPartner = () => {
 
       if (files.photograph) {
         photographUrl = await uploadToCloudinary(files.photograph, updateOverallProgress, { isDocument: false, maxWidth: 1200 });
-        uploadedCount++;
-      }
-      if (files.panCard) {
-        panCardUrl = await uploadToCloudinary(files.panCard, updateOverallProgress, { isDocument: true, maxWidth: 1920 });
         uploadedCount++;
       }
       if (files.aadhaarCard) {
@@ -167,7 +173,6 @@ const JoinAsPartner = () => {
       const partnerRef = await addDoc(collection(db, 'partnerRequests'), {
         ...sanitizedFormData,
         photographUrl,
-        panCardUrl,
         aadhaarCardUrl,
         loginId,
         status: 'Pending',
@@ -181,7 +186,6 @@ const JoinAsPartner = () => {
         password,
         formData: sanitizedFormData,
         photographUrl,
-        panCardUrl,
         aadhaarCardUrl,
         partnerRequestId: partnerRef.id,
       });
@@ -189,7 +193,7 @@ const JoinAsPartner = () => {
       await updateDoc(partnerRef, { agentUid: uid, agentId, ownReferralCode });
       setUploadProgress(99);
 
-      const fullName = [sanitizedFormData.firstName, sanitizedFormData.middleName, sanitizedFormData.lastName].filter(Boolean).join(' ');
+      const fullName = [sanitizedFormData.firstName, sanitizedFormData.lastName].filter(Boolean).join(' ');
       const emailResult = await sendCredentialsViaEmail(loginId, password, fullName);
 
       await updateDoc(doc(db, 'agents', uid), {
@@ -201,15 +205,14 @@ const JoinAsPartner = () => {
       setSubmitted(true);
 
       setFormData({
-        date: '', firstName: '', middleName: '', lastName: '',
-        fatherHusbandName: '', fatherHusbandMiddleName: '', fatherHusbandLastName: '',
+        date: new Date().toISOString().split('T')[0], firstName: '', lastName: '',
+        fatherHusbandName: '', fatherHusbandLastName: '',
         dob: '', localAddressLine: '', localCity: '', localState: '', localPinCode: '',
-        permanentAddressLine: '', permanentCity: '', permanentState: '', permanentPinCode: '',
-        email: '', mobile1: '', mobile2: '', panCardNo: '', aadhaarCardNo: '',
-        reference: '', department: '', leaderName: '', planBy: '', referralCode: '',
+        email: '', mobile1: '', mobile2: '', aadhaarCardNo: '',
+        reference: '', department: '', leaderName: '', referralCode: '',
       });
-      setFiles({ photograph: null, panCard: null, aadhaarCard: null });
-      setPreviews({ photograph: null, panCard: null, aadhaarCard: null });
+      setFiles({ photograph: null, aadhaarCard: null });
+      setPreviews({ photograph: null, aadhaarCard: null });
       setAgreed(false);
 
       setTimeout(() => navigate('/thank-you', {
@@ -217,418 +220,618 @@ const JoinAsPartner = () => {
       }), 500);
     } catch (error) {
       console.error('Error submitting form:', error);
-      // Check if error is email-already-in-use from Firebase Auth
       if (
         error.code === 'auth/email-already-in-use' || 
         error.code === 'auth/email-already-exists'
       ) {
-        setErrors(prev => ({ ...prev, email: 'Email ID already exists, use different' }));
+        setErrors(prev => ({ ...prev, email: 'Email ID already registered. Please use another email.' }));
       }
     } finally {
+      isSubmittingRef.current = false;
       setLoading(false);
       setUploadProgress(0);
     }
   };
 
   return (
-    <div className="contact-wrapper">
+    <div className="partner-wrapper">
       <Breadcrumb />
 
-      <section className="container py-5">
-        <div className="text-center mb-5">
-          <span className="contact-badge">PARTNER WITH US</span>
-          <h1 className="contact-title mt-3">
-            Join As <span>Associate Channel Partner</span>
+      {/* Hero Header Banner */}
+      <div className="partner-hero-banner text-center">
+        <div className="container">
+          <div className="partner-badge-pill">
+            <Sparkles size={14} className="me-2 text-primary-accent" />
+            <span>PARTNER NETWORK</span>
+          </div>
+          <h1 className="partner-hero-title mt-3">
+            Join As <span className="highlight">Associate Channel Partner</span>
           </h1>
-          <p className="contact-subtitle text-center">
-            Empower your future with our premier partnership program.
+          <p className="partner-hero-subtitle">
+            Empower your potential with SOS Infra's elite channel partner network.
           </p>
-        </div>
 
+          {/* Interactive Steps Navigation Bar */}
+          <div className="partner-steps-chips mt-4 d-none d-md-flex justify-content-center gap-3">
+            <button 
+              type="button"
+              onClick={() => scrollToSection('sec-personal', 1)}
+              className={`step-chip ${activeStep === 1 ? 'active' : ''}`}
+            >
+              <span className="step-num">01</span> Personal Info
+            </button>
+
+            <button 
+              type="button"
+              onClick={() => scrollToSection('sec-professional', 2)}
+              className={`step-chip ${activeStep === 2 ? 'active' : ''}`}
+            >
+              <span className="step-num">02</span> Professional
+            </button>
+
+            <button 
+              type="button"
+              onClick={() => scrollToSection('sec-address', 3)}
+              className={`step-chip ${activeStep === 3 ? 'active' : ''}`}
+            >
+              <span className="step-num">03</span> Address
+            </button>
+
+            <button 
+              type="button"
+              onClick={() => scrollToSection('sec-contact', 4)}
+              className={`step-chip ${activeStep === 4 ? 'active' : ''}`}
+            >
+              <span className="step-num">04</span> Contact
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <section className="container partner-form-section">
         {submitted && (
-          <div className="premium-success-alert mx-auto" role="alert">
-            <CheckCircle2 size={24} />
-            <strong>Your application has been submitted successfully!</strong>
+          <div className="partner-success-banner" role="alert">
+            <CheckCircle2 size={24} className="flex-shrink-0 text-success" />
+            <div>
+              <strong>Application Submitted Successfully!</strong>
+              <p className="mb-0">Redirecting to confirmation page...</p>
+            </div>
           </div>
         )}
 
         <div className="row justify-content-center">
-          <div className="col-lg-11 col-xl-10">
-            <div className="premium-form-card">
-              <form onSubmit={handleSubmit}>
-                {/* Basic Information */}
-                <div className="premium-section mb-5">
-                  <div className="premium-section-header">
-                    <div className="premium-section-icon">
-                      <Briefcase size={20} />
+          <div className="col-lg-10 col-xl-9">
+            <div className="partner-main-card">
+              <form onSubmit={handleSubmit} noValidate>
+
+                {/* Section 1: Basic & Personal Info */}
+                <div className="partner-form-block" id="sec-personal">
+                  <div className="partner-block-header">
+                    <div className="partner-section-badge">01</div>
+                    <div className="partner-header-icon">
+                      <User size={22} />
                     </div>
                     <div>
-                      <h4 className="premium-section-title">Basic Information</h4>
-                      <p className="premium-section-desc">Let's start with your application details</p>
+                      <h3 className="partner-block-title">Personal Information</h3>
+                      <p className="partner-block-subtitle">Provide your primary details and identification</p>
                     </div>
                   </div>
+
                   <div className="row g-3">
                     <div className="col-md-6">
-                      <div className="premium-field-group">
-                        <label className="premium-field-label">
-                          <Calendar size={16} className="me-2" />
+                      <div className="partner-field-group">
+                        <label className="partner-label">
+                          <Calendar size={15} className="me-2 text-accent" />
                           Application Date
                         </label>
-                        <input type="date" className="premium-form-control" name="date" value={formData.date} onChange={handleChange} />
+                        <input 
+                          type="date" 
+                          className="partner-input" 
+                          name="date" 
+                          value={formData.date} 
+                          onChange={handleChange} 
+                        />
                       </div>
                     </div>
+
+                    {/* Passport Photograph Upload */}
                     <div className="col-md-6">
-                      <div className="premium-field-group">
-                        <label className="premium-field-label">
-                          <Camera size={16} className="me-2" />
-                          Your Photograph <span className="premium-required">*</span>
+                      <div className="partner-field-group">
+                        <label className="partner-label">
+                          <Camera size={15} className="me-2 text-accent" />
+                          Passport Photograph <span className="required-star">*</span>
                         </label>
-                        <input type="file" id="photo" name="photograph" accept="image/*" onChange={handleFileChange} className="d-none" />
-                        <label htmlFor="photo" className="premium-file-upload">
-                          <div className="premium-file-upload-content">
-                            <span>{previews.photograph ? 'Photo Selected ✓' : 'Click to upload photograph'}</span>
-                            <Camera size={18} />
+                        
+                        <input 
+                          type="file" 
+                          id="photo-camera-input" 
+                          name="photograph" 
+                          accept="image/*" 
+                          capture="user"
+                          onChange={handleFileChange} 
+                          className="d-none" 
+                        />
+                        <input 
+                          type="file" 
+                          id="photo-gallery-input" 
+                          name="photograph" 
+                          accept="image/*" 
+                          onChange={handleFileChange} 
+                          className="d-none" 
+                        />
+
+                        <div className={`partner-upload-card ${previews.photograph ? 'has-file' : ''}`}>
+                          {previews.photograph ? (
+                            <div className="upload-file-active">
+                              <img src={previews.photograph} alt="Photograph Preview" className="upload-preview-img" />
+                              <div className="upload-file-details">
+                                <span className="upload-file-status"><Check size={14} className="me-1" /> Photo Uploaded</span>
+                                <div className="upload-action-buttons mt-2">
+                                  <label htmlFor="photo-camera-input" className="btn-upload-sub btn-camera">
+                                    <Camera size={13} className="me-1" /> Camera
+                                  </label>
+                                  <label htmlFor="photo-gallery-input" className="btn-upload-sub btn-gallery">
+                                    <ImageIcon size={13} className="me-1" /> Gallery
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="upload-options-grid">
+                              <label htmlFor="photo-camera-input" className="upload-option-btn option-camera">
+                                <Camera size={20} className="option-icon" />
+                                <span>Take Photo</span>
+                                <small>(Camera)</small>
+                              </label>
+                              <label htmlFor="photo-gallery-input" className="upload-option-btn option-gallery">
+                                <Upload size={20} className="option-icon" />
+                                <span>Choose Image</span>
+                                <small>(Gallery / Files)</small>
+                              </label>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="partner-field-group">
+                        <label className="partner-label">
+                          First Name <span className="required-star">*</span>
+                        </label>
+                        <input 
+                          type="text" 
+                          className="partner-input" 
+                          placeholder="Enter first name" 
+                          name="firstName" 
+                          value={formData.firstName} 
+                          onChange={handleChange} 
+                          required 
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="partner-field-group">
+                        <label className="partner-label">Last Name</label>
+                        <input 
+                          type="text" 
+                          className="partner-input" 
+                          placeholder="Enter last name" 
+                          name="lastName" 
+                          value={formData.lastName} 
+                          onChange={handleChange} 
+                        />
+                      </div>
+                    </div>
+
+                    {/* Sub-block: Father / Husband */}
+                    <div className="col-12 mt-4">
+                      <div className="partner-sub-card">
+                        <div className="partner-sub-header">
+                          <Users size={16} className="me-2 text-accent" />
+                          <span>Father / Husband Details</span>
+                        </div>
+                        <div className="row g-3">
+                          <div className="col-md-6">
+                            <div className="partner-field-group">
+                              <label className="partner-label">First Name</label>
+                              <input 
+                                type="text" 
+                                className="partner-input" 
+                                placeholder="Father / Husband first name" 
+                                name="fatherHusbandName" 
+                                value={formData.fatherHusbandName} 
+                                onChange={handleChange} 
+                              />
+                            </div>
                           </div>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Applicant Name */}
-                <div className="premium-section mb-5">
-                  <div className="premium-section-header">
-                    <div className="premium-section-icon">
-                      <User size={20} />
-                    </div>
-                    <div>
-                      <h4 className="premium-section-title">Applicant Name</h4>
-                      <p className="premium-section-desc">Enter your full name details</p>
-                    </div>
-                  </div>
-                  <div className="row g-3">
-                    <div className="col-md-4">
-                      <div className="premium-field-group">
-                        <label className="premium-field-label">First Name <span className="premium-required">*</span></label>
-                        <input type="text" className="premium-form-control" placeholder="First Name" name="firstName" value={formData.firstName} onChange={handleChange} required />
-                      </div>
-                    </div>
-                    <div className="col-md-4">
-                      <div className="premium-field-group">
-                        <label className="premium-field-label">Middle Name</label>
-                        <input type="text" className="premium-form-control" placeholder="Middle Name" name="middleName" value={formData.middleName} onChange={handleChange} />
-                      </div>
-                    </div>
-                    <div className="col-md-4">
-                      <div className="premium-field-group">
-                        <label className="premium-field-label">Last Name</label>
-                        <input type="text" className="premium-form-control" placeholder="Last Name" name="lastName" value={formData.lastName} onChange={handleChange} />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="premium-subsection mt-4">
-                    <div className="premium-subsection-header">
-                      <Users size={18} />
-                      Father / Husband Details
-                    </div>
-                    <div className="row g-3">
-                      <div className="col-md-4">
-                        <div className="premium-field-group">
-                          <label className="premium-field-label">First Name</label>
-                          <input type="text" className="premium-form-control" placeholder="First Name" name="fatherHusbandName" value={formData.fatherHusbandName} onChange={handleChange} />
-                        </div>
-                      </div>
-                      <div className="col-md-4">
-                        <div className="premium-field-group">
-                          <label className="premium-field-label">Middle Name</label>
-                          <input type="text" className="premium-form-control" placeholder="Middle Name" name="fatherHusbandMiddleName" value={formData.fatherHusbandMiddleName} onChange={handleChange} />
-                        </div>
-                      </div>
-                      <div className="col-md-4">
-                        <div className="premium-field-group">
-                          <label className="premium-field-label">Last Name</label>
-                          <input type="text" className="premium-form-control" placeholder="Last Name" name="fatherHusbandLastName" value={formData.fatherHusbandLastName} onChange={handleChange} />
+                          <div className="col-md-6">
+                            <div className="partner-field-group">
+                              <label className="partner-label">Last Name</label>
+                              <input 
+                                type="text" 
+                                className="partner-input" 
+                                placeholder="Father / Husband last name" 
+                                name="fatherHusbandLastName" 
+                                value={formData.fatherHusbandLastName} 
+                                onChange={handleChange} 
+                              />
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
 
-                {/* Personal Details */}
-                <div className="premium-section mb-5">
-                  <div className="premium-section-header">
-                    <div className="premium-section-icon">
-                      <FileText size={20} />
-                    </div>
-                    <div>
-                      <h4 className="premium-section-title">Personal Details</h4>
-                      <p className="premium-section-desc">Your personal identification information</p>
-                    </div>
-                  </div>
-                  <div className="row g-3">
-                    <div className="col-md-4">
-                      <div className="premium-field-group">
-                        <label className="premium-field-label">
-                          <Calendar size={16} className="me-2" />
+                    <div className="col-md-6 mt-3">
+                      <div className="partner-field-group">
+                        <label className="partner-label">
+                          <Calendar size={15} className="me-2 text-accent" />
                           Date of Birth
                         </label>
-                        <input type="date" className="premium-form-control" name="dob" value={formData.dob} onChange={handleChange} />
+                        <input 
+                          type="date" 
+                          className="partner-input" 
+                          name="dob" 
+                          value={formData.dob} 
+                          onChange={handleChange} 
+                        />
                       </div>
                     </div>
-                    <div className="col-md-4">
-                      <div className="premium-field-group">
-                        <label className="premium-field-label">
-                          <CreditCard size={16} className="me-2" />
-                          PAN Card Image <span className="premium-required">*</span>
+
+                    {/* Aadhaar Card Document Upload */}
+                    <div className="col-md-6 mt-3">
+                      <div className="partner-field-group">
+                        <label className="partner-label">
+                          <FileText size={15} className="me-2 text-accent" />
+                          Aadhaar Card Document <span className="required-star">*</span>
                         </label>
-                        <input type="file" id="pan-file" name="panCard" accept="image/*" onChange={handleFileChange} className="d-none" />
-                        <label htmlFor="pan-file" className="premium-file-upload">
-                          <div className="premium-file-upload-content">
-                            <span>{previews.panCard ? 'PAN Selected ✓' : 'Click to upload PAN card'}</span>
-                            <Upload size={18} />
-                          </div>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="col-md-4">
-                      <div className="premium-field-group">
-                        <label className="premium-field-label">
-                          <CreditCard size={16} className="me-2" />
-                          Aadhaar Card Image <span className="premium-required">*</span>
-                        </label>
-                        <input type="file" id="aadhaar-file" name="aadhaarCard" accept="image/*" onChange={handleFileChange} className="d-none" />
-                        <label htmlFor="aadhaar-file" className="premium-file-upload">
-                          <div className="premium-file-upload-content">
-                            <span>{previews.aadhaarCard ? 'Aadhaar Selected ✓' : 'Click to upload Aadhaar card'}</span>
-                            <Upload size={18} />
-                          </div>
-                        </label>
+
+                        <input 
+                          type="file" 
+                          id="aadhaar-camera-input" 
+                          name="aadhaarCard" 
+                          accept="image/*" 
+                          capture="environment"
+                          onChange={handleFileChange} 
+                          className="d-none" 
+                        />
+                        <input 
+                          type="file" 
+                          id="aadhaar-gallery-input" 
+                          name="aadhaarCard" 
+                          accept="image/*" 
+                          onChange={handleFileChange} 
+                          className="d-none" 
+                        />
+
+                        <div className={`partner-upload-card ${previews.aadhaarCard ? 'has-file' : ''}`}>
+                          {previews.aadhaarCard ? (
+                            <div className="upload-file-active">
+                              <img src={previews.aadhaarCard} alt="Aadhaar Preview" className="upload-preview-img" />
+                              <div className="upload-file-details">
+                                <span className="upload-file-status"><Check size={14} className="me-1" /> Aadhaar Uploaded</span>
+                                <div className="upload-action-buttons mt-2">
+                                  <label htmlFor="aadhaar-camera-input" className="btn-upload-sub btn-camera">
+                                    <Camera size={13} className="me-1" /> Camera
+                                  </label>
+                                  <label htmlFor="aadhaar-gallery-input" className="btn-upload-sub btn-gallery">
+                                    <ImageIcon size={13} className="me-1" /> Gallery
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="upload-options-grid">
+                              <label htmlFor="aadhaar-camera-input" className="upload-option-btn option-camera">
+                                <Camera size={20} className="option-icon" />
+                                <span>Capture Doc</span>
+                                <small>(Camera)</small>
+                              </label>
+                              <label htmlFor="aadhaar-gallery-input" className="upload-option-btn option-gallery">
+                                <Upload size={20} className="option-icon" />
+                                <span>Choose Document</span>
+                                <small>(Gallery / Files)</small>
+                              </label>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Professional Details */}
-                <div className="premium-section mb-5">
-                  <div className="premium-section-header">
-                    <div className="premium-section-icon">
-                      <Building size={20} />
+                {/* Section 2: Professional Details */}
+                <div className="partner-form-block" id="sec-professional">
+                  <div className="partner-block-header">
+                    <div className="partner-section-badge">02</div>
+                    <div className="partner-header-icon">
+                      <Building size={22} />
                     </div>
                     <div>
-                      <h4 className="premium-section-title">Professional Details</h4>
-                      <p className="premium-section-desc">Your professional and partnership information</p>
+                      <h3 className="partner-block-title">Professional Details</h3>
+                      <p className="partner-block-subtitle">Reference and channel partnership details</p>
                     </div>
                   </div>
+
                   <div className="row g-3">
                     <div className="col-md-6">
-                      <div className="premium-field-group">
-                        <label className="premium-field-label">Reference</label>
-                        <input type="text" className="premium-form-control" placeholder="Reference" name="reference" value={formData.reference} onChange={handleChange} />
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="premium-field-group">
-                        <label className="premium-field-label">Department</label>
-                        <input type="text" className="premium-form-control" placeholder="Department" name="department" value={formData.department} onChange={handleChange} />
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="premium-field-group">
-                        <label className="premium-field-label">Leader Name</label>
-                        <input type="text" className="premium-form-control" placeholder="Leader Name" name="leaderName" value={formData.leaderName} onChange={handleChange} />
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="premium-field-group">
-                        <label className="premium-field-label">Plan By</label>
-                        <input type="text" className="premium-form-control" placeholder="Plan By" name="planBy" value={formData.planBy} onChange={handleChange} />
-                      </div>
-                    </div>
-                    <div className="col-md-12">
-                      <div className="premium-field-group">
-                        <label className="premium-field-label">
-                          <Users size={16} className="me-2" />
-                          Referral Code <span className="premium-required">*</span>
+                      <div className="partner-field-group">
+                        <label className="partner-label">
+                          <Users size={15} className="me-2 text-accent" />
+                          Referral Code <span className="required-star">*</span>
                         </label>
-                        <input type="text" className={`premium-form-control ${errors.referralCode ? 'is-invalid' : ''}`} placeholder="Enter Referral Code" name="referralCode" value={formData.referralCode} onChange={handleChange} required />
-                        {errors.referralCode && <div className="text-danger mt-1 small">{errors.referralCode}</div>}
+                        <input 
+                          type="text" 
+                          className={`partner-input ${errors.referralCode ? 'is-invalid-input' : ''}`}
+                          placeholder="Enter Referral Code" 
+                          name="referralCode" 
+                          value={formData.referralCode} 
+                          onChange={handleChange} 
+                          required 
+                        />
+                        {errors.referralCode && (
+                          <div className="partner-error-text mt-1">
+                            <AlertCircle size={14} className="me-1 flex-shrink-0" />
+                            <span>{errors.referralCode}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="partner-field-group">
+                        <label className="partner-label">Reference</label>
+                        <input 
+                          type="text" 
+                          className="partner-input" 
+                          placeholder="Enter Reference (if any)" 
+                          name="reference" 
+                          value={formData.reference} 
+                          onChange={handleChange} 
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="partner-field-group">
+                        <label className="partner-label">Department</label>
+                        <input 
+                          type="text" 
+                          className="partner-input" 
+                          placeholder="Department" 
+                          name="department" 
+                          value={formData.department} 
+                          onChange={handleChange} 
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="partner-field-group">
+                        <label className="partner-label">Leader Name</label>
+                        <input 
+                          type="text" 
+                          className="partner-input" 
+                          placeholder="Leader Name" 
+                          name="leaderName" 
+                          value={formData.leaderName} 
+                          onChange={handleChange} 
+                        />
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Address Section */}
-                <div className="row g-4 mb-5">
-                  <div className="col-lg-6">
-                    <div className="premium-address-card">
-                      <div className="premium-address-header">
-                        <MapPin size={20} />
-                        <span>Local Address</span>
-                      </div>
-                      <div className="d-flex flex-column gap-3">
-                        <div className="premium-field-group">
-                          <label className="premium-field-label">Address Line</label>
-                          <input type="text" className="premium-form-control" placeholder="Address Line" name="localAddressLine" value={formData.localAddressLine} onChange={handleChange} />
-                        </div>
-                        <div className="row g-3">
-                          <div className="col-12 col-sm-4">
-                            <div className="premium-field-group">
-                              <label className="premium-field-label">City</label>
-                              <input type="text" className="premium-form-control" placeholder="City" name="localCity" value={formData.localCity} onChange={handleChange} />
-                            </div>
-                          </div>
-                          <div className="col-12 col-sm-4">
-                            <div className="premium-field-group">
-                              <label className="premium-field-label">State</label>
-                              <input type="text" className="premium-form-control" placeholder="State" name="localState" value={formData.localState} onChange={handleChange} />
-                            </div>
-                          </div>
-                          <div className="col-12 col-sm-4">
-                            <div className="premium-field-group">
-                              <label className="premium-field-label">Pin Code</label>
-                              <input type="text" className="premium-form-control" placeholder="Pin Code" name="localPinCode" value={formData.localPinCode} onChange={handleChange} />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="col-lg-6">
-                    <div className="premium-address-card">
-                      <div className="premium-address-header">
-                        <MapPin size={20} />
-                        <span>Permanent Address</span>
-                      </div>
-                      <div className="d-flex flex-column gap-3">
-                        <div className="premium-field-group">
-                          <label className="premium-field-label">Address Line</label>
-                          <input type="text" className="premium-form-control" placeholder="Address Line" name="permanentAddressLine" value={formData.permanentAddressLine} onChange={handleChange} />
-                        </div>
-                        <div className="row g-3">
-                          <div className="col-12 col-sm-4">
-                            <div className="premium-field-group">
-                              <label className="premium-field-label">City</label>
-                              <input type="text" className="premium-form-control" placeholder="City" name="permanentCity" value={formData.permanentCity} onChange={handleChange} />
-                            </div>
-                          </div>
-                          <div className="col-12 col-sm-4">
-                            <div className="premium-field-group">
-                              <label className="premium-field-label">State</label>
-                              <input type="text" className="premium-form-control" placeholder="State" name="permanentState" value={formData.permanentState} onChange={handleChange} />
-                            </div>
-                          </div>
-                          <div className="col-12 col-sm-4">
-                            <div className="premium-field-group">
-                              <label className="premium-field-label">Pin Code</label>
-                              <input type="text" className="premium-form-control" placeholder="Pin Code" name="permanentPinCode" value={formData.permanentPinCode} onChange={handleChange} />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Contact Details */}
-                <div className="premium-section mb-5">
-                  <div className="premium-section-header">
-                    <div className="premium-section-icon">
-                      <Phone size={20} />
+                {/* Section 3: Address Information */}
+                <div className="partner-form-block" id="sec-address">
+                  <div className="partner-block-header">
+                    <div className="partner-section-badge">03</div>
+                    <div className="partner-header-icon">
+                      <MapPin size={22} />
                     </div>
                     <div>
-                      <h4 className="premium-section-title">Contact Details</h4>
-                      <p className="premium-section-desc">How can we reach you?</p>
+                      <h3 className="partner-block-title">Address Information</h3>
+                      <p className="partner-block-subtitle">Your current residential / business address</p>
                     </div>
                   </div>
+
+                  <div className="row g-3">
+                    <div className="col-12">
+                      <div className="partner-field-group">
+                        <label className="partner-label">Address Line</label>
+                        <input 
+                          type="text" 
+                          className="partner-input" 
+                          placeholder="Street address, house no., building name" 
+                          name="localAddressLine" 
+                          value={formData.localAddressLine} 
+                          onChange={handleChange} 
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-md-4">
+                      <div className="partner-field-group">
+                        <label className="partner-label">City</label>
+                        <input 
+                          type="text" 
+                          className="partner-input" 
+                          placeholder="City" 
+                          name="localCity" 
+                          value={formData.localCity} 
+                          onChange={handleChange} 
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-md-4">
+                      <div className="partner-field-group">
+                        <label className="partner-label">State</label>
+                        <input 
+                          type="text" 
+                          className="partner-input" 
+                          placeholder="State" 
+                          name="localState" 
+                          value={formData.localState} 
+                          onChange={handleChange} 
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-md-4">
+                      <div className="partner-field-group">
+                        <label className="partner-label">Pin Code</label>
+                        <input 
+                          type="text" 
+                          className="partner-input" 
+                          placeholder="Pin Code" 
+                          name="localPinCode" 
+                          value={formData.localPinCode} 
+                          onChange={handleChange} 
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section 4: Contact Details */}
+                <div className="partner-form-block" id="sec-contact">
+                  <div className="partner-block-header">
+                    <div className="partner-section-badge">04</div>
+                    <div className="partner-header-icon">
+                      <Phone size={22} />
+                    </div>
+                    <div>
+                      <h3 className="partner-block-title">Contact Details</h3>
+                      <p className="partner-block-subtitle">How can our team reach out to you</p>
+                    </div>
+                  </div>
+
                   <div className="row g-3">
                     <div className="col-md-4">
-                      <div className="premium-field-group">
-                        <label className="premium-field-label">
-                          <Mail size={16} className="me-2" />
+                      <div className="partner-field-group">
+                        <label className="partner-label">
+                          <Mail size={15} className="me-2 text-accent" />
                           Email ID
                         </label>
-                        <input type="email" className={`premium-form-control ${errors.email ? 'is-invalid' : ''}`} placeholder="Email ID" name="email" value={formData.email} onChange={handleChange} />
-                        {errors.email && <div className="text-danger mt-1 small">{errors.email}</div>}
+                        <input 
+                          type="email" 
+                          className={`partner-input ${errors.email ? 'is-invalid-input' : ''}`}
+                          placeholder="name@example.com" 
+                          name="email" 
+                          value={formData.email} 
+                          onChange={handleChange} 
+                        />
+                        {errors.email && (
+                          <div className="partner-error-text mt-1">
+                            <AlertCircle size={14} className="me-1 flex-shrink-0" />
+                            <span>{errors.email}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
+
                     <div className="col-md-4">
-                      <div className="premium-field-group">
-                        <label className="premium-field-label">
-                          <Phone size={16} className="me-2" />
-                          Mobile 1 <span className="premium-required">*</span>
+                      <div className="partner-field-group">
+                        <label className="partner-label">
+                          <Phone size={15} className="me-2 text-accent" />
+                          Mobile Number 1 <span className="required-star">*</span>
                         </label>
-                        <input type="tel" className="premium-form-control" placeholder="Mobile 1" name="mobile1" value={formData.mobile1} onChange={handleChange} required />
+                        <input 
+                          type="tel" 
+                          className="partner-input" 
+                          placeholder="10-digit mobile number" 
+                          name="mobile1" 
+                          value={formData.mobile1} 
+                          onChange={handleChange} 
+                          required 
+                        />
                       </div>
                     </div>
+
                     <div className="col-md-4">
-                      <div className="premium-field-group">
-                        <label className="premium-field-label">
-                          <Phone size={16} className="me-2" />
-                          Mobile 2
+                      <div className="partner-field-group">
+                        <label className="partner-label">
+                          <Phone size={15} className="me-2 text-accent" />
+                          Mobile Number 2
                         </label>
-                        <input type="tel" className="premium-form-control" placeholder="Mobile 2" name="mobile2" value={formData.mobile2} onChange={handleChange} />
+                        <input 
+                          type="tel" 
+                          className="partner-input" 
+                          placeholder="Alternate mobile (optional)" 
+                          name="mobile2" 
+                          value={formData.mobile2} 
+                          onChange={handleChange} 
+                        />
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Action/Submission Section */}
-                <div className="premium-submit-section">
-                  {loading && (
-                    <div className="premium-progress-container mx-auto mb-4">
-                      <div className="premium-progress-header">
-                        <span className="premium-progress-text">Processing Application</span>
-                        <span className="premium-progress-percent">{uploadProgress}%</span>
-                      </div>
-                      <div className="premium-progress-bar-wrapper">
-                        <div
-                          className="premium-progress-bar"
-                          style={{ width: `${uploadProgress}%` }}
-                        ></div>
-                      </div>
+                {/* Submission Progress Bar */}
+                {loading && (
+                  <div className="partner-submit-progress">
+                    <div className="progress-info-row mb-2">
+                      <span className="progress-title">Uploading Documents & Registering</span>
+                      <span className="progress-count">{uploadProgress}%</span>
                     </div>
-                  )}
+                    <div className="progress-track">
+                      <div className="progress-fill" style={{ width: `${uploadProgress}%` }}></div>
+                    </div>
+                  </div>
+                )}
 
-                  <div className="premium-terms-container mb-4">
-                    <label className="premium-terms-label" onClick={handleCheckboxClick}>
+                {/* Terms Agreement & Submission CTA */}
+                <div className="partner-footer-action">
+                  <div className="terms-checkbox-wrapper mb-4">
+                    <label className="terms-custom-label" onClick={handleCheckboxClick}>
                       <input
                         type="checkbox"
-                        className="premium-terms-checkbox"
+                        className="terms-checkbox-input"
                         checked={agreed}
-                        onChange={() => {}} // Controlled component with click handled on label
+                        onChange={() => {}}
                       />
-                      <span>
-                        I agree with{" "}
-                        <span className="terms-link-text" onClick={(e) => {
-                          e.stopPropagation();
-                          setShowTermsModal(true);
-                        }}>
+                      <span className="terms-text">
+                        I agree with the{" "}
+                        <button
+                          type="button"
+                          className="terms-inline-link"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowTermsModal(true);
+                          }}
+                        >
                           Terms and Conditions
-                        </span>
+                        </button>
                       </span>
                     </label>
                   </div>
 
-                  <button type="submit" disabled={loading || !agreed} className="premium-submit-btn">
+                  <button 
+                    type="submit" 
+                    disabled={loading || !agreed} 
+                    className="partner-btn-submit"
+                  >
                     {loading ? (
                       <>
-                        <Loader2 size={18} className="premium-spinner me-2" />
-                        <span>Processing...</span>
+                        <Loader2 size={20} className="spinner-rotate me-2" />
+                        <span>Submitting Application...</span>
                       </>
                     ) : (
                       <>
                         <span>Submit Application</span>
-                        <ArrowRight size={18} />
+                        <ArrowRight size={20} className="ms-2" />
                       </>
                     )}
                   </button>
-                  <p className="premium-security-note">
-                    <ShieldCheck size={16} className="me-2" />
-                    Secure 256-bit SSL encrypted application
-                  </p>
+
+                  <div className="partner-security-badge mt-3">
+                    <ShieldCheck size={16} className="text-success me-2" />
+                    <span>Your data is encrypted & protected with 256-bit SSL</span>
+                  </div>
                 </div>
+
               </form>
             </div>
           </div>
@@ -637,20 +840,23 @@ const JoinAsPartner = () => {
 
       {/* Terms and Conditions Modal */}
       {showTermsModal && (
-        <div className="terms-modal-overlay" onClick={() => setShowTermsModal(false)}>
-          <div className="terms-modal-card" onClick={(e) => e.stopPropagation()}>
+        <div className="terms-modal-backdrop" onClick={() => setShowTermsModal(false)}>
+          <div className="terms-modal-box" onClick={(e) => e.stopPropagation()}>
             <div className="terms-modal-header">
-              <h3>नियम और शर्तें</h3>
+              <div className="d-flex align-items-center gap-2">
+                <FileText size={20} className="text-accent" />
+                <h3 className="mb-0">नियम और शर्तें</h3>
+              </div>
               <button 
                 type="button" 
-                className="terms-modal-close" 
+                className="terms-close-btn" 
                 onClick={() => setShowTermsModal(false)}
               >
                 &times;
               </button>
             </div>
             <div className="terms-modal-body">
-              <div className="terms-scroll-content">
+              <div className="terms-content-scroll">
                 <h4>1. नियमों की स्वीकृति</h4>
                 <p>
                   इस वेबसाइट का उपयोग करके, आप इन नियमों और शर्तों से बंधे रहने के लिए सहमत हैं। यदि आप सहमत नहीं हैं, तो कृपया इस साइट का उपयोग करने से बचें।
@@ -700,14 +906,14 @@ const JoinAsPartner = () => {
             <div className="terms-modal-footer">
               <button 
                 type="button" 
-                className="terms-decline-btn" 
+                className="terms-btn-decline" 
                 onClick={() => setShowTermsModal(false)}
               >
                 रद्द करें
               </button>
               <button 
                 type="button" 
-                className="terms-agree-btn" 
+                className="terms-btn-accept" 
                 onClick={() => {
                   setAgreed(true);
                   setShowTermsModal(false);
