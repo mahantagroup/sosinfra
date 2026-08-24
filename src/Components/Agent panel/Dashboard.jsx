@@ -16,7 +16,7 @@ import './AgentPanel.css';
 
 
 const mapAgentInfo = (agent) => {
-  const docsUploaded = [agent.photographUrl, agent.panCardUrl, agent.aadhaarCardUrl].filter(Boolean).length;
+  const docsUploaded = [agent.photographUrl, agent.aadhaarCardUrl].filter(Boolean).length;
   return {
     name: agent.fullName || [agent.firstName, agent.middleName, agent.lastName].filter(Boolean).join(' '),
     id: agent.loginId || agent.email,
@@ -27,15 +27,13 @@ const mapAgentInfo = (agent) => {
     status: agent.status || 'Pending',
     joiningDate: agent.date || '—',
     dob: agent.dob || '—',
-    panCardNo: agent.panCardNo || '—',
     aadhaarCardNo: agent.aadhaarCardNo || '—',
-    profileCompletion: Math.round((docsUploaded / 3) * 100),
+    profileCompletion: Math.round((docsUploaded / 2) * 100),
     address: agent.localAddressLine || agent.permanentAddressLine1 || '—',
     city: agent.localCity || agent.permanentCity || '—',
     state: agent.localState || agent.permanentState || '—',
     pincode: agent.localPinCode || agent.permanentPinCode || '—',
     photographUrl: agent.photographUrl,
-    panCardUrl: agent.panCardUrl,
     aadhaarCardUrl: agent.aadhaarCardUrl,
     passwordChanged: !!agent.passwordChanged,
     uid: agent.id,
@@ -485,10 +483,9 @@ const AgentDashboard = () => {
             <div className="row g-4">
               {[
                 { name: 'Profile Photograph', url: agentInfo.photographUrl },
-                { name: 'PAN Card Proof', url: agentInfo.panCardUrl },
                 { name: 'Aadhaar Card Proof', url: agentInfo.aadhaarCardUrl }
               ].map((kycDoc, idx) => (
-                <div className="col-md-4" key={idx}>
+                <div className="col-md-6" key={idx}>
                   <div className="agent-card p-0 overflow-hidden h-100" style={{ boxShadow: 'var(--agent-shadow-sm)' }}>
                     <div className="d-flex align-items-center justify-content-center" style={{ height: '160px', background: 'var(--agent-surface-2)' }}>
                       {kycDoc.url ? (

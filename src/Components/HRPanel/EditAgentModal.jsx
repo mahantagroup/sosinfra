@@ -23,7 +23,6 @@ const EditAgentModal = ({ agent, onClose, onSave }) => {
     email: agent.email || agent.loginId || '',
     mobile1: agent.mobile1 || '',
     mobile2: agent.mobile2 || '',
-    panCardNo: agent.panCardNo || '',
     aadhaarCardNo: agent.aadhaarCardNo || '',
     reference: agent.reference || '',
     department: agent.department || '',
@@ -75,7 +74,7 @@ const EditAgentModal = ({ agent, onClose, onSave }) => {
           <div className="alert alert-info border-0 bg-primary-subtle text-primary d-flex align-items-center gap-2 mb-4 p-3 rounded-3">
             <Lock size={18} className="flex-shrink-0" />
             <span className="small font-medium">
-              <strong>Notice:</strong> Per system policy, images (Photograph, PAN, Aadhaar) and referral codes cannot be edited after registration.
+              <strong>Notice:</strong> Per system policy, images (Photograph, Aadhaar) and referral codes cannot be edited after registration.
             </span>
           </div>
 
@@ -110,14 +109,6 @@ const EditAgentModal = ({ agent, onClose, onSave }) => {
                     <S3Image src={agent.photographUrl} width={100} className="rounded" style={{ width: '32px', height: '32px', objectFit: 'cover' }} />
                   ) : (
                     <span className="badge bg-secondary-subtle text-secondary small">No Image</span>
-                  )}
-                </div>
-                <div className="d-flex align-items-center gap-2 px-3 py-2 bg-white rounded border">
-                  <span className="small text-muted">PAN:</span>
-                  {agent.panCardUrl ? (
-                    <S3Image src={agent.panCardUrl} width={100} className="rounded" style={{ width: '32px', height: '32px', objectFit: 'cover' }} />
-                  ) : (
-                    <span className="badge bg-secondary-subtle text-secondary small">No PAN Image</span>
                   )}
                 </div>
                 <div className="d-flex align-items-center gap-2 px-3 py-2 bg-white rounded border">
@@ -212,11 +203,7 @@ const EditAgentModal = ({ agent, onClose, onSave }) => {
               <User size={16} className="text-primary" /> Identity Card Numbers
             </h5>
             <div className="row g-3">
-              <div className="col-md-6">
-                <label className="form-label small font-medium">PAN Card Number</label>
-                <input type="text" className="form-control" placeholder="PAN Card No." name="panCardNo" value={formData.panCardNo} onChange={handleChange} />
-              </div>
-              <div className="col-md-6">
+              <div className="col-md-12">
                 <label className="form-label small font-medium">Aadhaar Card Number</label>
                 <input type="text" className="form-control" placeholder="Aadhaar Card No." name="aadhaarCardNo" value={formData.aadhaarCardNo} onChange={handleChange} />
               </div>

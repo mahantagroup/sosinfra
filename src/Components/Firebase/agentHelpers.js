@@ -38,9 +38,8 @@ export const createAgentAccount = async ({
   email,
   password,
   formData,
-  photographUrl,
-  panCardUrl,
-  aadhaarCardUrl,
+  photographUrl = '',
+  aadhaarCardUrl = '',
   partnerRequestId,
 }) => {
   const normalizedEmail = email.trim().toLowerCase();
@@ -114,9 +113,8 @@ export const createAgentAccount = async ({
     status: 'Pending',
     fullName,
     ...formData,
-    photographUrl,
-    panCardUrl,
-    aadhaarCardUrl,
+    photographUrl: photographUrl || '',
+    aadhaarCardUrl: aadhaarCardUrl || '',
     partnerRequestId: partnerRequestId || null,
     passwordChanged: false,
     createdAt: serverTimestamp(),

@@ -29,7 +29,6 @@ const AddAgent = ({ onAgentAdded }) => {
     email: '',
     mobile1: '',
     mobile2: '',
-    panCardNo: '',
     aadhaarCardNo: '',
     reference: '',
     department: '',
@@ -38,8 +37,8 @@ const AddAgent = ({ onAgentAdded }) => {
     referralCode: '',
   });
 
-  const [files, setFiles] = useState({ photograph: null, panCard: null, aadhaarCard: null });
-  const [previews, setPreviews] = useState({ photograph: null, panCard: null, aadhaarCard: null });
+  const [files, setFiles] = useState({ photograph: null, aadhaarCard: null });
+  const [previews, setPreviews] = useState({ photograph: null, aadhaarCard: null });
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [submitted, setSubmitted] = useState(false);
@@ -72,10 +71,9 @@ const AddAgent = ({ onAgentAdded }) => {
 
     try {
       let photographUrl = '';
-      let panCardUrl = '';
       let aadhaarCardUrl = '';
 
-      const totalFiles = (files.photograph ? 1 : 0) + (files.panCard ? 1 : 0) + (files.aadhaarCard ? 1 : 0);
+      const totalFiles = (files.photograph ? 1 : 0) + (files.aadhaarCard ? 1 : 0);
       let uploadedCount = 0;
 
       const updateOverallProgress = (p) => {
@@ -86,10 +84,6 @@ const AddAgent = ({ onAgentAdded }) => {
 
       if (files.photograph) {
         photographUrl = await uploadToCloudinary(files.photograph, updateOverallProgress, { isDocument: false, maxWidth: 1200 });
-        uploadedCount++;
-      }
-      if (files.panCard) {
-        panCardUrl = await uploadToCloudinary(files.panCard, updateOverallProgress, { isDocument: true, maxWidth: 1920 });
         uploadedCount++;
       }
       if (files.aadhaarCard) {
@@ -105,7 +99,6 @@ const AddAgent = ({ onAgentAdded }) => {
       const partnerRef = await addDoc(collection(db, 'partnerRequests'), {
         ...formData,
         photographUrl,
-        panCardUrl,
         aadhaarCardUrl,
         loginId,
         status: 'Approved', // HR added agents are pre-approved
@@ -119,7 +112,6 @@ const AddAgent = ({ onAgentAdded }) => {
         password,
         formData,
         photographUrl,
-        panCardUrl,
         aadhaarCardUrl,
         partnerRequestId: partnerRef.id,
       });
@@ -152,11 +144,11 @@ const AddAgent = ({ onAgentAdded }) => {
         fatherHusbandName: '', fatherHusbandMiddleName: '', fatherHusbandLastName: '',
         dob: '', localAddressLine: '', localCity: '', localState: '', localPinCode: '',
         permanentAddressLine: '', permanentCity: '', permanentState: '', permanentPinCode: '',
-        email: '', mobile1: '', mobile2: '', panCardNo: '', aadhaarCardNo: '',
+        email: '', mobile1: '', mobile2: '', aadhaarCardNo: '',
         reference: '', department: '', leaderName: '', planBy: '', referralCode: '',
       });
-      setFiles({ photograph: null, panCard: null, aadhaarCard: null });
-      setPreviews({ photograph: null, panCard: null, aadhaarCard: null });
+      setFiles({ photograph: null, aadhaarCard: null });
+      setPreviews({ photograph: null, aadhaarCard: null });
 
       alert(`Agent added successfully!`);
       
@@ -238,19 +230,11 @@ const AddAgent = ({ onAgentAdded }) => {
             Personal Details
           </h4>
           <div className="row g-3">
-            <div className="col-md-4">
+            <div className="col-md-6">
               <label className="form-label">Date of Birth</label>
               <input type="date" className="form-control" name="dob" value={formData.dob} onChange={handleChange} />
             </div>
-            <div className="col-md-4">
-              <label className="form-label">PAN Card Image</label>
-              <input type="file" id="pan-file" name="panCard" accept="image/*" onChange={handleFileChange} className="d-none" />
-              <label htmlFor="pan-file" className="form-control d-flex align-items-center justify-content-between" style={{ cursor: 'pointer' }}>
-                <span>{previews.panCard ? 'PAN Selected ✓' : 'Upload PAN'}</span>
-                <Upload size={18} />
-              </label>
-            </div>
-            <div className="col-md-4">
+            <div className="col-md-6">
               <label className="form-label">Aadhaar Card Image</label>
               <input type="file" id="aadhaar-file" name="aadhaarCard" accept="image/*" onChange={handleFileChange} className="d-none" />
               <label htmlFor="aadhaar-file" className="form-control d-flex align-items-center justify-content-between" style={{ cursor: 'pointer' }}>

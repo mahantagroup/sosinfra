@@ -32,6 +32,10 @@ const HRDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [viewingTeamOf, setViewingTeamOf] = useState(null);
+  const [showCsvModal, setShowCsvModal] = useState(false);
+  const [csvStartDate, setCsvStartDate] = useState('');
+  const [csvEndDate, setCsvEndDate] = useState('');
+  const [csvStatusFilter, setCsvStatusFilter] = useState('Approved');
   const searchInputRef = useRef(null);
 
   const handleEdit = (agent) => {
@@ -152,10 +156,52 @@ const HRDashboard = () => {
     }
   };
 
+  const getAgentDateStr = (agent) => {
+    if (agent.date) return agent.date;
+    if (agent.createdAt) {
+      const d = agent.createdAt.toDate ? agent.createdAt.toDate() : new Date(agent.createdAt);
+      if (!isNaN(d.getTime())) {
+        return d.toISOString().split('T')[0];
+      }
+    }
+    return '';
+  };
+
+  const handleCsvPreset = (preset) => {
+    const today = new Date().toISOString().split('T')[0];
+    if (preset === 'all') {
+      setCsvStartDate('');
+      setCsvEndDate('');
+    } else if (preset === 'today') {
+      setCsvStartDate(today);
+      setCsvEndDate(today);
+    } else if (preset === 'thisMonth') {
+      const firstDay = new Date();
+      firstDay.setDate(1);
+      setCsvStartDate(firstDay.toISOString().split('T')[0]);
+      setCsvEndDate(today);
+    } else if (preset === 'last30') {
+      const d = new Date();
+      d.setDate(d.getDate() - 30);
+      setCsvStartDate(d.toISOString().split('T')[0]);
+      setCsvEndDate(today);
+    }
+  };
+
+  const getFilteredAgentsForCsv = () => {
+    return agents.filter((a) => {
+      if (csvStatusFilter === 'Approved' && a.status !== 'Approved') return false;
+      const agentDate = getAgentDateStr(a);
+      if (csvStartDate && agentDate && agentDate < csvStartDate) return false;
+      if (csvEndDate && agentDate && agentDate > csvEndDate) return false;
+      return true;
+    });
+  };
+
   const downloadCSV = () => {
-    const approvedAgents = agents.filter(a => a.status === 'Approved');
-    if (approvedAgents.length === 0) {
-      alert("No approved partners to download.");
+    const targetAgents = getFilteredAgentsForCsv();
+    if (targetAgents.length === 0) {
+      alert("No partner records found matching the selected date criteria.");
       return;
     }
 
@@ -182,7 +228,6 @@ const HRDashboard = () => {
       'Permanent City',
       'Permanent State',
       'Permanent Pin Code',
-      'PAN Card No',
       'Aadhaar Card No',
       'Referral Code Used',
       'Reference',
@@ -199,7 +244,7 @@ const HRDashboard = () => {
       return `"${str}"`;
     };
 
-    const rows = approvedAgents.map(a => [
+    const rows = targetAgents.map(a => [
       a.agentId || '',
       a.ownReferralCode || '',
       a.status || 'Approved',
@@ -222,7 +267,6 @@ const HRDashboard = () => {
       a.permanentCity || '',
       a.permanentState || '',
       a.permanentPinCode || '',
-      a.panCardNo || '',
       a.aadhaarCardNo || '',
       a.referralCode || '',
       a.reference || '',
@@ -238,14 +282,24 @@ const HRDashboard = () => {
       ...rows.map(row => row.map(cell => escapeCSV(cell)).join(','))
     ].join('\n');
 
+    let filename = `partners_export`;
+    if (csvStartDate || csvEndDate) {
+      filename += `_${csvStartDate || 'start'}_to_${csvEndDate || 'end'}`;
+    } else {
+      filename += `_all_time`;
+    }
+    filename += `.csv`;
+
     const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `approved_partners_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute('download', filename);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
+    setShowCsvModal(false);
   };
 
   const menuItems = [
@@ -443,8 +497,8 @@ const HRDashboard = () => {
                         Back to List
                       </button>
                     )}
-                    {activeTab === 'approved' && !viewingTeamOf && (
-                      <button className="btn-hr-approve" onClick={downloadCSV}>
+                    {!viewingTeamOf && (
+                      <button className="btn-hr-approve" onClick={() => setShowCsvModal(true)}>
                         <Download size={14} className="me-2" /> Download CSV
                       </button>
                     )}
@@ -635,30 +689,12 @@ const HRDashboard = () => {
 
                     <h3 className="mt-4">Onboarding Documents</h3>
                     <div className="hr-info-item">
-                       <label>PAN Card Number</label>
-                       <span>{selectedAgent.panCardNo || '—'}</span>
-                    </div>
-                    <div className="hr-info-item">
                        <label>Aadhaar Card Number</label>
                        <span>{selectedAgent.aadhaarCardNo || '—'}</span>
                     </div>
                     
                     <div className="row g-3 mt-2">
-                      <div className="col-6">
-                        <div className="hr-doc-box">
-                          <S3Image src={selectedAgent.panCardUrl} width={300} className="hr-doc-thumb" />
-                          <button 
-                            className="btn btn-sm btn-link text-decoration-none p-0 fw-bold small" 
-                            onClick={async () => {
-                              const url = await getImageViewUrl(selectedAgent.panCardUrl);
-                              if (url) window.open(getOptimizedCloudinaryUrl(url, 1200), '_blank');
-                            }}
-                          >
-                            View PAN <ExternalLink size={10} />
-                          </button>
-                        </div>
-                      </div>
-                      <div className="col-6">
+                      <div className="col-12">
                         <div className="hr-doc-box">
                           <S3Image src={selectedAgent.aadhaarCardUrl} width={300} className="hr-doc-thumb" />
                           <button 
@@ -699,6 +735,152 @@ const HRDashboard = () => {
           onClose={() => setEditingAgent(null)}
           onSave={handleSaveEditedAgent}
         />
+      )}
+
+      {/* CSV Export & Date Filter Modal */}
+      {showCsvModal && (
+        <div className="hr-modal-overlay" onClick={() => setShowCsvModal(false)}>
+          <div className="hr-modal-container" style={{ maxWidth: '520px' }} onClick={(e) => e.stopPropagation()}>
+            <div className="hr-modal-header">
+              <div className="d-flex align-items-center gap-2">
+                <Download size={22} className="text-primary" />
+                <div>
+                  <h3 className="m-0 fw-800 fs-5">Export Partners Data (CSV)</h3>
+                  <p className="m-0 text-muted small">Filter records by single date or date range</p>
+                </div>
+              </div>
+              <button className="hr-modal-close-btn" onClick={() => setShowCsvModal(false)} aria-label="Close modal">
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="hr-modal-body p-4">
+              {/* Quick Date Presets */}
+              <div className="mb-4">
+                <label className="form-label text-muted small fw-bold text-uppercase mb-2" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>
+                  Quick Date Presets
+                </label>
+                <div className="d-flex flex-wrap gap-2">
+                  <button 
+                    type="button" 
+                    className={`btn btn-sm ${!csvStartDate && !csvEndDate ? 'btn-primary' : 'btn-outline-secondary'}`}
+                    onClick={() => handleCsvPreset('all')}
+                  >
+                    All Time
+                  </button>
+                  <button 
+                    type="button" 
+                    className="btn btn-sm btn-outline-secondary"
+                    onClick={() => handleCsvPreset('today')}
+                  >
+                    Today
+                  </button>
+                  <button 
+                    type="button" 
+                    className="btn btn-sm btn-outline-secondary"
+                    onClick={() => handleCsvPreset('thisMonth')}
+                  >
+                    This Month
+                  </button>
+                  <button 
+                    type="button" 
+                    className="btn btn-sm btn-outline-secondary"
+                    onClick={() => handleCsvPreset('last30')}
+                  >
+                    Last 30 Days
+                  </button>
+                </div>
+              </div>
+
+              {/* Date Selection Inputs */}
+              <div className="row g-3 mb-4">
+                <div className="col-md-6">
+                  <label className="form-label small font-medium d-flex align-items-center gap-1">
+                    <Calendar size={14} className="text-primary" /> Start Date
+                  </label>
+                  <input 
+                    type="date" 
+                    className="form-control"
+                    value={csvStartDate}
+                    onChange={(e) => setCsvStartDate(e.target.value)}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <label className="form-label small font-medium d-flex align-items-center gap-1">
+                    <Calendar size={14} className="text-primary" /> End Date
+                  </label>
+                  <input 
+                    type="date" 
+                    className="form-control"
+                    value={csvEndDate}
+                    onChange={(e) => setCsvEndDate(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {/* Filter by Status */}
+              <div className="mb-4">
+                <label className="form-label text-muted small fw-bold text-uppercase mb-2" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>
+                  Filter by Status
+                </label>
+                <div className="d-flex gap-3 flex-wrap">
+                  <label className="d-flex align-items-center gap-2 cursor-pointer small font-medium me-3">
+                    <input 
+                      type="radio" 
+                      name="csvStatus" 
+                      checked={csvStatusFilter === 'Approved'} 
+                      onChange={() => setCsvStatusFilter('Approved')}
+                    />
+                    Approved Partners Only
+                  </label>
+                  <label className="d-flex align-items-center gap-2 cursor-pointer small font-medium">
+                    <input 
+                      type="radio" 
+                      name="csvStatus" 
+                      checked={csvStatusFilter === 'All'} 
+                      onChange={() => setCsvStatusFilter('All')}
+                    />
+                    All Registrations
+                  </label>
+                </div>
+              </div>
+
+              {/* Summary Banner */}
+              <div className="alert alert-info border-0 bg-primary-subtle text-primary d-flex align-items-center justify-content-between p-3 rounded-3 m-0">
+                <span className="small font-medium">
+                  <strong>Matching Records:</strong> {getFilteredAgentsForCsv().length} partner(s) found
+                </span>
+                {(csvStartDate || csvEndDate) && (
+                  <button 
+                    type="button" 
+                    className="btn btn-sm btn-link text-primary p-0 text-decoration-none small fw-bold"
+                    onClick={() => { setCsvStartDate(''); setCsvEndDate(''); }}
+                  >
+                    Clear Filter
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="hr-modal-footer p-3 bg-light rounded-bottom d-flex justify-content-end gap-2">
+              <button 
+                type="button" 
+                className="btn btn-light px-4 fw-bold" 
+                onClick={() => setShowCsvModal(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                type="button" 
+                className="btn btn-primary px-4 fw-bold d-flex align-items-center gap-2"
+                onClick={downloadCSV}
+                disabled={getFilteredAgentsForCsv().length === 0}
+              >
+                <Download size={16} /> Download CSV ({getFilteredAgentsForCsv().length})
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
