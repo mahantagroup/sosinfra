@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import {
   LayoutDashboard, Users, UserCheck, LogOut, Search, Menu, X,
   Eye, CheckCircle2, XCircle, Clock, Loader2, RefreshCw, ExternalLink,
-  ChevronRight, Mail, Phone, Calendar, UserPlus, Download, Users2, Trash2, Edit
+  ChevronRight, ChevronLeft, ChevronsLeft, ChevronsRight, ArrowUpDown,
+  Mail, Phone, Calendar, UserPlus, Download, Users2, Trash2, Edit
 } from 'lucide-react';
 import {
   fetchAllAgents,
@@ -36,7 +37,14 @@ const HRDashboard = () => {
   const [csvStartDate, setCsvStartDate] = useState('');
   const [csvEndDate, setCsvEndDate] = useState('');
   const [csvStatusFilter, setCsvStatusFilter] = useState('Approved');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortBy, setSortBy] = useState('latest');
+  const ITEMS_PER_PAGE = 20;
   const searchInputRef = useRef(null);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab, searchQuery, sortBy, viewingTeamOf]);
 
   const handleEdit = (agent) => {
     setEditingAgent(agent);
@@ -318,17 +326,65 @@ const HRDashboard = () => {
       list = agents.filter(a => a.referralCode === viewingTeamOf.ownReferralCode);
     }
 
-    // Sort by latest registration first
-    return [...list].sort((a, b) => {
-      const getMs = (ts) => {
-        if (!ts) return 0;
+    const getMs = (agent) => {
+      const ts = agent.createdAt;
+      if (ts) {
         if (typeof ts.toMillis === 'function') return ts.toMillis();
         if (ts instanceof Date) return ts.getTime();
-        return 0;
-      };
-      return getMs(b.createdAt) - getMs(a.createdAt);
+        const d = new Date(ts);
+        if (!isNaN(d.getTime())) return d.getTime();
+      }
+      if (agent.date) {
+        const d = new Date(agent.date);
+        if (!isNaN(d.getTime())) return d.getTime();
+      }
+      return 0;
+    };
+
+    return [...list].sort((a, b) => {
+      if (sortBy === 'oldest') {
+        return getMs(a) - getMs(b);
+      }
+      if (sortBy === 'alphabetic') {
+        const nameA = formatAgentName(a).trim().toLowerCase();
+        const nameB = formatAgentName(b).trim().toLowerCase();
+        return nameA.localeCompare(nameB);
+      }
+      if (sortBy === 'approved') {
+        const isAppA = a.status === 'Approved' ? 1 : 0;
+        const isAppB = b.status === 'Approved' ? 1 : 0;
+        if (isAppA !== isAppB) return isAppB - isAppA;
+        return getMs(b) - getMs(a);
+      }
+      if (sortBy === 'unapproved') {
+        const isAppA = a.status === 'Approved' ? 1 : 0;
+        const isAppB = b.status === 'Approved' ? 1 : 0;
+        if (isAppA !== isAppB) return isAppA - isAppB;
+        return getMs(b) - getMs(a);
+      }
+      // Default: 'latest' (latest to oldest)
+      return getMs(b) - getMs(a);
     });
   })();
+
+  const totalPages = Math.ceil(currentList.length / ITEMS_PER_PAGE) || 1;
+  const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
+  const startIndex = (safeCurrentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, currentList.length);
+  const paginatedList = currentList.slice(startIndex, endIndex);
+
+  const getPaginationGroup = (current, total) => {
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+    if (current <= 4) {
+      return [1, 2, 3, 4, 5, '...', total];
+    }
+    if (current >= total - 3) {
+      return [1, '...', total - 4, total - 3, total - 2, total - 1, total];
+    }
+    return [1, '...', current - 1, current, current + 1, '...', total];
+  };
 
   return (
     <div className="hr-panel-wrapper">
@@ -482,16 +538,36 @@ const HRDashboard = () => {
 
             {(activeTab === 'registrations' || activeTab === 'approved') && (
               <div className="hr-table-card">
-                <div className="hr-table-header">
+                <div className="hr-table-header flex-wrap gap-3">
                   <div className="d-flex flex-column">
                     <h2>
                       {viewingTeamOf 
                         ? `Team Members of ${formatAgentName(viewingTeamOf)}` 
                         : activeTab === 'approved' ? 'Active Partners' : 'All Partner Registrations'}
                     </h2>
-                    <p>{currentList.length} record{currentList.length !== 1 ? 's' : ''} found</p>
+                    <p>
+                      {currentList.length} record{currentList.length !== 1 ? 's' : ''} found
+                      {totalPages > 1 && ` • Page ${safeCurrentPage} of ${totalPages}`}
+                    </p>
                   </div>
-                  <div className="d-flex gap-2">
+                  <div className="d-flex align-items-center gap-2 flex-wrap">
+                    <div className="hr-sort-container">
+                      <ArrowUpDown size={14} className="text-muted" />
+                      <span className="hr-sort-label">Sort:</span>
+                      <select 
+                        className="form-select form-select-sm hr-sort-dropdown"
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value)}
+                        aria-label="Sort partner records"
+                      >
+                        <option value="latest">Latest to Oldest</option>
+                        <option value="oldest">Oldest to Latest</option>
+                        <option value="alphabetic">Alphabetical (A - Z)</option>
+                        <option value="approved">Approved First</option>
+                        <option value="unapproved">Unapproved First</option>
+                      </select>
+                    </div>
+
                     {viewingTeamOf && (
                       <button className="btn-hr-view" onClick={() => setViewingTeamOf(null)}>
                         Back to List
@@ -516,27 +592,16 @@ const HRDashboard = () => {
                     {currentList.length === 0 ? (
                       <div className="p-5 text-center text-muted">No registrations found</div>
                     ) : (
-                      currentList.map((agent) => (
+                      paginatedList.map((agent) => (
                         <div className="hr-row" key={agent.id}>
-                          <div className="hr-applicant-info d-flex align-items-center gap-3">
-                            <div className="hr-table-avatar rounded-circle overflow-hidden flex-shrink-0 border" style={{ width: '38px', height: '38px', borderColor: 'var(--hr-border)' }}>
-                              {agent.photographUrl ? (
-                                <S3Image src={agent.photographUrl} width={100} className="w-100 h-100 object-cover" />
-                              ) : (
-                                <div className="w-100 h-100 d-flex align-items-center justify-content-center fw-bold text-uppercase" style={{ background: 'linear-gradient(135deg, rgba(74, 151, 228, 0.1) 0%, rgba(74, 151, 228, 0.25) 100%)', color: 'var(--hr-accent)', fontSize: '0.85rem' }}>
-                                  {formatAgentName(agent).charAt(0)}
-                                </div>
-                              )}
-                            </div>
-                            <div className="min-w-0">
-                              <h4 className="text-truncate m-0" style={{ maxWidth: '180px', fontSize: '0.88rem' }}>{formatAgentName(agent)}</h4>
-                              <div className="d-flex gap-2 align-items-center mt-1">
-                                <span className="badge font-monospace text-primary bg-primary-subtle border border-primary-subtle" style={{ fontSize: '0.7rem', padding: '2px 6px', borderRadius: '4px' }}>
-                                  {agent.agentId || 'Pending'}
-                                </span>
-                                <span className="text-muted small">•</span>
-                                <p className="m-0 text-muted text-truncate" style={{ maxWidth: '140px', fontSize: '0.75rem' }} title={agent.email}>{agent.email}</p>
-                              </div>
+                          <div className="hr-applicant-info min-w-0">
+                            <h4 className="text-truncate m-0" style={{ maxWidth: '240px', fontSize: '0.88rem' }}>{formatAgentName(agent)}</h4>
+                            <div className="d-flex gap-2 align-items-center mt-1">
+                              <span className="badge font-monospace text-primary bg-primary-subtle border border-primary-subtle" style={{ fontSize: '0.7rem', padding: '2px 6px', borderRadius: '4px' }}>
+                                {agent.agentId || 'Pending'}
+                              </span>
+                              <span className="text-muted small">•</span>
+                              <p className="m-0 text-muted text-truncate" style={{ maxWidth: '140px', fontSize: '0.75rem' }} title={agent.email}>{agent.email}</p>
                             </div>
                           </div>
                           <div className="hr-contact-info d-flex align-items-center gap-2">
@@ -591,6 +656,77 @@ const HRDashboard = () => {
                     )}
                   </div>
                 </div>
+
+                {/* Pagination Controls */}
+                {currentList.length > 0 && (
+                  <div className="hr-pagination-container">
+                    <div className="hr-pagination-info">
+                      Showing <span>{startIndex + 1}</span> to <span>{endIndex}</span> of <span>{currentList.length}</span> records
+                    </div>
+                    {totalPages > 1 && (
+                      <div className="hr-pagination-controls">
+                        <button
+                          type="button"
+                          className="hr-page-btn"
+                          disabled={safeCurrentPage === 1}
+                          onClick={() => setCurrentPage(1)}
+                          title="First Page"
+                          aria-label="First page"
+                        >
+                          <ChevronsLeft size={16} />
+                        </button>
+                        <button
+                          type="button"
+                          className="hr-page-btn"
+                          disabled={safeCurrentPage === 1}
+                          onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                          title="Previous Page"
+                          aria-label="Previous page"
+                        >
+                          <ChevronLeft size={16} />
+                        </button>
+
+                        <div className="hr-page-numbers">
+                          {getPaginationGroup(safeCurrentPage, totalPages).map((item, idx) => (
+                            item === '...' ? (
+                              <span key={`ellipsis-${idx}`} className="hr-page-ellipsis">...</span>
+                            ) : (
+                              <button
+                                key={`page-${item}`}
+                                type="button"
+                                className={`hr-page-num-btn ${safeCurrentPage === item ? 'active' : ''}`}
+                                onClick={() => setCurrentPage(item)}
+                              >
+                                {item}
+                              </button>
+                            )
+                          ))}
+                        </div>
+
+                        <button
+                          type="button"
+                          className="hr-page-btn"
+                          disabled={safeCurrentPage === totalPages}
+                          onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                          title="Next Page"
+                          aria-label="Next page"
+                        >
+                          <ChevronRight size={16} />
+                        </button>
+                        <button
+                          type="button"
+                          className="hr-page-btn"
+                          disabled={safeCurrentPage === totalPages}
+                          onClick={() => setCurrentPage(totalPages)}
+                          title="Last Page"
+                          aria-label="Last page"
+                        >
+                          <ChevronsRight size={16} />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
 
